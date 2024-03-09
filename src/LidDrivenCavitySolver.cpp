@@ -18,6 +18,8 @@ int main(int argc, char **argv)
 	int Ny; // Number of grid points in y-direction
 	bool verbose; // Display more hint message
 
+    std::string folder_results = "results/";
+
     po::options_description opts(
         "Solver for the 2D lid-driven cavity incompressible flow problem");
     opts.add_options()
@@ -67,11 +69,11 @@ int main(int argc, char **argv)
 
     solver->Initialise();
 
-    solver->WriteSolution("ic.txt");
+    solver->WriteSolution(folder_results+"ic.txt");
 
     solver->Integrate();
 
-    solver->WriteSolution("final.txt");
+    solver->WriteSolution(folder_results+"final.txt");
 
 
 

@@ -207,3 +207,13 @@ void LidDrivenCavity::Advance()
     // Solve Poisson problem
     cg->Solve(v, s);
 }
+
+double LidDrivenCavity::get_dx()
+{
+    return dx;
+}
+
+double LidDrivenCavity::get_dy()
+{
+    return dy;
+}

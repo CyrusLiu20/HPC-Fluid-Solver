@@ -22,6 +22,11 @@ public:
     void WriteSolution(std::string file);
     void PrintConfiguration();
 
+    // Test cases (Developer use)
+    double get_dx();
+    double get_dy();
+
+
 private:
     double* v   = nullptr;
     double* s   = nullptr;
