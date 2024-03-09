@@ -1,6 +1,6 @@
 #include <iostream>
-using namespace std;
-
+#include <chrono>
+#include <ctime>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
@@ -8,35 +8,54 @@ namespace po = boost::program_options;
 
 int main(int argc, char **argv)
 {
+	// Program arguments
+	double Lx; // Length of the domain in the x-direction
+	double Ly; // Length of the domain in the y-direction
+	double dt; // Time step 
+	double T; // Total simulation time
+	double Re; // Reynolds number in computation
+	int Nx; // Number of grid points in x-direction
+	int Ny; // Number of grid points in y-direction
+	bool verbose; // Display more hint message
+
     po::options_description opts(
         "Solver for the 2D lid-driven cavity incompressible flow problem");
     opts.add_options()
-        ("Lx",  po::value<double>()->default_value(1.0),
-                 "Length of the domain in the x-direction.")
-        ("Ly",  po::value<double>()->default_value(1.0),
-                 "Length of the domain in the y-direction.")
-        ("Nx",  po::value<int>()->default_value(9),
-                 "Number of grid points in x-direction.")
-        ("Ny",  po::value<int>()->default_value(9),
-                 "Number of grid points in y-direction.")
-        ("dt",  po::value<double>()->default_value(0.01),
-                 "Time step size.")
-        ("T",   po::value<double>()->default_value(1.0),
-                 "Final time.")
-        ("Re",  po::value<double>()->default_value(10),
-                 "Reynolds number.")
-        ("verbose",    "Be more verbose.")
-        ("help",       "Print help message.");
+        ("Lx", 	po::value<double>(&Lx)->default_value(1.0), "Length of the domain in the x-direction")
+        ("Ly", 	po::value<double>(&Ly)->default_value(1.0), "Length of the domain in the y-direction")
+        ("dt", 	po::value<double>(&dt)->default_value(2e-4), "Time step ")
+        ("T", 	po::value<double>(&T)->default_value(1.0), "Total simulation time")
+        ("Re", 	po::value<double>(&Re)->default_value(10), "Reynolds number used in computation")
+        ("Nx",	po::value<int>(&Nx)->default_value(9), "Number of grid points in x-direction")
+        ("Ny", 	po::value<int>(&Ny)->default_value(9), "Number of grid points in y-direction")
+        ("verbose", po::value<bool>(&verbose)->default_value(true), "Display more hint message")
+		("help", "Display argument details");
 
+
+	// Ensure arguments are parsed correctly
     po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, opts), vm);
-    po::notify(vm);
-
-    if (vm.count("help")) {
-        cout << opts << endl;
-        return 0;
+    try {
+        po::store(po::parse_command_line(argc, argv, opts), vm);
+        po::notify(vm);
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
+	
+	
+	// Display argument details and terminates program if help flag
+	if(vm.count("help")){
+		std::cout << opts << std::endl;
+		return 0;
+	}
+	
+    // Begin program and displays current time
+    auto start = std::chrono::system_clock::now();
+    std::time_t time_now = std::chrono::system_clock::to_time_t(start);
+    std::cout << "2D lid-driven cavity incompressible flow problem | Time :  " << std::ctime(&time_now);
 
+
+    // Core program
     LidDrivenCavity* solver = new LidDrivenCavity();
     solver->SetDomainSize(vm["Lx"].as<double>(), vm["Ly"].as<double>());
     solver->SetGridSize(vm["Nx"].as<int>(),vm["Ny"].as<int>());
@@ -53,6 +72,15 @@ int main(int argc, char **argv)
     solver->Integrate();
 
     solver->WriteSolution("final.txt");
+
+
+
+	// End of Program ad displays current time
+    auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "Time spent: " << elapsed_seconds.count() << " seconds" << std::endl;
+    std::cout << "End of program | Time : " << std::ctime(&end_time);
 
 	return 0;
 }

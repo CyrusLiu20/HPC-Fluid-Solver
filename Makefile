@@ -1,24 +1,37 @@
-## Common variables
+# Common variables
 CC = mpicxx
-FLAGS = -std=c++11 -Wall -O0 -pedantic
-SOURCEDIR = src/
-LIBS = -lboost_program_options
-OUTPUT = solver.out
+CFLAGS = -std=c++11 -Wall -O0 -pedantic
+LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi
 
-# Source files
-SOURCES := $(SOURCEDIR)SolveMain.cpp
+# Source file directory
+SRC_DIR = src
+# Object file directory
+BUILD_DIR = build
+# Executable to be created
+OUTPUT = solver
+# List of source files
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+# List of object files
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
-# Main target
-all: $(OUTPUT)
+# Number of processors
+NP ?= 1
 
-# Create solver executable
-$(OUTPUT): $(SOURCES)
-	$(CC) $(FLAGS) $^ $(LIBS) -o $@
+all: $(BUILD_DIR) $(OUTPUT)
 
-# Rule to clean up executable
-clean:
-	rm -f $(OUTPUT)
+$(OUTPUT): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-# Run the solver with mpiexec
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
 run: $(OUTPUT)
-	mpiexec -np 1 ./$(OUTPUT)
+	mpiexec -np $(NP) ./$(OUTPUT)
+
+clean:
+	rm -rf $(BUILD_DIR)/*.o $(OUTPUT)
+
+.PHONY: all clean
