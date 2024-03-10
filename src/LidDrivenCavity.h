@@ -16,6 +16,8 @@ public:
     void SetTimeStep(double deltat);
     void SetFinalTime(double finalt);
     void SetReynoldsNumber(double Re);
+    void SetVerbose(bool verbose);
+
 
     void Initialise();
     void Integrate();
@@ -31,6 +33,9 @@ public:
     double* get_s();
     double* get_u0();
     double* get_u1();
+
+    void IntegrateControl(double percentage);
+
 
 
 private:
@@ -50,6 +55,8 @@ private:
     double Re   = 10;
     double U    = 1.0;
     double nu   = 0.1;
+
+    bool verbose = true;
 
     SolverCG* cg = nullptr;
 

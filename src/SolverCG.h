@@ -6,7 +6,7 @@ public:
     SolverCG(int pNx, int pNy, double pdx, double pdy);
     ~SolverCG();
 
-    void Solve(double* b, double* x);
+    void Solve(double* b, double* x, bool verbose);
 
 private:
     double dx;

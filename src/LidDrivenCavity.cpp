@@ -51,6 +51,11 @@ void LidDrivenCavity::SetReynoldsNumber(double re)
     this->nu = 1.0/re;
 }
 
+void LidDrivenCavity::SetVerbose(bool verbose)
+{
+    this->verbose = verbose;
+}
+
 void LidDrivenCavity::Initialise()
 {
     CleanUp();
@@ -205,7 +210,7 @@ void LidDrivenCavity::Advance()
     */
 
     // Solve Poisson problem
-    cg->Solve(v, s);
+    cg->Solve(v, s, verbose);
 }
 
 double LidDrivenCavity::get_dx()
@@ -266,4 +271,18 @@ double* LidDrivenCavity::get_u1()
     }
 
     return u1;
+}
+
+// Integrate up to a certain time
+void LidDrivenCavity::IntegrateControl(double percentage)
+{
+    int NSteps = ceil(T/dt*percentage);
+    // std::cout << floor(T/dt*percentage) << std::endl;
+    for (int t = 0; t < NSteps; ++t)
+    {
+        if(verbose){
+            std::cout << "Step: " << setw(8) << t << "  Time: " << setw(8) << t*dt << std::endl;
+        }
+        Advance();
+    }
 }

@@ -1,6 +1,6 @@
 # Build system for 2D Lid Driven Cavity Incompressible Flow
 # all: 			builds the main solver executable
-# test: 		builds the test cases executable for the involved classes
+# unittests: 	builds the test cases executable for the involved classes
 # run_test: 	executes the test executable
 # run: 			executes the main solver executable
 # doc:			generates documentation using Doxygen
@@ -71,7 +71,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 # Builds the test cases executable for the involved classes
-test: $(TEST_BUILD_DIR) $(TEST_OUTPUT)
+unittests: $(TEST_BUILD_DIR) $(TEST_OUTPUT)
 
 $(TEST_BUILD_DIR):
 	mkdir -p $(TEST_BUILD_DIR)

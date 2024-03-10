@@ -32,7 +32,7 @@ SolverCG::~SolverCG()
 }
 
 
-void SolverCG::Solve(double* b, double* x) {
+void SolverCG::Solve(double* b, double* x, bool verbose) {
     unsigned int n = Nx*Ny;
     int k;
     double alpha;
@@ -87,7 +87,9 @@ void SolverCG::Solve(double* b, double* x) {
         exit(-1);
     }
 
-    cout << "Converged in " << k << " iterations. eps = " << eps << endl;
+    if(verbose){
+        cout << "Converged in " << k << " iterations. eps = " << eps << endl;
+    }
 }
 
 
