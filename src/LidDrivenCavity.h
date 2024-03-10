@@ -25,6 +25,12 @@ public:
     // Test cases (Developer use)
     double get_dx();
     double get_dy();
+    double get_nu();
+    int get_Npts();
+    double* get_v();
+    double* get_s();
+    double* get_u0();
+    double* get_u1();
 
 
 private:

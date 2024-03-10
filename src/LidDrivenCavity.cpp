@@ -217,3 +217,53 @@ double LidDrivenCavity::get_dy()
 {
     return dy;
 }
+
+int LidDrivenCavity::get_Npts()
+{
+    return Npts;
+}
+
+double LidDrivenCavity::get_nu()
+{
+    return nu;
+}
+
+double* LidDrivenCavity::get_v()
+{
+    return v;
+}
+
+double* LidDrivenCavity::get_s()
+{
+    return s;
+}
+
+// Extract u velocity matrix by ds/dy = u
+double* LidDrivenCavity::get_u0()
+{
+    double* u0 = new double[Nx*Ny]();
+    for (int i = 1; i < Nx - 1; ++i) {
+        for (int j = 1; j < Ny - 1; ++j) {
+            u0[IDX(i,j)] =  (s[IDX(i,j+1)] - s[IDX(i,j)]) / dy;
+        }
+    }
+    // Boundary condition where u0 at the top row equals U
+    for (int i = 0; i < Nx; ++i) {
+        u0[IDX(i,Ny-1)] = U;
+    }
+
+    return u0;
+}
+
+// Extract v velocity matrix by ds/dx = -v
+double* LidDrivenCavity::get_u1()
+{
+    double* u1 = new double[Nx*Ny]();
+    for (int i = 1; i < Nx - 1; ++i) {
+        for (int j = 1; j < Ny - 1; ++j) {
+            u1[IDX(i,j)] = -(s[IDX(i+1,j)] - s[IDX(i,j)]) / dx;
+        }
+    }
+
+    return u1;
+}
