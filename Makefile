@@ -10,7 +10,7 @@
 CC = mpicxx
 MPI_CC = mpiexec
 CFLAGS = -std=c++11 -Wall -O0 -pedantic
-LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi
+LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi -lboost_unit_test_framework
 
 
 # Source folder, Build folder, and Results directory

@@ -1,20 +1,7 @@
-/*
-Test cases for LidDrivenCavity class
-
-Program arguments
-1. DomainCheck: Check correct mesh size
-2. ReynoldsCheck: Check correct Reynolds number and Nusselt number specified
-
-Numerical simulation
-3. InitialConditionCheck: Check if initial condition (v,s,u0,u1) is applied correctly
-4. BoundaryConditionCheck: Check if boundary condition is been applied correctly at the start, middle, and end of simulation
-*/
-
-
 #include "../src/LidDrivenCavity.h"
 #include <iostream>
 #include <boost/algorithm/cxx11/all_of.hpp>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(MyTests)
 
@@ -277,5 +264,5 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
     delete solver2;
 
 }
-BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_AUTO_TEST_SUITE_END()

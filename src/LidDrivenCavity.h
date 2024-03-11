@@ -35,6 +35,8 @@ public:
     double* get_u1();
 
     void IntegrateControl(double percentage);
+    void Advance();
+
 
 
 
@@ -62,6 +64,5 @@ private:
 
     void CleanUp();
     void UpdateDxDy();
-    void Advance();
 };
 
