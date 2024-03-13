@@ -300,3 +300,98 @@ BOOST_AUTO_TEST_SUITE_END()
     // PrintMatrix(s_true,Nx_test,Ny_test);  
 
     // BOOST_CHECK_MESSAGE(true, "something");
+
+
+
+
+
+
+
+    // std::ifstream infile(file_path);
+
+    // // Load the true s stream function matrix
+    // for (int i = 0; i < Npts; i++) {
+    //     infile >> s_true[i];
+    // }
+    // // Close the file
+    // infile.close();
+
+
+
+
+
+
+
+    // Domain length for test case
+    double Lx_test = 2.5;
+    double Ly_test = 1.3;
+    // Grid points for test case
+    int Nx_test = 39;
+    int Ny_test = 47;
+    int Npts = Nx_test*Ny_test;
+
+    double dt_test = 0.0003; // time step for test case
+    double T_test = 1.2; // Total simulation for test case
+    double Re_test = 10; // Reynolds number for test case 
+    bool verbose = false; // Do not diplay convergence detail inside this test
+
+    // Create and set up LidDrivenCavity environment
+    LidDrivenCavity* solver = new LidDrivenCavity();
+    solver->SetDomainSize(Lx_test,Ly_test);
+    solver->SetGridSize(Nx_test,Ny_test);
+    solver->SetTimeStep(dt_test);
+    solver->SetFinalTime(T_test);
+    solver->SetReynoldsNumber(Re_test);
+    solver->SetVerbose(verbose);
+
+
+    // Starting time : t = 0
+    solver->Initialise();
+    double half_time = 0.4;
+    solver->IntegrateControl(half_time);
+    double* v = solver->get_v();
+    double* s = solver->get_s();
+
+    std::ofstream outFile("test/data/realv_input1.txt");
+
+    // Write the arrays to the file
+    for (int i = 0; i < Npts; ++i) {
+        outFile << v[i] << std::endl;
+    }
+
+    // Close the file
+    outFile.close();
+
+    std::ofstream outFile2("test/data/reals_input1.txt");
+
+    // Write the arrays to the file
+    for (int i = 0; i < Npts; ++i) {
+        outFile2 << s[i] << std::endl;
+    }
+
+    // Close the file
+    outFile2.close();
+
+    solver->Advance();
+    v = solver->get_v();
+    s = solver->get_s();
+
+    std::ofstream outFile3("test/data/realv_output1.txt");
+
+    // Write the arrays to the file
+    for (int i = 0; i < Npts; ++i) {
+        outFile3 << v[i] << std::endl;
+    }
+
+    // Close the file
+    outFile3.close();
+
+    std::ofstream outFile4("test/data/reals_output1.txt");
+
+    // Write the arrays to the file
+    for (int i = 0; i < Npts; ++i) {
+        outFile4 << s[i] << std::endl;
+    }
+
+    // Close the file
+    outFile4.close();
