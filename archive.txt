@@ -266,3 +266,37 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+
+
+
+
+
+
+    // Open a file for writing
+    std::ofstream outFile("test/data/arbitrary1.txt");
+
+
+    // Write the array elements to the file
+    for (int i = 0; i < Npts; ++i) {
+        outFile << s[i] << std::endl;
+    }
+
+    // Close the file
+    outFile.close();
+
+
+
+
+        // if (std::abs(s[i]-s_true[i])>tolerance){
+        //     std::cout << "Solved s : "  << s[i] << " Stored s : " << s_true[i] << " Eps : " << s[i]-s_true[i] << std::endl;
+        // }
+
+
+
+    // std::cout << "s_solve" << std::endl;
+    // PrintMatrix(s,Nx_test,Ny_test);
+    // std::cout << "s_true" << std::endl;
+    // PrintMatrix(s_true,Nx_test,Ny_test);  
+
+    // BOOST_CHECK_MESSAGE(true, "something");

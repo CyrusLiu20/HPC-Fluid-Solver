@@ -10,7 +10,8 @@
 CC = mpicxx
 MPI_CC = mpiexec
 CFLAGS = -std=c++11 -Wall -O0 -pedantic
-LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi -lboost_unit_test_framework
+LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi 
+TEST_LIBS = -lboost_unit_test_framework
 
 
 # Source folder, Build folder, and Results directory
@@ -83,7 +84,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST_OUTPUT): $(TEST_OBJS) $(TEST_SRC_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS) $(TEST_LIBS)
 
 # Executes the test executable
 run_test: $(TEST_OUTPUT)

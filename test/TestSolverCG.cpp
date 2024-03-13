@@ -15,6 +15,7 @@ Solver Check
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <fstream>
 BOOST_AUTO_TEST_SUITE(solver_cg)
 
 void PrintMatrix(double* A, int nx, int ny) {
@@ -28,43 +29,61 @@ void PrintMatrix(double* A, int nx, int ny) {
     std::cout << std::endl;
 }
 
-// Test case for correct mesh size specified
+// Test case for arbitrary vorticity and stream function
 BOOST_AUTO_TEST_CASE(SolveArbitraryCheck)
 {
     // Test cases parameters
-    int Nx_test = 9;
-    int Ny_test = 7;
+    int Nx_test = 29;
+    int Ny_test = 25;
     int Npts = Nx_test*Ny_test;
     double dx_test = 0.008;
     double dy_test = 0.01;
 
     double* v = new double[Npts];
     double* s = new double[Npts];
+    double* s_true = new double[Npts];
     bool verbose = false;
 
     // Create LidDrivenCavity environment
-    SolverCG* solver  = new SolverCG(Nx_test,Ny_test,dx_test,dy_test);
+    SolverCG* solver_cg  = new SolverCG(Nx_test,Ny_test,dx_test,dy_test);
 
     for(int i=0;i<Npts;i++){
-        v[i] = i*0.3-1;
-        s[i] = i*0.2-0.5;
+        s[i] = i*2e-5-5e-5;
+        v[i] = (i % Nx_test);
     }
 
-    std::cout << "Arbitrary v" << std::endl;
-    PrintMatrix(v,Nx_test,Ny_test);
-    std::cout << "Arbitrary s" << std::endl;
-    PrintMatrix(s,Nx_test,Ny_test);
+    solver_cg->Solve(v,s,verbose);
 
+    // Open the file for reading
+    std::string file_path = "test/data/arbitrary1.txt";
+    std::ifstream infile(file_path);
+
+    // Load the true s stream function matrix
+    for (int i = 0; i < Npts; i++) {
+        infile >> s_true[i];
+    }
+    // Close the file
+    infile.close();
 
     // Check if solves correctly
-    // BOOST_CHECK_MESSAGE(solver->get_dx() == Lx_test / (Nx_test - 1), "Mesh size in x-direction does not match");
-    // BOOST_CHECK_MESSAGE(solver->get_dy() == Ly_test / (Ny_test - 1), "Mesh size in y-direction does not match");
-
-    BOOST_CHECK_MESSAGE(true, "test");
+    double tolerance = 1e-6;
+    bool all_within = true;
+    for (int i=0;i<Npts;i++){
+        if(std::abs(s[i]-s_true[i])>tolerance){
+            all_within = false;
+        }
+    }
+    BOOST_CHECK_MESSAGE(all_within, "Solved stream function not within tolerance");
     BOOST_TEST_MESSAGE("\n  Test results: Conjugate gradient solver solves correctly\n");  // Print a message indicating the test case is successful
 
-    delete solver;
+    delete solver_cg;
+    delete[] v;
+    delete[] s;
+    delete[] s_true;
 }
+
+// Test case for real vorticity and stream function
+
 
 BOOST_AUTO_TEST_SUITE_END()
 
