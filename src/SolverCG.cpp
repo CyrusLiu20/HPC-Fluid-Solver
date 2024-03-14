@@ -113,6 +113,11 @@ void SolverCG::ApplyOperator(double* in, double* out) {
 }
 
 
+// void SolverCg::ApplyOperatorParallel(double* in, double* out){
+//     double dx2i = 1.0/dx/dx;
+//     double dy2i = 1.0/dy/dy;
+// }
+
 void SolverCG::Precondition(double* in, double* out) {
     int i, j;
     double dx2i = 1.0/dx/dx;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <mpi.h>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
@@ -51,10 +52,25 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	
-    // Begin program and displays current time
+    // Initialise MPI
+    int rank = 0; // ID of process
+    int size = 0; // Number of processes
+    int err = MPI_Init(&argc, &argv);
+    if (err != MPI_SUCCESS) {
+        cout << "Error: Failed to initialise MPI" << endl;
+        return -1;
+    }
+
+    // Get comm rank and size of each process
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
     auto start = std::chrono::system_clock::now();
-    std::time_t time_now = std::chrono::system_clock::to_time_t(start);
-    std::cout << "2D lid-driven cavity incompressible flow problem | Time :  " << std::ctime(&time_now);
+    // Begin program and displays current time
+    if(rank==0){
+        std::time_t time_now = std::chrono::system_clock::to_time_t(start);
+        std::cout << "2D lid-driven cavity incompressible flow problem | Time :  " << std::ctime(&time_now);
+    }
 
 
     // Core program
@@ -78,11 +94,16 @@ int main(int argc, char **argv)
 
 
 	// End of Program ad displays current time
-    auto end = std::chrono::system_clock::now();
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "Time spent: " << elapsed_seconds.count() << " seconds" << std::endl;
-    std::cout << "End of program | Time : " << std::ctime(&end_time);
+    if(rank==0){
+        auto end = std::chrono::system_clock::now();
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::cout << "Time spent: " << elapsed_seconds.count() << " seconds" << std::endl;
+        std::cout << "End of program | Time : " << std::ctime(&end_time);
+    }
+
+    // Finalise MPI.
+    MPI_Finalize();
 
 	return 0;
 }

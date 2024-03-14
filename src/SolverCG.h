@@ -22,5 +22,9 @@ private:
     void Precondition(double* p, double* t);
     void ImposeBC(double* p);
 
+    // Matrix form (Matrix equivalent of ApplyOperator) applying Laplace operator
+    // void MatrixOperator(double* in, double* out);
+
+
 };
 
