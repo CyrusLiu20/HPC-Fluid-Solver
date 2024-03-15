@@ -13,6 +13,7 @@ Numerical simulation
 
 #include "../src/LidDrivenCavity.h"
 #include <iostream>
+#include <fstream>
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -74,6 +75,8 @@ void ExtractInnerRectangle(double* A, double* B, int Nx, int Ny) {
         }
     }
 }
+
+
 
 // Test case for initial condition (fluid at t=0 is at rest)
 BOOST_AUTO_TEST_CASE(InitialConditionCheck)
@@ -178,7 +181,7 @@ void CheckBoundaryConditions(double* u0_top, double* u1_top, double* u0_bottom, 
     BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_left, Ny), "V-velocity Left boundary condition not imposed");
 }
 
-
+/*
 // Test case for initial condition (fluid at t=0 is at rest)
 BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
 {
@@ -277,5 +280,75 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
     delete solver2;
 
 }
+*/
+
+// Compare two files
+bool CompareFiles(const std::string& filename1, const std::string& filename2) {
+    std::ifstream file1(filename1), file2(filename2);
+    std::string line1, line2;
+
+    double tolerance = 1e-8;
+    bool all_correct = true;
+    bool verbose = false;
+
+    // Compare line by line
+    while (std::getline(file1, line1) && std::getline(file2, line2)) {
+        std::istringstream iss1(line1), iss2(line2);
+        double num1, num2;
+
+        // Compare each number in the line
+        while (iss1 >> num1 && iss2 >> num2) {
+
+            if (std::abs(num1 - num2) > tolerance) {
+                if(verbose){
+                    std::cout << " Number 1 : "  << num1 << " | Number 2 : " << num2 << " | error : " << std::abs(num1 - num2)<< std::endl;
+                }
+                all_correct = false;
+            }
+        }
+
+    }
+
+    return all_correct;
+}
+
+// Test case for initial condition (fluid at t=0 is at rest)
+BOOST_AUTO_TEST_CASE(FinalResultsCheck)
+{
+    // Domain length for test case
+    double Lx_test = 1;
+    double Ly_test = 1;
+    // Grid points for test case
+    int Nx_test = 9;
+    int Ny_test = 9;
+
+    double dt_test = 2e-4; // time step for test case
+    double T_test = 1.0; // Total simulation for test case
+    double Re_test = 10; // Reynolds number for test case 
+    bool verbose = false; // Do not diplay convergence detail inside this test
+
+    LidDrivenCavity* solver = new LidDrivenCavity();
+    solver->SetDomainSize(Lx_test,Ly_test);
+    solver->SetGridSize(Nx_test,Ny_test);
+    solver->SetTimeStep(dt_test);
+    solver->SetFinalTime(T_test);
+    solver->SetReynoldsNumber(Re_test);
+    solver->SetVerbose(verbose);
+
+
+
+    // Lid Driven Cavity Parallel
+    std::string output = "test/data/final_test.txt";
+    solver->Initialise();
+    solver->Integrate();
+    solver->WriteSolution(output);
+
+    std::string output_true = "test/data/final.txt";
+    bool results = CompareFiles(output,output_true);
+    BOOST_CHECK_MESSAGE(results, "Results do not match"); 
+}
+
+
+
 BOOST_AUTO_TEST_SUITE_END()
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <math.h>
 #include <mpi.h>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -19,6 +20,7 @@ int main(int argc, char **argv)
 	int Ny; // Number of grid points in y-direction
 	bool verbose; // Display more hint message
 
+    int root = 0; // Root process
     std::string folder_results = "results/";
 
     po::options_description opts(
@@ -65,9 +67,19 @@ int main(int argc, char **argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    // Check if the number of processes is a perfect squares
+    int sqrtNum = sqrt(size);
+    if(sqrtNum * sqrtNum != size){
+		if(rank==root){
+			cout << "Please have n^2 of processes" << endl;
+		}
+		MPI_Finalize();
+		return 0;
+    }
+
     auto start = std::chrono::system_clock::now();
     // Begin program and displays current time
-    if(rank==0){
+    if(rank==root){
         std::time_t time_now = std::chrono::system_clock::to_time_t(start);
         std::cout << "2D lid-driven cavity incompressible flow problem | Time :  " << std::ctime(&time_now);
     }
@@ -80,21 +92,26 @@ int main(int argc, char **argv)
     solver->SetTimeStep(vm["dt"].as<double>());
     solver->SetFinalTime(vm["T"].as<double>());
     solver->SetReynoldsNumber(vm["Re"].as<double>());
+    solver->SetVerbose(verbose);
+    solver->DomainDecomposition();
 
-    solver->PrintConfiguration();
+    // if(rank==root){
+    //     solver->PrintConfiguration();
+    // }
 
     solver->Initialise();
-
-    solver->WriteSolution(folder_results+"ic.txt");
+    if(rank==root){
+        solver->WriteSolution(folder_results+"ic.txt");
+    }
 
     solver->Integrate();
 
-    solver->WriteSolution(folder_results+"final.txt");
-
-
+    if(rank==root){
+        solver->WriteSolution(folder_results+"final.txt");
+    }
 
 	// End of Program ad displays current time
-    if(rank==0){
+    if(rank==root){
         auto end = std::chrono::system_clock::now();
         std::time_t end_time = std::chrono::system_clock::to_time_t(end);
         std::chrono::duration<double> elapsed_seconds = end - start;

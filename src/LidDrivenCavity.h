@@ -17,12 +17,18 @@ public:
     void SetFinalTime(double finalt);
     void SetReynoldsNumber(double Re);
     void SetVerbose(bool verbose);
+    void DomainDecomposition();
 
 
     void Initialise();
     void Integrate();
     void WriteSolution(std::string file);
     void PrintConfiguration();
+
+    // MPI Parallel processing
+    void InitialiseParallel();
+    
+
 
     // Test cases (Developer use)
     double get_dx();
@@ -52,17 +58,48 @@ private:
     int    Nx   = 9;
     int    Ny   = 9;
     int    Npts = 81;
+    int    Nx_inner;
+    int    Ny_inner;
+    int    Npts_inner;
+
+
     double Lx   = 1.0;
     double Ly   = 1.0;
     double Re   = 10;
     double U    = 1.0;
     double nu   = 0.1;
 
-    bool verbose = true;
+    // MPI Parallel processing
+    bool parallel; // Serial or parallel processing
+    int    Npts_local;
+    int    Nx_remainder; // remainder of nodes in x direction
+    int    Ny_remainder; // remainder of nodes in y direction
+    int    Nx_local;
+    int    Ny_local;
+
+    int    offset_x;
+    int    offset_y;
+
+    double* v_local = nullptr; // local vorticity matrix
+    double* s_local = nullptr; // local stream function matrix
+
+    bool verbose = true; // Display convergence and timestep detail during integration
+
+    // MPI process rank and number of processes
+    int root    = 0;
+    int rank;
+    int Nprocs;
+    int Nprocs_sqrt; // Square root of nprocs for domain decomposition
+
 
     SolverCG* cg = nullptr;
 
     void CleanUp();
     void UpdateDxDy();
+
+    // Parallel processing functions
+    void ComputeBoundaryVorticityParallel();
+    void ComputeInteriorVorticityParallel();
+
 };
 
