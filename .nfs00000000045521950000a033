@@ -1,0 +1,31 @@
+Running 6 test cases...
+Entering test module "Main"
+test/TestLidDrivenCavity.cpp(23): Entering test suite "MyTests"
+test/TestLidDrivenCavity.cpp(26): Entering test case "DomainCheck"
+
+  Test results: Mesh size matches correctly
+
+test/TestLidDrivenCavity.cpp(26): Leaving test case "DomainCheck"; testing time: 295us
+test/TestLidDrivenCavity.cpp(49): Entering test case "ReynoldsCheck"
+
+  Test results: Reynolds and Nusselt number specified correctly
+
+test/TestLidDrivenCavity.cpp(49): Leaving test case "ReynoldsCheck"; testing time: 260us
+test/TestLidDrivenCavity.cpp(85): Entering test case "InitialConditionCheck"
+
+  Test results: Initial condition applied correctly
+
+test/TestLidDrivenCavity.cpp(85): Leaving test case "InitialConditionCheck"; testing time: 1553us
+test/TestLidDrivenCavity.cpp(325): Entering test case "FinalResultsCheck"
+test/TestLidDrivenCavity.cpp(325): Leaving test case "FinalResultsCheck"; testing time: 43020474us
+test/TestLidDrivenCavity.cpp(23): Leaving test suite "MyTests"; testing time: 43022704us
+test/TestSolverCG.cpp(19): Entering test suite "solver_cg"
+test/TestSolverCG.cpp(52): Entering test case "SolveArbitraryCheck"
+
+  Test results: Conjugate gradient solver solves correctly
+
+test/TestSolverCG.cpp(52): Leaving test case "SolveArbitraryCheck"; testing time: 3453us
+test/TestSolverCG.cpp(99): Entering test case "SolveRealCheck"
+test/TestSolverCG.cpp(99): Leaving test case "SolveRealCheck"; testing time: 16867us
+test/TestSolverCG.cpp(19): Leaving test suite "solver_cg"; testing time: 20414us
+Leaving test module "Main"; testing time: 43043175us

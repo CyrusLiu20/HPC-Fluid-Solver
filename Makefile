@@ -57,7 +57,7 @@ T  ?= 1.0 # Total simulation time
 Re ?= 10 # Reynolds number
 Nx ?= 9 # Number of grid points in x-direction
 Ny ?= 9 # Number of grid points in y-direction
-verbose ?= true # Verbosity
+verbose ?= false # Verbosity
 
 
 # Builds the main solver executable

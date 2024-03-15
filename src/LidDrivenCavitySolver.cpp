@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	double Re; // Reynolds number in computation
 	int Nx; // Number of grid points in x-direction
 	int Ny; // Number of grid points in y-direction
-	bool verbose; // Display more hint message
+	bool verbose = true; // Display more hint message
 
     int root = 0; // Root process
     std::string folder_results = "results/";
@@ -100,11 +100,14 @@ int main(int argc, char **argv)
     // }
 
     solver->Initialise();
+    // solver->InitialiseParallel();
+    
     if(rank==root){
         solver->WriteSolution(folder_results+"ic.txt");
     }
 
     solver->Integrate();
+    // solver->IntegrateParallel();
 
     if(rank==root){
         solver->WriteSolution(folder_results+"final.txt");

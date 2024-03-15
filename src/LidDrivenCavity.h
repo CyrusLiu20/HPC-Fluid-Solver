@@ -41,15 +41,20 @@ public:
     double* get_u1();
 
     void IntegrateControl(double percentage);
-    void Advance();
+    void Advance(bool verbose_advance);
 
+    // Parallel processing functions
+    void IntegrateParallel();
 
 
 
 private:
     double* v   = nullptr;
     double* s   = nullptr;
-    double* tmp = nullptr;
+    // double* tmp = nullptr;
+
+    double* u0   = nullptr;
+    double* u1   = nullptr;
 
     double dt   = 0.01;
     double T    = 1.0;
@@ -80,8 +85,8 @@ private:
     int    offset_x;
     int    offset_y;
 
-    double* v_local = nullptr; // local vorticity matrix
-    double* s_local = nullptr; // local stream function matrix
+    // double* v_local = nullptr; // local vorticity matrix
+    // double* s_local = nullptr; // local stream function matrix
 
     bool verbose = true; // Display convergence and timestep detail during integration
 
@@ -98,8 +103,25 @@ private:
     void UpdateDxDy();
 
     // Parallel processing functions
+    void AdvanceParallel(bool verbose_advance);
+
     void ComputeBoundaryVorticityParallel();
     void ComputeInteriorVorticityParallel();
+    void ComputeNextVorticityParallel();
+    void ComputeLaplaceOperatorParallel();
+
+
+
+    int Local2Global(int i_local, int j_local);
+
+
+
+
+
+
+
+    void CreateU();
+    void PrintMatrix(int nsv, double* A);
 
 };
 

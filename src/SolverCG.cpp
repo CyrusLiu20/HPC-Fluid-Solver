@@ -20,6 +20,13 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
     p = new double[n];
     z = new double[n];
     t = new double[n]; //temp
+
+    for(int i=0;i<n;i++){
+        r[i] = 0;
+        p[i] = 0;
+        z[i] = 0;
+        t[i] = 0;
+    }
 }
 
 

@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <mpi.h>
+
 using namespace std;
 
 #include <cblas.h>
@@ -12,6 +13,28 @@ using namespace std;
 
 #include "LidDrivenCavity.h"
 #include "SolverCG.h"
+
+// void LidDrivenCavity::PrintMatrix(int nsv, std::vector<double>& A) {
+//     cout.precision(4);
+//     for (int i = 0; i < nsv; ++i) {
+//         for (int j = 0; j < nsv; ++j) {
+//             cout << setw(13) << A[j*nsv+i] << " ";
+//         }
+//         cout << endl;
+//     }
+//     cout << endl;
+// }
+
+void LidDrivenCavity::PrintMatrix(int nsv, double* A) {
+    cout.precision(4);
+    for (int i = 0; i < nsv; ++i) {
+        for (int j = 0; j < nsv; ++j) {
+            cout << setw(13) << A[j*nsv+i] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
 
 LidDrivenCavity::LidDrivenCavity()
 {
@@ -64,15 +87,94 @@ void LidDrivenCavity::SetVerbose(bool verbose)
 
 void LidDrivenCavity::InitialiseParallel()
 {
-    v_local = new double[Npts_local];
-    s_local = new double[Npts_local];
-    s = new double[Npts];
+    // v_local = new double[Npts_local];
+    // s_local = new double[Npts_local];
     // cg = new SolverCG(Nx_local,Ny_local,dx_local,dy_local);
 
-    if(rank=root){
+    // Initialize elements for safety
+    // for (int i=0;i<Npts_local;i++) {
+    //     v_local[i] = 0;
+    //     s_local[i] = 0;
+    // }    
+    s = new double[Npts];
+    for (int i=0;i<Npts;i++) {s[i] = 0;}
+    // v = new double[Npts];
+    // for (int i=0;i<Npts;i++) {v[i] = 0;}
+    if(rank==root){
+        u0 = new double[Npts];
+        u1 = new double[Npts];
+        for (int i=0;i<Npts;i++) {u0[i] = 0;u1[i] = 0;}
+    }
+    if(rank==root){
         v = new double[Npts];
+        for (int i=0;i<Npts;i++) {v[i] = 0;}
+        cg  = new SolverCG(Nx, Ny, dx, dy);
     }
 
+}
+
+void LidDrivenCavity::CreateU(){
+    u0 = new double[Npts];
+    u1 = new double[Npts];
+    for (int i=0;i<Npts;i++) {u0[i] = 0;u1[i] = 0;}
+
+}
+
+void LidDrivenCavity::IntegrateParallel(){
+    int NSteps = ceil(T/dt);
+
+    bool verbose_advance = false;
+    for (int t = 0; t < NSteps; ++t)
+    {
+        if(verbose && rank==root){
+            std::cout << "Step: " << setw(8) << t
+                    << "  Time: " << setw(8) << t*dt
+                    << std::endl;
+        }
+        if(t==NSteps-1){
+            verbose_advance = true;
+        }
+        else{
+            verbose_advance = false;
+        }
+
+        AdvanceParallel(verbose_advance);
+    }
+
+}
+
+void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
+
+
+    ComputeInteriorVorticityParallel();
+    // std::cout << "Rank : " << rank << "| interior vorticity" << std::endl;
+
+    ComputeBoundaryVorticityParallel();
+    // std::cout << "Rank : " << rank << "| boundary vorticity" << std::endl;
+    if(rank==root && verbose_advance){
+        std::cout << "Interior vorticity" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "(Interior vorticity) Stream function" << std::endl;
+        PrintMatrix(Nx,s);
+    }
+
+    ComputeNextVorticityParallel();
+    // std::cout << "Rank : " << rank << "| next vorticity" << std::endl;
+    if(rank==root && verbose_advance){
+        std::cout << "Next vorticity" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "(Next vorticity) Stream function" << std::endl;
+        PrintMatrix(Nx,s);
+    }
+
+    ComputeLaplaceOperatorParallel();
+    // std::cout << "Rank : " << rank << "| laplace operator" << std::endl;
+    if(rank==root && verbose_advance){
+        std::cout << "Laplace Operator (vorticity)" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "Laplace Operator (stream function)" << std::endl;
+        PrintMatrix(Nx,s);
+    }
 }
 
 void LidDrivenCavity::DomainDecomposition()
@@ -91,7 +193,7 @@ void LidDrivenCavity::DomainDecomposition()
         MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
 
         parallel = Nprocs > 1;
-        if(parallel){
+        // if(parallel){
             Nprocs_sqrt = sqrt(Nprocs);
             Nx_remainder = Nx_inner % Nprocs_sqrt;
             Ny_remainder = Ny_inner % Nprocs_sqrt;
@@ -118,13 +220,18 @@ void LidDrivenCavity::DomainDecomposition()
             Npts_local = Nx_local*Ny_local;
             std::cout << "Rank: " << rank  << " | Nx_local: " << Nx_local << " | offset_x: " << offset_x << " | Ny_local: " << Ny_local << " | offset_y: " << offset_y << std::endl;
 
-        }
+        // }
     }
+}
+
+int LidDrivenCavity::Local2Global(int i_local, int j_local){
+    int index_global = (j_local + offset_y + 1)*Nx + (i_local + offset_x + 1);
+    return index_global;
 }
 
 void LidDrivenCavity::ComputeBoundaryVorticityParallel(){
 
-    if(rank=root){
+    if(rank==root){
         double dxi  = 1.0/dx;
         double dyi  = 1.0/dy;
         double dx2i = 1.0/dx/dx;
@@ -150,26 +257,128 @@ void LidDrivenCavity::ComputeBoundaryVorticityParallel(){
 
 void LidDrivenCavity::ComputeInteriorVorticityParallel(){
 
-    if(parallel){
+    // if(parallel){
         double dxi  = 1.0/dx;
         double dyi  = 1.0/dy;
         double dx2i = 1.0/dx/dx;
         double dy2i = 1.0/dy/dy;
+        double *v_global_temp = new double[Npts];
+        for (int i=0;i<Npts;i++) {v_global_temp[i] = 0;}
+        int index_global;
 
-        for (int i = 0; i < Nx_local; ++i) {
-            for (int j = 0; j < Ny_local; ++j) {
-                v_local[IDX(i,j)] = dx2i*(
-                        2.0 * s[IDX(i,j)] - s[IDX(i+1,j)] - s[IDX(i-1,j)])
-                            + 1.0/dy/dy*(
-                        2.0 * s[IDX(i,j)] - s[IDX(i,j+1)] - s[IDX(i,j-1)]);
+        for (int j = 0; j < Ny_local; ++j) {
+            for (int i = 0; i < Nx_local; ++i) {
+                index_global = Local2Global(i,j);
+                // std::cout << "Index global : " << index_global << std::endl;
+                v_global_temp[Local2Global(i,j)] = 
+                    dx2i*(2.0 * s[Local2Global(i,j)] - s[Local2Global(i+1,j)] - s[Local2Global(i-1,j)])
+                    + 1.0/dy/dy*(2.0 * s[Local2Global(i,j)] - s[Local2Global(i,j+1)] - s[Local2Global(i,j-1)]);
             }
         }
 
 
+        // Assemble each individual matrix to global
+        if(rank!=root){
+            // Send calculated local v matrix to root process
+            MPI_Send(v_global_temp, Npts, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        }
+        else{
 
+            for (int i=1;i<Nprocs;i++) {
+                double* v_receive_temp = new double[Npts]{};
+                for (int i=0;i<Npts;i++) {v_receive_temp[i] = 0;}
+                MPI_Recv(v_receive_temp, Npts, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                cblas_daxpy(Npts, 1.0, v_receive_temp, 1, v_global_temp, 1);
+                delete[] v_receive_temp;
+            }
+
+        }
+
+        // if(rank==root){
+        //     std::cout << "v_global_temp" << std::endl;
+        //     PrintMatrix(Nx,v_global_temp);
+        // }
+        v = v_global_temp;
+        delete[] v_global_temp;
+    // }
+}
+
+
+void LidDrivenCavity::ComputeNextVorticityParallel(){
+
+    if(rank==root){
+        double dxi  = 1.0/dx;
+        double dyi  = 1.0/dy;
+        double dx2i = 1.0/dx/dx;
+        double dy2i = 1.0/dy/dy;
+        // Time advance vorticity
+        for (int i = 1; i < Nx - 1; ++i) {
+            for (int j = 1; j < Ny - 1; ++j) {
+                v[IDX(i,j)] = v[IDX(i,j)] + dt*(
+                    ( (s[IDX(i+1,j)] - s[IDX(i-1,j)]) * 0.5 * dxi
+                    *(v[IDX(i,j+1)] - v[IDX(i,j-1)]) * 0.5 * dyi)
+                - ( (s[IDX(i,j+1)] - s[IDX(i,j-1)]) * 0.5 * dyi
+                    *(v[IDX(i+1,j)] - v[IDX(i-1,j)]) * 0.5 * dxi)
+                + nu * (v[IDX(i+1,j)] - 2.0 * v[IDX(i,j)] + v[IDX(i-1,j)])*dx2i
+                + nu * (v[IDX(i,j+1)] - 2.0 * v[IDX(i,j)] + v[IDX(i,j-1)])*dy2i);
+            }
+        }
     }
 
+
 }
+
+
+void LidDrivenCavity::ComputeLaplaceOperatorParallel(){
+
+    if(rank==root){
+        // Solve Poisson problem
+        cg->Solve(v, s, verbose);
+    }
+
+    MPI_Bcast(s, Npts, MPI_DOUBLE, 0, MPI_COMM_WORLD);    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void LidDrivenCavity::Initialise()
 {
@@ -177,13 +386,15 @@ void LidDrivenCavity::Initialise()
 
     v   = new double[Npts]();
     s   = new double[Npts]();
-    tmp = new double[Npts]();
+    // tmp = new double[Npts]();
     cg  = new SolverCG(Nx, Ny, dx, dy);
+    CreateU();
 }
 
 void LidDrivenCavity::Integrate()
 {
     int NSteps = ceil(T/dt);
+    bool verbose_advance = true;
     for (int t = 0; t < NSteps; ++t)
     {
         if(verbose){
@@ -191,26 +402,38 @@ void LidDrivenCavity::Integrate()
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
-        Advance();
+        if(t<-1){
+            verbose_advance = true;
+        }
+        else{
+            verbose_advance = false;
+        }
+        Advance(verbose_advance);
     }
 }
 
 void LidDrivenCavity::WriteSolution(std::string file)
 {
-    double* u0 = new double[Nx*Ny]();
-    double* u1 = new double[Nx*Ny]();
+    // std::cout << "Last vorticity" << std::endl;
+    // PrintMatrix(Nx,v);
+
+    for(int i=0;i<Npts;i++){u0[i] = 0; u1[i] = 0;}
     for (int i = 1; i < Nx - 1; ++i) {
         for (int j = 1; j < Ny - 1; ++j) {
             u0[IDX(i,j)] =  (s[IDX(i,j+1)] - s[IDX(i,j)]) / dy;
             u1[IDX(i,j)] = -(s[IDX(i+1,j)] - s[IDX(i,j)]) / dx;
         }
     }
+
     for (int i = 0; i < Nx; ++i) {
         u0[IDX(i,Ny-1)] = U;
     }
 
     std::ofstream f(file.c_str());
     std::cout << "Writing file " << file << std::endl;
+    // std::cout << "Last vorticity" << std::endl;
+    // PrintMatrix(Nx,v);
+
     int k = 0;
     for (int i = 0; i < Nx; ++i)
     {
@@ -224,8 +447,10 @@ void LidDrivenCavity::WriteSolution(std::string file)
     }
     f.close();
 
-    delete[] u0;
-    delete[] u1;
+
+
+    // delete[] u0;
+    // delete[] u1;
 }
 
 
@@ -253,7 +478,7 @@ void LidDrivenCavity::CleanUp()
     if (v) {
         delete[] v;
         delete[] s;
-        delete[] tmp;
+        // delete[] tmp;
         delete cg;
     }
 }
@@ -267,7 +492,7 @@ void LidDrivenCavity::UpdateDxDy()
 }
 
 
-void LidDrivenCavity::Advance()
+void LidDrivenCavity::Advance(bool verbose_advance)
 {
     double dxi  = 1.0/dx;
     double dyi  = 1.0/dy;
@@ -299,6 +524,13 @@ void LidDrivenCavity::Advance()
         }
     }
 
+    if(verbose_advance){
+        std::cout << "Interior vorticity" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "(Interior vorticity) Stream function" << std::endl;
+        PrintMatrix(Nx,s);
+    }
+
     // Time advance vorticity
     for (int i = 1; i < Nx - 1; ++i) {
         for (int j = 1; j < Ny - 1; ++j) {
@@ -311,6 +543,14 @@ void LidDrivenCavity::Advance()
               + nu * (v[IDX(i,j+1)] - 2.0 * v[IDX(i,j)] + v[IDX(i,j-1)])*dy2i);
         }
     }
+
+    if(verbose_advance){
+        std::cout << "Next vorticity" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "(Next voriticity) Stream function" << std::endl;
+        PrintMatrix(Nx,s);
+    }
+
 
     // Sinusoidal test case with analytical solution, which can be used to test
     // the Poisson solver
@@ -328,6 +568,14 @@ void LidDrivenCavity::Advance()
 
     // Solve Poisson problem
     cg->Solve(v, s, verbose);
+
+    if(verbose_advance){
+        std::cout << "Laplace Operator (vorticity)" << std::endl;
+        PrintMatrix(Nx,v);
+        std::cout << "Laplace Operator (stream function)" << std::endl;
+        PrintMatrix(Nx,s);
+    }
+
 }
 
 double LidDrivenCavity::get_dx()
@@ -400,6 +648,6 @@ void LidDrivenCavity::IntegrateControl(double percentage)
         if(verbose){
             std::cout << "Step: " << setw(8) << t << "  Time: " << setw(8) << t*dt << std::endl;
         }
-        Advance();
+        Advance(false);
     }
 }
