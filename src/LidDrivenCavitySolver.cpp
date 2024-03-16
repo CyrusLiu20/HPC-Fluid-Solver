@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <chrono>
 #include <ctime>
 #include <math.h>
@@ -77,6 +78,29 @@ int main(int argc, char **argv)
 		return 0;
     }
 
+
+    // Create a cartesian grid of n x n to compute
+    MPI_Comm domain_local;
+    int dims[2] = {0, 0};
+    int periods[2] = {0, 0};
+    int coords[2];
+    int reorder = 0; // Do not allow reordering for now
+
+    MPI_Dims_create(size, 2, dims);
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, reorder, &domain_local); // Create the Cartesian communicator
+    MPI_Cart_coords(domain_local, rank, 2, coords); // Get the coordinates of the current process in the Cartesian grid
+
+    int rank_left, rank_right, rank_up, rank_down; // Ranks of neighboring processes
+    // Get the ranks of the neighboring processes
+    // MPI_Cart_shift(domain_local, 0, 1, &rank_up, &rank_down);
+    MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
+    MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
+
+    // printf("Rank %d at coordinates (%d, %d) has neighbors: up=%d, down=%d, left=%d, right=%d\n",
+    //        rank, coords[0], coords[1], rank_up, rank_down, rank_left, rank_right);
+
+
+
     auto start = std::chrono::system_clock::now();
     // Begin program and displays current time
     if(rank==root){
@@ -93,25 +117,26 @@ int main(int argc, char **argv)
     solver->SetFinalTime(vm["T"].as<double>());
     solver->SetReynoldsNumber(vm["Re"].as<double>());
     solver->SetVerbose(verbose);
+    solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     solver->DomainDecomposition();
 
     // if(rank==root){
     //     solver->PrintConfiguration();
     // }
 
-    solver->Initialise();
-    // solver->InitialiseParallel();
+    // solver->Initialise();
+    solver->InitialiseParallel();
     
-    if(rank==root){
-        solver->WriteSolution(folder_results+"ic.txt");
-    }
+    // if(rank==root){
+    //     solver->WriteSolution(folder_results+"ic.txt");
+    // }
 
-    solver->Integrate();
-    // solver->IntegrateParallel();
+    // solver->Integrate();
+    solver->IntegrateParallel();
 
-    if(rank==root){
-        solver->WriteSolution(folder_results+"final.txt");
-    }
+    // if(rank==root){
+    //     solver->WriteSolution(folder_results+"final.txt");
+    // }
 
 	// End of Program ad displays current time
     if(rank==root){

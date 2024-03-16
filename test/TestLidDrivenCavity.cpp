@@ -79,8 +79,6 @@ void ExtractInnerRectangle(double* A, double* B, int Nx, int Ny) {
     }
 }
 
-
-
 // Test case for initial condition (fluid at t=0 is at rest)
 BOOST_AUTO_TEST_CASE(InitialConditionCheck)
 {

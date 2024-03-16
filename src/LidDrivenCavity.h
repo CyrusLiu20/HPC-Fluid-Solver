@@ -17,6 +17,7 @@ public:
     void SetFinalTime(double finalt);
     void SetReynoldsNumber(double Re);
     void SetVerbose(bool verbose);
+    void SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right);
     void DomainDecomposition();
 
 
@@ -49,6 +50,7 @@ public:
 
 
 private:
+
     double* v   = nullptr;
     double* s   = nullptr;
     // double* tmp = nullptr;
@@ -77,6 +79,7 @@ private:
     // MPI Parallel processing
     bool parallel; // Serial or parallel processing
     int    Npts_local;
+    int    Npts_local_buffer;
     int    Nx_remainder; // remainder of nodes in x direction
     int    Ny_remainder; // remainder of nodes in y direction
     int    Nx_local;
@@ -85,8 +88,9 @@ private:
     int    offset_x;
     int    offset_y;
 
-    // double* v_local = nullptr; // local vorticity matrix
-    // double* s_local = nullptr; // local stream function matrix
+    double* v_local = nullptr; // local vorticity matrix
+    double* v_next_local = nullptr; // local vorticity matrix
+    double* s_local = nullptr; // local stream function matrix
 
     bool verbose = true; // Display convergence and timestep detail during integration
 
@@ -95,6 +99,7 @@ private:
     int rank;
     int Nprocs;
     int Nprocs_sqrt; // Square root of nprocs for domain decomposition
+    int rank_up, rank_down, rank_left, rank_right; // neighbour ranking
 
 
     SolverCG* cg = nullptr;
@@ -103,6 +108,8 @@ private:
     void UpdateDxDy();
 
     // Parallel processing functions
+    void GatherDomain(double* A_local, double* A_global);
+
     void AdvanceParallel(bool verbose_advance);
 
     void ComputeBoundaryVorticityParallel();
@@ -113,7 +120,7 @@ private:
 
 
     int Local2Global(int i_local, int j_local);
-
+    bool CheckBoundary(int i_local, int j_local);
 
 
 
@@ -122,6 +129,6 @@ private:
 
     void CreateU();
     void PrintMatrix(int nsv, double* A);
-
+    void Printmatrix(int nx, int ny, double* A);
 };
 

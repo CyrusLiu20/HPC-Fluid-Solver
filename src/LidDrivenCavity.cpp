@@ -10,6 +10,10 @@ using namespace std;
 #include <cblas.h>
 
 #define IDX(I,J) ((J)*Nx + (I))
+#define IDX_local(I_local,J_local) ((J_local)*Nx_local + (I_local))
+#define IDX_local_buffer(I_local,J_local) ((J_local+1)*(Nx_local+2) + (I_local+1))
+
+
 
 #include "LidDrivenCavity.h"
 #include "SolverCG.h"
@@ -25,6 +29,17 @@ using namespace std;
 //     cout << endl;
 // }
 
+void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
+    cout.precision(4);
+    for (int j = ny-1; j >= 0; --j) {
+        for (int i = 0; i < nx; ++i) {
+            cout << setw(10) << A[j*nx+i] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
 void LidDrivenCavity::PrintMatrix(int nsv, double* A) {
     cout.precision(4);
     for (int i = 0; i < nsv; ++i) {
@@ -34,6 +49,112 @@ void LidDrivenCavity::PrintMatrix(int nsv, double* A) {
         cout << endl;
     }
     cout << endl;
+}
+
+int LidDrivenCavity::Local2Global(int i_local, int j_local){
+    int index_global = (j_local + offset_y + 1)*Nx + (i_local + offset_x + 1);
+    return index_global;
+}
+
+
+// Function to check if a number is at the boundary of a grid
+bool LidDrivenCavity::CheckBoundary(int i_local, int j_local) {
+    int index = Local2Global(i_local,j_local);
+    int rows = Ny;
+    int cols = Nx;
+    return index < cols ||                // Top row
+           index >= (rows - 1) * cols ||  // Bottom row
+           index % cols == 0 ||           // Leftmost column
+           index % cols == cols - 1;      // Rightmost column
+}
+
+void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
+
+    int Nx_local_temp = Nx_local;
+    int Ny_local_temp = Ny_local;
+    int i_start = 0;
+    int i_end = Nx_local;
+    int j_start = 0;
+    int j_end = Ny_local;
+    if (rank_up != -2) {Ny_local_temp--;j_end--;}
+    if (rank_down != -2) {Ny_local_temp--;j_start++;}
+    if (rank_left != -2) {Nx_local_temp--;i_start++;}
+    if (rank_right != -2) {Nx_local_temp--;i_end--;}
+
+    int Npts_local_temp = Nx_local_temp*Ny_local_temp;
+    double* A_local_temp = new double[Npts_local_temp];
+    for(int i=0;i<Npts_local_temp;i++){A_local_temp[i]=0;}
+
+    int k = 0;
+    for(int j=j_start;j<j_end;j++){
+        for(int i=i_start;i<i_end;i++){
+            A_local_temp[k] = A_local[IDX_local(i,j)];
+            k++;
+        }
+    }
+
+    // // Print the information
+    // printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
+    //        rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
+    // if(rank==7){
+    //     printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
+    //         rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
+    //     Printmatrix(Nx_local_temp,Ny_local_temp,A_local_temp);
+    // }
+
+    if(rank!=root){
+
+        int send_buf[4] = {Nx_local_temp, Ny_local_temp, offset_x, offset_y};
+        MPI_Send(send_buf,4,MPI_INT,root,0,MPI_COMM_WORLD);
+        // Send A_local_temp to the root
+        MPI_Send(A_local_temp, Npts_local_temp, MPI_DOUBLE, root, 0, MPI_COMM_WORLD);
+    }
+    else{
+        int index_global, index_local;
+        for (int src = 0; src < Nprocs; ++src) {
+
+            if (src != root) {
+                int recv_buf[4];
+                MPI_Recv(recv_buf, 4, MPI_INT, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                // if(src == 7) {
+                //     printf("Source: %d, recv_buf: %d %d %d %d\n", src, recv_buf[0], recv_buf[1], recv_buf[2], recv_buf[3]);
+                // }
+                double* A_local_temp_recv = new double[recv_buf[0]*recv_buf[1]];
+
+                MPI_Recv(A_local_temp_recv, recv_buf[0]*recv_buf[1], MPI_DOUBLE, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                // if(src == 7) {
+                //     printf("Received Domain\n");
+                //     Printmatrix(recv_buf[0],recv_buf[1],A_local_temp_recv);
+                // }
+                for(int i=0;i<recv_buf[0];i++){
+                    for(int j=0;j<recv_buf[1];j++){
+                        index_global = (j + recv_buf[3])*Nx + (i + recv_buf[2]);
+                        index_local = (j)*recv_buf[0] + (i);
+                        A_global[index_global] = A_local_temp_recv[index_local];
+
+                        // if(src == 7) {
+                        //     printf("Source: %d, index_global: %d, index_local: %d, value: %d\n", src, index_global,index_local,A_local_temp_recv[index_local]);
+                        // }
+                    }
+                }
+                delete[] A_local_temp_recv;
+            }
+            else{
+                for(int i=i_start;i<i_end;i++){
+                    for(int j=j_start;j<j_end;j++){
+                        index_global = (j + offset_y)*Nx + (i + offset_x);
+                        A_global[index_global] = A_local_temp[IDX_local(i,j)];
+                    }
+                }
+            }
+                
+        }
+    }
+    // Synchronize all processes
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    delete[] A_local_temp;
+
 }
 
 LidDrivenCavity::LidDrivenCavity()
@@ -85,21 +206,73 @@ void LidDrivenCavity::SetVerbose(bool verbose)
     this->verbose = verbose;
 }
 
+void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right)
+{
+    this->rank_up = rank_up;
+    this->rank_down = rank_down;
+    this->rank_left = rank_left;
+    this->rank_right = rank_right;
+
+}
+
+void LidDrivenCavity::DomainDecomposition()
+{
+
+    // Retrieve current rank and process
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
+
+
+    parallel = Nprocs > 1;
+    // if(parallel){
+        Nprocs_sqrt = sqrt(Nprocs);
+        Nx_remainder = Nx % Nprocs_sqrt;
+        Ny_remainder = Ny % Nprocs_sqrt;
+
+        if(rank % Nprocs_sqrt < Nx_remainder){
+            Nx_local = Nx / Nprocs_sqrt + 1;
+            offset_x = Nx_local * (rank % Nprocs_sqrt);
+        }
+        else{
+            Nx_local = Nx / Nprocs_sqrt;
+            offset_x = Nx_local * (rank % Nprocs_sqrt) + Nx_remainder;
+        }
+
+        if(rank / Nprocs_sqrt < Ny_remainder){
+            Ny_local = Ny / Nprocs_sqrt + 1;
+            offset_y = Ny_local * (rank / Nprocs_sqrt);
+        }
+        else{
+            Ny_local = Ny / Nprocs_sqrt;
+            offset_y = Ny_local * (rank / Nprocs_sqrt) + Ny_remainder ;
+        }
+
+        // Account for shared rows/columns of neighbouring ranks
+        if (rank_up != -2) {Ny_local++;}
+        if (rank_down != -2) {Ny_local++;}
+        if (rank_left != -2) {Nx_local++;}
+        if (rank_right != -2) {Nx_local++;}
+
+        Npts_local = Nx_local*Ny_local;
+
+        // std::cout << "Rank: " << rank  << " | Nx_local: " << Nx_local << " | offset_x: " << offset_x << " | Ny_local: " << Ny_local << " | offset_y: " << offset_y << std::endl;
+
+}
+
 void LidDrivenCavity::InitialiseParallel()
 {
-    // v_local = new double[Npts_local];
-    // s_local = new double[Npts_local];
+    v_local = new double[Npts_local];
+    s_local = new double[Npts_local];
+    v_next_local = new double[Npts_local];
     // cg = new SolverCG(Nx_local,Ny_local,dx_local,dy_local);
 
     // Initialize elements for safety
-    // for (int i=0;i<Npts_local;i++) {
-    //     v_local[i] = 0;
-    //     s_local[i] = 0;
-    // }    
-    s = new double[Npts];
-    for (int i=0;i<Npts;i++) {s[i] = 0;}
-    // v = new double[Npts];
-    // for (int i=0;i<Npts;i++) {v[i] = 0;}
+    for (int i=0;i<Npts_local;i++) {
+        v_local[i] = 0;
+        s_local[i] = 0;
+        v_next_local[i] = 0;
+    }    
+
     if(rank==root){
         u0 = new double[Npts];
         u1 = new double[Npts];
@@ -107,7 +280,8 @@ void LidDrivenCavity::InitialiseParallel()
     }
     if(rank==root){
         v = new double[Npts];
-        for (int i=0;i<Npts;i++) {v[i] = 0;}
+        s = new double[Npts];
+        for (int i=0;i<Npts;i++) {v[i] = 0;s[i]=0;}
         cg  = new SolverCG(Nx, Ny, dx, dy);
     }
 
@@ -131,12 +305,6 @@ void LidDrivenCavity::IntegrateParallel(){
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
-        if(t==NSteps-1){
-            verbose_advance = true;
-        }
-        else{
-            verbose_advance = false;
-        }
 
         AdvanceParallel(verbose_advance);
     }
@@ -145,116 +313,66 @@ void LidDrivenCavity::IntegrateParallel(){
 
 void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
-
-    ComputeInteriorVorticityParallel();
-    // std::cout << "Rank : " << rank << "| interior vorticity" << std::endl;
-
     ComputeBoundaryVorticityParallel();
-    // std::cout << "Rank : " << rank << "| boundary vorticity" << std::endl;
-    if(rank==root && verbose_advance){
-        std::cout << "Interior vorticity" << std::endl;
-        PrintMatrix(Nx,v);
-        std::cout << "(Interior vorticity) Stream function" << std::endl;
-        PrintMatrix(Nx,s);
-    }
+    ComputeInteriorVorticityParallel();
+    
+    GatherDomain(v_local,v);
 
-    ComputeNextVorticityParallel();
-    // std::cout << "Rank : " << rank << "| next vorticity" << std::endl;
-    if(rank==root && verbose_advance){
-        std::cout << "Next vorticity" << std::endl;
-        PrintMatrix(Nx,v);
-        std::cout << "(Next vorticity) Stream function" << std::endl;
-        PrintMatrix(Nx,s);
-    }
-
-    ComputeLaplaceOperatorParallel();
-    // std::cout << "Rank : " << rank << "| laplace operator" << std::endl;
-    if(rank==root && verbose_advance){
-        std::cout << "Laplace Operator (vorticity)" << std::endl;
-        PrintMatrix(Nx,v);
-        std::cout << "Laplace Operator (stream function)" << std::endl;
-        PrintMatrix(Nx,s);
-    }
 }
 
-void LidDrivenCavity::DomainDecomposition()
-{
-
-    // Check if MPI is initialised
-    int init_mpi;
-    MPI_Initialized(&init_mpi);
-    if (!init_mpi) {
-        std::cerr << "Error: MPI not initialized" << std::endl;
-        throw std::runtime_error("MPI not initialized");
-    }
-    else{
-        // Retrieve current rank and process
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
-
-        parallel = Nprocs > 1;
-        // if(parallel){
-            Nprocs_sqrt = sqrt(Nprocs);
-            Nx_remainder = Nx_inner % Nprocs_sqrt;
-            Ny_remainder = Ny_inner % Nprocs_sqrt;
-            // std::cout << "Nx_inner: " << Nx_inner << std::endl;
-
-            if(rank % Nprocs_sqrt < Nx_remainder){
-                Nx_local = Nx_inner / Nprocs_sqrt + 1;
-                offset_x = Nx_local * (rank % Nprocs_sqrt);
-            }
-            else{
-                Nx_local = Nx_inner / Nprocs_sqrt;
-                offset_x = Nx_local * (rank % Nprocs_sqrt) + Nx_remainder;
-            }
-
-            if(rank / Nprocs_sqrt < Ny_remainder){
-                Ny_local = Ny_inner / Nprocs_sqrt + 1;
-                offset_y = Ny_local * (rank / Nprocs_sqrt);
-            }
-            else{
-                Ny_local = Ny_inner / Nprocs_sqrt;
-                offset_y = Ny_local * (rank / Nprocs_sqrt) + Ny_remainder;
-            }
-
-            Npts_local = Nx_local*Ny_local;
-            std::cout << "Rank: " << rank  << " | Nx_local: " << Nx_local << " | offset_x: " << offset_x << " | Ny_local: " << Ny_local << " | offset_y: " << offset_y << std::endl;
-
-        // }
-    }
-}
-
-int LidDrivenCavity::Local2Global(int i_local, int j_local){
-    int index_global = (j_local + offset_y + 1)*Nx + (i_local + offset_x + 1);
-    return index_global;
-}
 
 void LidDrivenCavity::ComputeBoundaryVorticityParallel(){
 
-    if(rank==root){
-        double dxi  = 1.0/dx;
-        double dyi  = 1.0/dy;
-        double dx2i = 1.0/dx/dx;
-        double dy2i = 1.0/dy/dy;
+    double dxi  = 1.0/dx;
+    double dyi  = 1.0/dy;
+    double dx2i = 1.0/dx/dx;
+    double dy2i = 1.0/dy/dy;
 
-        // Boundary node vorticity
-        for (int i = 1; i < Nx-1; ++i) {
-            // top
-            v[IDX(i,0)]    = 2.0 * dy2i * (s[IDX(i,0)]    - s[IDX(i,1)]);
-            // bottom
-            v[IDX(i,Ny-1)] = 2.0 * dy2i * (s[IDX(i,Ny-1)] - s[IDX(i,Ny-2)])
-                        - 2.0 * dyi*U;
-        }
-        for (int j = 1; j < Ny-1; ++j) {
-            // left
-            v[IDX(0,j)]    = 2.0 * dx2i * (s[IDX(0,j)]    - s[IDX(1,j)]);
-            // right
-            v[IDX(Nx-1,j)] = 2.0 * dx2i * (s[IDX(Nx-1,j)] - s[IDX(Nx-2,j)]);
+    // Top
+    if (rank_up==-2){
+        for (int i=0;i<Nx_local;++i){
+            v_local[IDX_local(i,Ny_local-1)] = 2.0 * dy2i * (s_local[IDX_local(i,Ny_local-1)] - s_local[IDX_local(i,Ny_local-2)])- 2.0 * dyi*U;
         }
     }
 
+    // Bottom
+    if (rank_down==-2){
+        for (int i=0;i<Nx_local;++i){
+            v_local[IDX_local(i,0)] = 2.0 * dy2i * (s_local[IDX_local(i,0)] - s_local[IDX_local(i,1)]);
+        }
+    }
+
+    // Left
+    if (rank_left==-2){
+        for (int j=0;j<Ny_local;++j){
+            v_local[IDX_local(0,j)]    = 2.0 * dx2i * (s_local[IDX_local(0,j)] - s_local[IDX_local(1,j)]);
+        }
+    }
+
+    // Right
+    if (rank_right==-2){
+        for (int j=0;j<Ny_local;++j){
+            v_local[IDX_local(Nx_local-1,j)] = 2.0 * dx2i * (s_local[IDX_local(Nx_local-1,j)]    - s_local[IDX_local(Nx_local-2,j)]);
+        }
+    }
+
+
+    // std::cout << "Compute Boundary" << std::endl;
 }
 
+void LidDrivenCavity::ComputeInteriorVorticityParallel(){
+    double dx2i = 1.0/dx/dx;
+    for (int i=1;i<Nx_local-1;i++){
+        for (int j=1;j<Ny_local-1;j++){
+            v_local[IDX_local(i,j)] = dx2i*(
+                    2.0 * s_local[IDX_local(i,j)] - s_local[IDX_local(i+1,j)] - s_local[IDX_local(i-1,j)])
+                        + 1.0/dy/dy*(
+                    2.0 * s_local[IDX_local(i,j)] - s_local[IDX_local(i,j+1)] - s_local[IDX_local(i,j-1)]);
+        }
+    }
+}
+
+/*
 void LidDrivenCavity::ComputeInteriorVorticityParallel(){
 
     // if(parallel){
@@ -294,15 +412,11 @@ void LidDrivenCavity::ComputeInteriorVorticityParallel(){
 
         }
 
-        // if(rank==root){
-        //     std::cout << "v_global_temp" << std::endl;
-        //     PrintMatrix(Nx,v_global_temp);
-        // }
         v = v_global_temp;
         delete[] v_global_temp;
     // }
 }
-
+*/
 
 void LidDrivenCavity::ComputeNextVorticityParallel(){
 
@@ -402,12 +516,12 @@ void LidDrivenCavity::Integrate()
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
-        if(t<-1){
-            verbose_advance = true;
-        }
-        else{
-            verbose_advance = false;
-        }
+        // if(t<-1){
+        //     verbose_advance = true;
+        // }
+        // else{
+        //     verbose_advance = false;
+        // }
         Advance(verbose_advance);
     }
 }
