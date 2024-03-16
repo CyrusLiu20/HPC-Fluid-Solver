@@ -134,9 +134,9 @@ int main(int argc, char **argv)
     // solver->Integrate();
     solver->IntegrateParallel();
 
-    // if(rank==root){
-    //     solver->WriteSolution(folder_results+"final.txt");
-    // }
+    if(rank==root){
+        solver->WriteSolution(folder_results+"final.txt");
+    }
 
 	// End of Program ad displays current time
     if(rank==root){

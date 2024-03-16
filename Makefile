@@ -89,7 +89,7 @@ $(TEST_OUTPUT): $(TEST_OBJS) $(TEST_SRC_OBJS)
 
 # Executes the test executable
 run_test: $(TEST_OUTPUT)
-	$(MPI_CC) -np $(Np) ./$(TEST_OUTPUT) --log_level=test_suite --report_level=short --output_format=HRF --log_sink=$(TEST_REPORT)
+	$(MPI_CC) -np $(Np) ./$(TEST_OUTPUT) --log_level=test_suite --report_level=detailed --output_format=HRF --log_sink=$(TEST_REPORT)
 
 # Executes the main solver executable
 run: $(OUTPUT)

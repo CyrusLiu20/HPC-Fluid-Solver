@@ -54,6 +54,7 @@ BOOST_AUTO_TEST_CASE(SolveArbitraryCheck)
     // Test cases parameters
     int Nx_test = 29;
     int Ny_test = 25;
+
     int Npts = Nx_test*Ny_test;
     double dx_test = 0.008;
     double dy_test = 0.01;
@@ -71,7 +72,10 @@ BOOST_AUTO_TEST_CASE(SolveArbitraryCheck)
         v[i] = (i % Nx_test);
     }
 
+    // PrintMatrix(s,Nx_test,Ny_test);
+
     solver_cg->Solve(v,s,verbose);
+    // PrintMatrix(s,Nx_test,Ny_test);
 
     // Open the file for reading
     std::string file_path = "test/data/arbitrary1.txt";

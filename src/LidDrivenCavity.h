@@ -92,6 +92,9 @@ private:
     double* v_next_local = nullptr; // local vorticity matrix
     double* s_local = nullptr; // local stream function matrix
 
+    double* A_global_temp = nullptr; // temporary pointer storing global matrix
+
+
     bool verbose = true; // Display convergence and timestep detail during integration
 
     // MPI process rank and number of processes
@@ -109,6 +112,9 @@ private:
 
     // Parallel processing functions
     void GatherDomain(double* A_local, double* A_global);
+    void ScatterDomain(double* A_local, double* A_global);
+    void DomainInterComunnication(double* A_local);
+
 
     void AdvanceParallel(bool verbose_advance);
 

@@ -68,6 +68,47 @@ bool LidDrivenCavity::CheckBoundary(int i_local, int j_local) {
            index % cols == cols - 1;      // Rightmost column
 }
 
+void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global){
+
+
+
+    if(rank==root){
+        for (int src = 1; src < Nprocs; ++src) {
+            MPI_Send(A_global, Npts, MPI_DOUBLE, src, 0, MPI_COMM_WORLD);
+        }
+        int index_global, index_local;
+        for (int i=0;i<Nx_local;i++){
+            for (int j=0;j<Ny_local;j++){
+                index_global = (j + 0)*Nx + (i + 0);
+                index_local = IDX_local(i,j);                
+                A_local[index_local] = A_global[index_global];
+            }
+        }
+    } 
+    else{
+        double* A_global_temp = new double[Npts];
+        int index_global, index_local;
+        MPI_Recv(A_global_temp, Npts, MPI_DOUBLE, root, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        int offset_y_temp = offset_y;
+        int offset_x_temp = offset_x;
+        if(rank_down!=-2){offset_y_temp--;}
+        if(rank_left!=-2){offset_x_temp--;}
+
+
+        for (int i=0;i<Nx_local;i++){
+            for (int j=0;j<Ny_local;j++){
+                index_global = (j + offset_y_temp)*Nx + (i + offset_x_temp);
+                index_local = IDX_local(i,j);                
+                A_local[index_local] = A_global_temp[index_global];
+            }
+        }
+        delete[] A_global_temp;
+    }
+
+}
+
+
 void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
 
     int Nx_local_temp = Nx_local;
@@ -96,10 +137,10 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
     // // Print the information
     // printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
     //        rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
-    // if(rank==7){
+    // if(rank==0){
     //     printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
     //         rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
-    //     Printmatrix(Nx_local_temp,Ny_local_temp,A_local_temp);
+    //     // Printmatrix(Nx_local_temp,Ny_local_temp,A_local_temp);
     // }
 
     if(rank!=root){
@@ -140,10 +181,13 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
                 delete[] A_local_temp_recv;
             }
             else{
+                
                 for(int i=i_start;i<i_end;i++){
                     for(int j=j_start;j<j_end;j++){
                         index_global = (j + offset_y)*Nx + (i + offset_x);
-                        A_global[index_global] = A_local_temp[IDX_local(i,j)];
+                        // A_global[index_global] = A_local_temp[IDX_local(i,j)];
+                        A_global[index_global] = A_local[IDX_local(i,j)];
+                    
                     }
                 }
             }
@@ -305,7 +349,8 @@ void LidDrivenCavity::IntegrateParallel(){
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
-
+        if(t==-1){verbose_advance=true;}
+        else{verbose_advance=false;}
         AdvanceParallel(verbose_advance);
     }
 
@@ -315,8 +360,29 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
     ComputeBoundaryVorticityParallel();
     ComputeInteriorVorticityParallel();
-    
+
     GatherDomain(v_local,v);
+    if(rank==root&&verbose_advance){
+        std::cout << "(Interior vorticity) vorticity matrix" << std::endl;
+        Printmatrix(Nx, Ny, v);
+    }
+
+    DomainInterComunnication(v_local);
+    ComputeNextVorticityParallel();
+    DomainInterComunnication(v_local);  
+
+    GatherDomain(v_local,v);
+    GatherDomain(s_local,s);
+    ComputeLaplaceOperatorParallel();
+
+    if(rank==root&&verbose_advance){
+        std::cout << "Global vorticity matrix" << std::endl;
+        Printmatrix(Nx, Ny, v);
+        std::cout << "Global stream function matrix" << std::endl;
+        Printmatrix(Nx, Ny, s);
+    }   
+
+    ScatterDomain(s_local,s);
 
 }
 
@@ -330,28 +396,28 @@ void LidDrivenCavity::ComputeBoundaryVorticityParallel(){
 
     // Top
     if (rank_up==-2){
-        for (int i=0;i<Nx_local;++i){
+        for (int i=1;i<Nx_local-1;++i){
             v_local[IDX_local(i,Ny_local-1)] = 2.0 * dy2i * (s_local[IDX_local(i,Ny_local-1)] - s_local[IDX_local(i,Ny_local-2)])- 2.0 * dyi*U;
         }
     }
 
     // Bottom
     if (rank_down==-2){
-        for (int i=0;i<Nx_local;++i){
+        for (int i=1;i<Nx_local-1;++i){
             v_local[IDX_local(i,0)] = 2.0 * dy2i * (s_local[IDX_local(i,0)] - s_local[IDX_local(i,1)]);
         }
     }
 
     // Left
     if (rank_left==-2){
-        for (int j=0;j<Ny_local;++j){
+        for (int j=1;j<Ny_local-1;++j){
             v_local[IDX_local(0,j)]    = 2.0 * dx2i * (s_local[IDX_local(0,j)] - s_local[IDX_local(1,j)]);
         }
     }
 
     // Right
     if (rank_right==-2){
-        for (int j=0;j<Ny_local;++j){
+        for (int j=1;j<Ny_local-1;++j){
             v_local[IDX_local(Nx_local-1,j)] = 2.0 * dx2i * (s_local[IDX_local(Nx_local-1,j)]    - s_local[IDX_local(Nx_local-2,j)]);
         }
     }
@@ -371,6 +437,26 @@ void LidDrivenCavity::ComputeInteriorVorticityParallel(){
         }
     }
 }
+
+void LidDrivenCavity::ComputeNextVorticityParallel(){
+    double dxi  = 1.0/dx;
+    double dyi  = 1.0/dy;
+    double dx2i = 1.0/dx/dx;
+    double dy2i = 1.0/dy/dy;
+    // Time advance vorticity
+    for (int i=1;i<Nx_local-1;i++){
+        for (int j=1;j<Ny_local-1;j++){ // Check whether to use another variable or not
+            v_local[IDX_local(i,j)] = v_local[IDX_local(i,j)] + dt*(
+                ( (s_local[IDX_local(i+1,j)] - s_local[IDX_local(i-1,j)]) * 0.5 * dxi
+                 *(v_local[IDX_local(i,j+1)] - v_local[IDX_local(i,j-1)]) * 0.5 * dyi)
+              - ( (s_local[IDX_local(i,j+1)] - s_local[IDX_local(i,j-1)]) * 0.5 * dyi
+                 *(v_local[IDX_local(i+1,j)] - v_local[IDX_local(i-1,j)]) * 0.5 * dxi)
+              + nu * (v_local[IDX_local(i+1,j)] - 2.0 * v_local[IDX_local(i,j)] + v_local[IDX_local(i-1,j)])*dx2i
+              + nu * (v_local[IDX_local(i,j+1)] - 2.0 * v_local[IDX_local(i,j)] + v_local[IDX_local(i,j-1)])*dy2i);
+        }
+    }
+}
+
 
 /*
 void LidDrivenCavity::ComputeInteriorVorticityParallel(){
@@ -418,6 +504,7 @@ void LidDrivenCavity::ComputeInteriorVorticityParallel(){
 }
 */
 
+/*
 void LidDrivenCavity::ComputeNextVorticityParallel(){
 
     if(rank==root){
@@ -441,7 +528,7 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
 
 
 }
-
+*/
 
 void LidDrivenCavity::ComputeLaplaceOperatorParallel(){
 
@@ -449,11 +536,92 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel(){
         // Solve Poisson problem
         cg->Solve(v, s, verbose);
     }
-
-    MPI_Bcast(s, Npts, MPI_DOUBLE, 0, MPI_COMM_WORLD);    
+ 
 }
 
+void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
+    // Top and bottom communication
+    double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
+    double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
+
+    if(rank_up!=-2){
+        int j_second_upper = (Ny_local-1)-1;
+        for(int i=0;i<Nx_local;i++){
+            buffer_up_send[i] = A_local[IDX_local(i,j_second_upper)];
+        }
+    }
+    if(rank_down!=-2){
+        int j_second_lower = (0)+1;
+        for(int i=0;i<Nx_local;i++){
+            buffer_down_send[i] = A_local[IDX_local(i,j_second_lower)];
+        }
+    }
+
+    // Send and receive
+    if(rank_up!=-2){
+        MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
+    }
+    if(rank_down!=-2){
+        MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
+    }
+
+    if(rank_down!=-2){
+        MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+    if(rank_up!=-2){
+        MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // Storing communicated knowledge
+    for(int i=0;i<Nx_local;i++){
+        if (rank_up != -2) {A_local[IDX_local(i,Ny_local-1)] = buffer_up_recv[i];}
+        if (rank_down != -2) {A_local[IDX_local(i,0)] = buffer_down_recv[i];}
+    }
+
+    // Left and right communication
+    // Allocate memory for communication buffers
+    double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
+    double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
+
+    if(rank_left!=-2){
+        int i_second_left = (0) + 1;
+        for(int j=0;j<Ny_local;j++){
+            buffer_left_send[j] = A_local[IDX_local(i_second_left,j)];
+        }
+    }
+    if(rank_right!=-2){
+        int i_second_right = (Nx_local-1) - 1;
+        for(int j=0;j<Ny_local;j++){
+            buffer_right_send[j] = A_local[IDX_local(i_second_right,j)];
+        }
+    }
+
+    // Send and receive
+    if(rank_left!=-2){
+        MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
+    }
+    if(rank_right!=-2){
+        MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
+    }
+
+    if(rank_right!=-2){
+        MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+    if(rank_left!=-2){
+        MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // Storing communicated knowledge
+    for(int j=0;j<Ny_local;j++){
+        if (rank_left != -2) {A_local[IDX_local(0,j)] = buffer_left_recv[j];}
+        if (rank_right != -2) {A_local[IDX_local(Nx_local-1,j)] = buffer_right_recv[j];}
+    }       
+}
 
 
 
@@ -508,7 +676,7 @@ void LidDrivenCavity::Initialise()
 void LidDrivenCavity::Integrate()
 {
     int NSteps = ceil(T/dt);
-    bool verbose_advance = true;
+    bool verbose_advance = false;
     for (int t = 0; t < NSteps; ++t)
     {
         if(verbose){
@@ -516,12 +684,9 @@ void LidDrivenCavity::Integrate()
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
-        // if(t<-1){
-        //     verbose_advance = true;
-        // }
-        // else{
-        //     verbose_advance = false;
-        // }
+
+        if(t==-1){verbose_advance=true;}
+        else{verbose_advance=false;}
         Advance(verbose_advance);
     }
 }
