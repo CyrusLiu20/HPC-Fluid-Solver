@@ -35,7 +35,6 @@ private:
     void DomainInterComunnication(double* A_local);
     void GatherDomain(double* A_local, double* A_global);
 
-    void ApplyOperatorParallel(double* p, double* t);
     void PreconditionParallel(double* p, double* t);
     void ImposeBCParallel(double* p);
 
@@ -63,6 +62,18 @@ private:
     double* p_global = nullptr;
     double* z_global = nullptr;
     double* t_global = nullptr;
+
+    double* buffer_up_send = nullptr;
+    double* buffer_down_send = nullptr;
+    double* buffer_up_recv = nullptr;
+    double* buffer_down_recv = nullptr;
+
+    double* buffer_left_send = nullptr;
+    double* buffer_right_send = nullptr;
+    double* buffer_left_recv = nullptr;
+    double* buffer_right_recv = nullptr;
+
+
     void Printmatrix(int nx, int ny, double* A);
 
 

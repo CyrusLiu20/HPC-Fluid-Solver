@@ -92,14 +92,8 @@ int main(int argc, char **argv)
 
     int rank_left, rank_right, rank_up, rank_down; // Ranks of neighboring processes
     // Get the ranks of the neighboring processes
-    // MPI_Cart_shift(domain_local, 0, 1, &rank_up, &rank_down);
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
-
-    // printf("Rank %d at coordinates (%d, %d) has neighbors: up=%d, down=%d, left=%d, right=%d\n",
-    //        rank, coords[0], coords[1], rank_up, rank_down, rank_left, rank_right);
-
-
 
     auto start = std::chrono::system_clock::now();
     // Begin program and displays current time
@@ -120,9 +114,9 @@ int main(int argc, char **argv)
     solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     solver->DomainDecomposition();
 
-    // if(rank==root){
-    //     solver->PrintConfiguration();
-    // }
+    if(rank==root){
+        solver->PrintConfiguration();
+    }
 
     // bool parallel = false;
     bool parallel = true;
@@ -133,9 +127,9 @@ int main(int argc, char **argv)
         solver->InitialiseParallel();
     }
     
-    // if(rank==root){
-    //     solver->WriteSolution(folder_results+"ic.txt");
-    // }
+    if(rank==root){
+        solver->WriteSolution(folder_results+"ic.txt");
+    }
 
 
     if (parallel==false) {

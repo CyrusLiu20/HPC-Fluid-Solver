@@ -18,17 +18,6 @@ using namespace std;
 #include "LidDrivenCavity.h"
 #include "SolverCG.h"
 
-// void LidDrivenCavity::PrintMatrix(int nsv, std::vector<double>& A) {
-//     cout.precision(4);
-//     for (int i = 0; i < nsv; ++i) {
-//         for (int j = 0; j < nsv; ++j) {
-//             cout << setw(13) << A[j*nsv+i] << " ";
-//         }
-//         cout << endl;
-//     }
-//     cout << endl;
-// }
-
 void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
     cout.precision(4);
     for (int j = ny-1; j >= 0; --j) {
@@ -136,15 +125,6 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
         }
     }
 
-    // // Print the information
-    // printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
-    //        rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
-    // if(rank==0){
-    //     printf("Rank %d: Nx_local_temp = %d, Ny_local_temp = %d, i_start = %d, i_end = %d, j_start = %d, j_end = %d\n",
-    //         rank, Nx_local_temp, Ny_local_temp, i_start, i_end, j_start, j_end);
-    //     // Printmatrix(Nx_local_temp,Ny_local_temp,A_local_temp);
-    // }
-
     if(rank!=root){
 
         int send_buf[4] = {Nx_local_temp, Ny_local_temp, offset_x, offset_y};
@@ -159,25 +139,15 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
             if (src != root) {
                 int recv_buf[4];
                 MPI_Recv(recv_buf, 4, MPI_INT, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                // if(src == 7) {
-                //     printf("Source: %d, recv_buf: %d %d %d %d\n", src, recv_buf[0], recv_buf[1], recv_buf[2], recv_buf[3]);
-                // }
                 double* A_local_temp_recv = new double[recv_buf[0]*recv_buf[1]];
 
                 MPI_Recv(A_local_temp_recv, recv_buf[0]*recv_buf[1], MPI_DOUBLE, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                // if(src == 7) {
-                //     printf("Received Domain\n");
-                //     Printmatrix(recv_buf[0],recv_buf[1],A_local_temp_recv);
-                // }
                 for(int i=0;i<recv_buf[0];i++){
                     for(int j=0;j<recv_buf[1];j++){
                         index_global = (j + recv_buf[3])*Nx + (i + recv_buf[2]);
                         index_local = (j)*recv_buf[0] + (i);
                         A_global[index_global] = A_local_temp_recv[index_local];
 
-                        // if(src == 7) {
-                        //     printf("Source: %d, index_global: %d, index_local: %d, value: %d\n", src, index_global,index_local,A_local_temp_recv[index_local]);
-                        // }
                     }
                 }
                 delete[] A_local_temp_recv;
@@ -187,7 +157,6 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
                 for(int i=i_start;i<i_end;i++){
                     for(int j=j_start;j<j_end;j++){
                         index_global = (j + offset_y)*Nx + (i + offset_x);
-                        // A_global[index_global] = A_local_temp[IDX_local(i,j)];
                         A_global[index_global] = A_local[IDX_local(i,j)];
                     
                     }
@@ -311,7 +280,6 @@ void LidDrivenCavity::InitialiseParallel()
     s_local = new double[Npts_local];
     v_next_local = new double[Npts_local];
     cg = new SolverCG(Nx_local,Ny_local,dx,dy);
-
     cg->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     cg->SetOffset(offset_x,offset_y,Nx,Ny);
 
@@ -331,9 +299,29 @@ void LidDrivenCavity::InitialiseParallel()
         v = new double[Npts];
         s = new double[Npts];
         for (int i=0;i<Npts;i++) {v[i] = 0;s[i]=0;}
-        // cg  = new SolverCG(Nx, Ny, dx, dy);
     }
 
+    buffer_up_send = new double[Nx_local];
+    buffer_down_send = new double[Nx_local];
+    buffer_up_recv = new double[Nx_local];
+    buffer_down_recv = new double[Nx_local];
+    for (int i=0;i<Nx_local;i++) {
+        buffer_up_send[i] = 0;
+        buffer_down_send[i] = 0;
+        buffer_up_recv[i] = 0;
+        buffer_down_recv[i] = 0;
+    }    
+
+    buffer_left_send = new double[Ny_local];
+    buffer_right_send = new double[Ny_local];
+    buffer_left_recv = new double[Ny_local];
+    buffer_right_recv = new double[Ny_local];
+    for (int j=0;j<Ny_local;j++) {
+        buffer_left_send[j] = 0;
+        buffer_right_send[j] = 0;
+        buffer_left_recv[j] = 0;
+        buffer_right_recv[j] = 0;
+    }    
 }
 
 void LidDrivenCavity::CreateU(){
@@ -367,7 +355,7 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
     ComputeBoundaryVorticityParallel();
     ComputeInteriorVorticityParallel();
 
-    GatherDomain(v_local,v);
+    // GatherDomain(v_local,v);
     if(rank==root&&verbose_advance){
         std::cout << "(Interior vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -379,7 +367,6 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
     // GatherDomain(v_local,v);
     // GatherDomain(s_local,s);
-
     if(rank==root&&verbose_advance){
         std::cout << "(Next vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -388,13 +375,9 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
     } 
 
     ComputeLaplaceOperatorParallel();
-    // std::cout << "rank : " << rank << " local stream function matrix" << std::endl;
-    // Printmatrix(Nx_local, Ny_local, s_local);
-
 
     // GatherDomain(v_local,v);
     // GatherDomain(s_local,s);
-
     if(rank==root&&verbose_advance){
         std::cout << "(Laplace operator) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -402,15 +385,12 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
         Printmatrix(Nx, Ny, s);
     }   
 
-    // ScatterDomain(s_local,s);
-
 }
 
 
 void LidDrivenCavity::ComputeBoundaryVorticityParallel()
 {
 
-    double dxi  = 1.0/dx;
     double dyi  = 1.0/dy;
     double dx2i = 1.0/dx/dx;
     double dy2i = 1.0/dy/dy;
@@ -486,95 +466,11 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel()
  
 }
 
-/*
-void LidDrivenCavity::ComputeInteriorVorticityParallel(){
-
-    // if(parallel){
-        double dxi  = 1.0/dx;
-        double dyi  = 1.0/dy;
-        double dx2i = 1.0/dx/dx;
-        double dy2i = 1.0/dy/dy;
-        double *v_global_temp = new double[Npts];
-        for (int i=0;i<Npts;i++) {v_global_temp[i] = 0;}
-        int index_global;
-
-        for (int j = 0; j < Ny_local; ++j) {
-            for (int i = 0; i < Nx_local; ++i) {
-                index_global = Local2Global(i,j);
-                // std::cout << "Index global : " << index_global << std::endl;
-                v_global_temp[Local2Global(i,j)] = 
-                    dx2i*(2.0 * s[Local2Global(i,j)] - s[Local2Global(i+1,j)] - s[Local2Global(i-1,j)])
-                    + 1.0/dy/dy*(2.0 * s[Local2Global(i,j)] - s[Local2Global(i,j+1)] - s[Local2Global(i,j-1)]);
-            }
-        }
-
-
-        // Assemble each individual matrix to global
-        if(rank!=root){
-            // Send calculated local v matrix to root process
-            MPI_Send(v_global_temp, Npts, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-        }
-        else{
-
-            for (int i=1;i<Nprocs;i++) {
-                double* v_receive_temp = new double[Npts]{};
-                for (int i=0;i<Npts;i++) {v_receive_temp[i] = 0;}
-                MPI_Recv(v_receive_temp, Npts, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                cblas_daxpy(Npts, 1.0, v_receive_temp, 1, v_global_temp, 1);
-                delete[] v_receive_temp;
-            }
-
-        }
-
-        v = v_global_temp;
-        delete[] v_global_temp;
-    // }
-}
-*/
-
-/*
-void LidDrivenCavity::ComputeNextVorticityParallel(){
-
-    if(rank==root){
-        double dxi  = 1.0/dx;
-        double dyi  = 1.0/dy;
-        double dx2i = 1.0/dx/dx;
-        double dy2i = 1.0/dy/dy;
-        // Time advance vorticity
-        for (int i = 1; i < Nx - 1; ++i) {
-            for (int j = 1; j < Ny - 1; ++j) {
-                v[IDX(i,j)] = v[IDX(i,j)] + dt*(
-                    ( (s[IDX(i+1,j)] - s[IDX(i-1,j)]) * 0.5 * dxi
-                    *(v[IDX(i,j+1)] - v[IDX(i,j-1)]) * 0.5 * dyi)
-                - ( (s[IDX(i,j+1)] - s[IDX(i,j-1)]) * 0.5 * dyi
-                    *(v[IDX(i+1,j)] - v[IDX(i-1,j)]) * 0.5 * dxi)
-                + nu * (v[IDX(i+1,j)] - 2.0 * v[IDX(i,j)] + v[IDX(i-1,j)])*dx2i
-                + nu * (v[IDX(i,j+1)] - 2.0 * v[IDX(i,j)] + v[IDX(i,j-1)])*dy2i);
-            }
-        }
-    }
-
-
-}
-*/
-
-/*
-void LidDrivenCavity::ComputeLaplaceOperatorParallel()
-{
-
-    if(rank==root){
-        // Solve Poisson problem
-        cg->Solve(v, s, verbose);
-    }
- 
-}
-*/
-
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Top and bottom communication
-    double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
-    double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
+    // double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
+    // double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
 
     if(rank_up!=-2){
         int j_second_upper = (Ny_local-1)-1;
@@ -591,17 +487,21 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_up!=-2){
-        MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
     }
     if(rank_down!=-2){
-        MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
     }
 
     if(rank_down!=-2){
-        MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     if(rank_up!=-2){
-        MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
 
@@ -615,8 +515,8 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Left and right communication
     // Allocate memory for communication buffers
-    double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
-    double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
+    // double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
+    // double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
 
     if(rank_left!=-2){
         int i_second_left = (0) + 1;
@@ -633,17 +533,22 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_left!=-2){
-        MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
     }
     if(rank_right!=-2){
-        MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
     }
 
     if(rank_right!=-2){
-        MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     if(rank_left!=-2){
-        MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -724,8 +629,6 @@ void LidDrivenCavity::Integrate()
 
 void LidDrivenCavity::WriteSolution(std::string file)
 {
-    // std::cout << "Last vorticity" << std::endl;
-    // PrintMatrix(Nx,v);
 
     for(int i=0;i<Npts;i++){u0[i] = 0; u1[i] = 0;}
     for (int i = 1; i < Nx - 1; ++i) {
@@ -741,8 +644,6 @@ void LidDrivenCavity::WriteSolution(std::string file)
 
     std::ofstream f(file.c_str());
     std::cout << "Writing file " << file << std::endl;
-    // std::cout << "Last vorticity" << std::endl;
-    // PrintMatrix(Nx,v);
 
     int k = 0;
     for (int i = 0; i < Nx; ++i)
@@ -856,9 +757,9 @@ void LidDrivenCavity::Advance(bool verbose_advance)
 
     if(verbose_advance){
         std::cout << "Next vorticity" << std::endl;
-        PrintMatrix(Nx,v);
+        Printmatrix(Nx,Ny,v);
         std::cout << "(Next voriticity) Stream function" << std::endl;
-        PrintMatrix(Nx,s);
+        Printmatrix(Nx,Ny,s);
     }
 
 

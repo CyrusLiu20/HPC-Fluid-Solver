@@ -105,6 +105,17 @@ private:
     int rank_up, rank_down, rank_left, rank_right; // neighbour ranking
 
 
+    double* buffer_up_send = nullptr;
+    double* buffer_down_send = nullptr;
+    double* buffer_up_recv = nullptr;
+    double* buffer_down_recv = nullptr;
+
+    double* buffer_left_send = nullptr;
+    double* buffer_right_send = nullptr;
+    double* buffer_left_recv = nullptr;
+    double* buffer_right_recv = nullptr;
+
+
     SolverCG* cg = nullptr;
 
     void CleanUp();

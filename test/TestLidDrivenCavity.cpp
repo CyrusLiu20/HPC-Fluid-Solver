@@ -425,10 +425,10 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
 
     // Lid Driven Cavity Parallel
     std::string output = "test/data/final_test.txt";
-    // solver->Initialise();
-    // solver->Integrate();
 
-
+    if(rank==0){
+        cout << "Begin 9x9 grid simulation (Re=10, dt=2e-4, T=1.0, Lx=1, Ly=1)" << endl;
+    }
     solver->DomainDecomposition();
     solver->InitialiseParallel();
     solver->IntegrateParallel();
@@ -500,7 +500,6 @@ BOOST_AUTO_TEST_CASE(FinalResults2Check)
 
     int rank_left, rank_right, rank_up, rank_down; // Ranks of neighboring processes
     // Get the ranks of the neighboring processes
-    // MPI_Cart_shift(domain_local, 0, 1, &rank_up, &rank_down);
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
 
@@ -518,6 +517,9 @@ BOOST_AUTO_TEST_CASE(FinalResults2Check)
 
     // Lid Driven Cavity Parallel
     std::string output = "test/data/final_test.txt";
+    if(rank==0){
+        cout << "Begin 49x49 grid simulation (Re=10, dt=2e-4, T=1.0, Lx=1, Ly=1)" << endl;
+    }
 
     solver->DomainDecomposition();
     solver->InitialiseParallel();

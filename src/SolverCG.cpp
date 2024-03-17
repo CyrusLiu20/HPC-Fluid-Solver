@@ -55,6 +55,28 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
 
+    buffer_up_send = new double[Nx];
+    buffer_down_send = new double[Nx];
+    buffer_up_recv = new double[Nx];
+    buffer_down_recv = new double[Nx];
+    for (int i=0;i<Nx;i++) {
+        buffer_up_send[i] = 0;
+        buffer_down_send[i] = 0;
+        buffer_up_recv[i] = 0;
+        buffer_down_recv[i] = 0;
+    }    
+
+    buffer_left_send = new double[Ny];
+    buffer_right_send = new double[Ny];
+    buffer_left_recv = new double[Ny];
+    buffer_right_recv = new double[Ny];
+    for (int j=0;j<Ny;j++) {
+        buffer_left_send[j] = 0;
+        buffer_right_send[j] = 0;
+        buffer_left_recv[j] = 0;
+        buffer_right_recv[j] = 0;
+    }  
+
 }
 
 void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right){
@@ -111,19 +133,12 @@ SolverCG::~SolverCG()
 void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     unsigned int n = Nx*Ny;
     int k;
-    // double alpha;
-    // double beta;
     double alpha_global, alpha1_global,alpha2_global;
-    double alpha1 = 0;
-    double alpha2 = 0;
     double beta_global, beta1_global, beta2_global;
-    double beta1 = 0;
-    double beta2 = 0;
 
     double eps;
     double tol = 0.001;
 
-    // eps = cblas_dnrm2(n, b, 1);
     eps = ComputeErrorGlobalParallel(n,b);
     // if (rank==root){
     //     std::cout << "Error (eps) : " << eps << std::endl;
@@ -189,7 +204,6 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         //     std::cout << "Step size (alpha2_global) : " << alpha2_global << std::endl;
         //     std::cout << "Step size (alpha_global) : " << alpha_global << std::endl;
         // }
-        // std::cout << "Rank: " << rank << "Alpha_global" << << std::endl;
 
         // One single new search direction for all processes (beta_global)
         beta1_global  = alpha2_global;
@@ -229,33 +243,13 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     } while (k < iter_max); // Set a maximum number of iterations
 
 
-    if (k == iter_max && debug==false) {
+    if (rank==root && k == iter_max && debug==false) {
         cout << "FAILED TO CONVERGE" << endl;
         exit(-1);
     }
 
-    if(verbose){
+    if(rank==root && verbose){
         cout << "Converged in " << k << " iterations. eps = " << eps << endl;
-    }
-}
-
-
-void SolverCG::ApplyOperatorParallel(double* in, double* out) {
-    // Assume ordered with y-direction fastest (column-by-column)
-    double dx2i = 1.0/dx/dx;
-    double dy2i = 1.0/dy/dy;
-    int jm1 = 0, jp1 = 2;
-    for (int j = 1; j < Ny - 1; ++j) {
-        for (int i = 1; i < Nx - 1; ++i) {
-            out[IDX(i,j)] = ( -     in[IDX(i-1, j)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i+1, j)])*dx2i
-                          + ( -     in[IDX(i, jm1)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i, jp1)])*dy2i;
-        }
-        jm1++;
-        jp1++;
     }
 }
 
@@ -331,8 +325,8 @@ void SolverCG::DomainInterComunnication(double* A_local){
     int Ny_local = Ny;
 
     // Top and bottom communication
-    double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
-    double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
+    // double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
+    // double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
 
     if(rank_up!=-2){
         int j_second_upper = (Ny_local-1)-1;
@@ -349,17 +343,22 @@ void SolverCG::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_up!=-2){
-        MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
     }
     if(rank_down!=-2){
-        MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
     }
 
     if(rank_down!=-2){
-        MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
     }
     if(rank_up!=-2){
-        MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
 
@@ -373,8 +372,8 @@ void SolverCG::DomainInterComunnication(double* A_local){
 
     // Left and right communication
     // Allocate memory for communication buffers
-    double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
-    double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
+    // double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
+    // double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
 
     if(rank_left!=-2){
         int i_second_left = (0) + 1;
@@ -391,17 +390,21 @@ void SolverCG::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_left!=-2){
-        MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
     }
     if(rank_right!=-2){
-        MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
+        // MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
     }
 
     if(rank_right!=-2){
-        MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     if(rank_left!=-2){
-        MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
