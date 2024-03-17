@@ -124,15 +124,25 @@ int main(int argc, char **argv)
     //     solver->PrintConfiguration();
     // }
 
-    // solver->Initialise();
-    solver->InitialiseParallel();
+    // bool parallel = false;
+    bool parallel = true;
+
+    if (parallel==false) {
+        solver->Initialise();
+    } else {
+        solver->InitialiseParallel();
+    }
     
     // if(rank==root){
     //     solver->WriteSolution(folder_results+"ic.txt");
     // }
 
-    // solver->Integrate();
-    solver->IntegrateParallel();
+
+    if (parallel==false) {
+        solver->Integrate();
+    } else {
+        solver->IntegrateParallel();
+    }
 
     if(rank==root){
         solver->WriteSolution(folder_results+"final.txt");

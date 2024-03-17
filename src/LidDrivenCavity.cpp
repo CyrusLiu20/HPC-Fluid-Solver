@@ -58,7 +58,8 @@ int LidDrivenCavity::Local2Global(int i_local, int j_local){
 
 
 // Function to check if a number is at the boundary of a grid
-bool LidDrivenCavity::CheckBoundary(int i_local, int j_local) {
+bool LidDrivenCavity::CheckBoundary(int i_local, int j_local)
+{
     int index = Local2Global(i_local,j_local);
     int rows = Ny;
     int cols = Nx;
@@ -68,7 +69,8 @@ bool LidDrivenCavity::CheckBoundary(int i_local, int j_local) {
            index % cols == cols - 1;      // Rightmost column
 }
 
-void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global){
+void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
+{
 
 
 
@@ -308,7 +310,10 @@ void LidDrivenCavity::InitialiseParallel()
     v_local = new double[Npts_local];
     s_local = new double[Npts_local];
     v_next_local = new double[Npts_local];
-    // cg = new SolverCG(Nx_local,Ny_local,dx_local,dy_local);
+    cg = new SolverCG(Nx_local,Ny_local,dx,dy);
+
+    cg->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
+    cg->SetOffset(offset_x,offset_y,Nx,Ny);
 
     // Initialize elements for safety
     for (int i=0;i<Npts_local;i++) {
@@ -326,7 +331,7 @@ void LidDrivenCavity::InitialiseParallel()
         v = new double[Npts];
         s = new double[Npts];
         for (int i=0;i<Npts;i++) {v[i] = 0;s[i]=0;}
-        cg  = new SolverCG(Nx, Ny, dx, dy);
+        // cg  = new SolverCG(Nx, Ny, dx, dy);
     }
 
 }
@@ -353,7 +358,8 @@ void LidDrivenCavity::IntegrateParallel(){
         else{verbose_advance=false;}
         AdvanceParallel(verbose_advance);
     }
-
+    GatherDomain(v_local,v);
+    GatherDomain(s_local,s);
 }
 
 void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
@@ -371,23 +377,38 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
     ComputeNextVorticityParallel();
     DomainInterComunnication(v_local);  
 
-    GatherDomain(v_local,v);
-    GatherDomain(s_local,s);
-    ComputeLaplaceOperatorParallel();
+    // GatherDomain(v_local,v);
+    // GatherDomain(s_local,s);
 
     if(rank==root&&verbose_advance){
-        std::cout << "Global vorticity matrix" << std::endl;
+        std::cout << "(Next vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
-        std::cout << "Global stream function matrix" << std::endl;
+        std::cout << "(Next vorticity) stream function matrix" << std::endl;
+        Printmatrix(Nx, Ny, s);
+    } 
+
+    ComputeLaplaceOperatorParallel();
+    // std::cout << "rank : " << rank << " local stream function matrix" << std::endl;
+    // Printmatrix(Nx_local, Ny_local, s_local);
+
+
+    // GatherDomain(v_local,v);
+    // GatherDomain(s_local,s);
+
+    if(rank==root&&verbose_advance){
+        std::cout << "(Laplace operator) vorticity matrix" << std::endl;
+        Printmatrix(Nx, Ny, v);
+        std::cout << "(Laplace operator) stream function matrix" << std::endl;
         Printmatrix(Nx, Ny, s);
     }   
 
-    ScatterDomain(s_local,s);
+    // ScatterDomain(s_local,s);
 
 }
 
 
-void LidDrivenCavity::ComputeBoundaryVorticityParallel(){
+void LidDrivenCavity::ComputeBoundaryVorticityParallel()
+{
 
     double dxi  = 1.0/dx;
     double dyi  = 1.0/dy;
@@ -457,6 +478,13 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
     }
 }
 
+
+void LidDrivenCavity::ComputeLaplaceOperatorParallel()
+{
+    // Solve Poisson problem
+    cg->SolveParallel(v_local, s_local, verbose);
+ 
+}
 
 /*
 void LidDrivenCavity::ComputeInteriorVorticityParallel(){
@@ -530,7 +558,9 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
 }
 */
 
-void LidDrivenCavity::ComputeLaplaceOperatorParallel(){
+/*
+void LidDrivenCavity::ComputeLaplaceOperatorParallel()
+{
 
     if(rank==root){
         // Solve Poisson problem
@@ -538,6 +568,7 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel(){
     }
  
 }
+*/
 
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 

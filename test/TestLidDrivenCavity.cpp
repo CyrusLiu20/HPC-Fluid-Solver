@@ -8,6 +8,10 @@ Program arguments
 Numerical simulation
 3. InitialConditionCheck: Check if initial condition (v,s,u0,u1) is applied correctly
 4. BoundaryConditionCheck: Check if boundary condition is been applied correctly at the start, middle, and end of simulation
+
+Results validation
+5. FinalResultCheck: Check simulation results for a 9x9 grid
+6. FinalResult2Check: Check simulation results for a 49x49 grid
 */
 
 
@@ -20,7 +24,35 @@ Numerical simulation
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/test/unit_test.hpp>
 
+struct MPIFixture {
+    public:
+        explicit MPIFixture() {
+            argc = boost::unit_test::framework::master_test_suite().argc;
+            argv = boost::unit_test::framework::master_test_suite().argv;
+            MPI_Init(&argc, &argv);
+
+            int rank = 0; // ID of process
+            MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+            if(rank==0){
+                std::cout << "Initialising MPI" << std::endl;
+            }
+        }
+
+        ~MPIFixture() {
+            std::cout << "Finalising MPI" << std::endl;
+            MPI_Finalize();
+        }
+
+        int argc;
+        char **argv;
+};
+BOOST_GLOBAL_FIXTURE(MPIFixture);
+
+
+
 BOOST_AUTO_TEST_SUITE(MyTests)
+
+
 
 // Test case for correct mesh size specified
 BOOST_AUTO_TEST_CASE(DomainCheck)
@@ -182,6 +214,9 @@ void CheckBoundaryConditions(double* u0_top, double* u1_top, double* u0_bottom, 
     BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_left, Ny), "V-velocity Left boundary condition not imposed");
 }
 
+
+
+
 /*
 // Test case for initial condition (fluid at t=0 is at rest)
 BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
@@ -320,7 +355,8 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     return all_correct;
 }
 
-// Test case for initial condition (fluid at t=0 is at rest)
+
+// Test case for all results at the end (u-velocity, v-velocity, vorticity, and stream function)
 BOOST_AUTO_TEST_CASE(FinalResultsCheck)
 {
     // Domain length for test case
@@ -341,13 +377,9 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
 
 
 
-    // Initialise MPI
+    // // Initialise MPI
     int rank = 0; // ID of process
     int size = 0; // Number of processes
-    int err = MPI_Init(NULL,NULL);
-    if (err != MPI_SUCCESS) {
-        cout << "Error: Failed to initialise MPI" << endl;
-    }
 
     // Get comm rank and size of each process
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -405,7 +437,7 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
         cout << "Successfully written report" << endl;
     }
 
-	MPI_Finalize();
+	// MPI_Finalize();
 
     if(rank==0){
         std::string output_true = "test/data/final.txt";
@@ -418,6 +450,92 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
 
 }
 
+
+// Test case for all results at the end (u-velocity, v-velocity, vorticity, and stream function)
+BOOST_AUTO_TEST_CASE(FinalResults2Check)
+{
+    // Domain length for test case
+    double Lx_test = 1;
+    double Ly_test = 1;
+    // Grid points for test case
+    int Nx_test = 49;
+    int Ny_test = 49;
+    int Npts = Nx_test*Ny_test;
+
+    double dt_test = 2e-4; // time step for test case
+    double T_test = 1.0; // Total simulation for test case
+
+    double Re_test = 10; // Reynolds number for test case 
+    bool verbose = false; // Do not diplay convergence detail inside this test
+
+
+
+    // // Initialise MPI
+    int rank = 0; // ID of process
+    int size = 0; // Number of processes
+
+    // Get comm rank and size of each process
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Check if the number of processes is a perfect squares
+    int sqrtNum = sqrt(size);
+    if(sqrtNum * sqrtNum != size){
+		if(rank==0){
+			cout << "Please have n^2 of processes" << endl;
+		}
+		MPI_Finalize();
+    }
+
+    // Create a cartesian grid of n x n to compute
+    MPI_Comm domain_local;
+    int dims[2] = {0, 0};
+    int periods[2] = {0, 0};
+    int coords[2];
+    int reorder = 0; // Do not allow reordering for now
+
+    MPI_Dims_create(size, 2, dims);
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, reorder, &domain_local); // Create the Cartesian communicator
+    MPI_Cart_coords(domain_local, rank, 2, coords); // Get the coordinates of the current process in the Cartesian grid
+
+    int rank_left, rank_right, rank_up, rank_down; // Ranks of neighboring processes
+    // Get the ranks of the neighboring processes
+    // MPI_Cart_shift(domain_local, 0, 1, &rank_up, &rank_down);
+    MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
+    MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
+
+
+    LidDrivenCavity* solver = new LidDrivenCavity();
+    solver->SetDomainSize(Lx_test,Ly_test);
+    solver->SetGridSize(Nx_test,Ny_test);
+    solver->SetTimeStep(dt_test);
+    solver->SetFinalTime(T_test);
+    solver->SetReynoldsNumber(Re_test);
+    solver->SetVerbose(verbose);
+    solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
+    solver->DomainDecomposition();
+
+
+    // Lid Driven Cavity Parallel
+    std::string output = "test/data/final_test.txt";
+
+    solver->DomainDecomposition();
+    solver->InitialiseParallel();
+    solver->IntegrateParallel();
+    if(rank==0){
+        solver->WriteSolution(output);
+        cout << "Successfully written report" << endl;
+    }
+
+    if(rank==0){
+        std::string output_true = "test/data/final2.txt";
+        bool results = CompareFiles(output,output_true,Npts);
+        BOOST_CHECK_MESSAGE(results, "Results do not match"); 
+    }
+
+    BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
+
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

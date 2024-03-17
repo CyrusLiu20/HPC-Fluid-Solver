@@ -48,6 +48,8 @@ void LoadDataFromFile(const std::string& file_path, double* A, int Npts) {
     infile.close();
 }
 
+
+
 // Test case for arbitrary vorticity and stream function
 BOOST_AUTO_TEST_CASE(SolveArbitraryCheck)
 {
