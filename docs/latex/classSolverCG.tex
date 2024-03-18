@@ -1,0 +1,470 @@
+\hypertarget{classSolverCG}{}\doxysection{Solver\+CG Class Reference}
+\label{classSolverCG}\index{SolverCG@{SolverCG}}
+
+
+\mbox{\hyperlink{classSolverCG}{Solver\+CG}} class for solving a linear system using the Conjugate Gradient method. It is used to solve the laplace operator in the vorticity stream function eqution. This class supports the usage for both serial and parallel computation.  
+
+
+
+
+{\ttfamily \#include $<$Solver\+CG.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSolverCG_af2e6b28644c4379d49bffb377c020345}{Solver\+CG}} (int p\+Nx, int p\+Ny, double pdx, double pdy)
+\item 
+\mbox{\hyperlink{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}{$\sim$\+Solver\+CG}} ()
+\item 
+void \mbox{\hyperlink{classSolverCG_a912137e50d0887235b01d42327976441}{Solve}} (double $\ast$b, double $\ast$x, bool verbose)
+\item 
+void \mbox{\hyperlink{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}{Solve\+Parallel}} (double $\ast$b, double $\ast$x, bool verbose)
+\item 
+void \mbox{\hyperlink{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}{Set\+Neighbour}} (int \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\+\_\+up}}, int \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\+\_\+down}}, int \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\+\_\+left}}, int \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\+\_\+right}})
+\item 
+void \mbox{\hyperlink{classSolverCG_a6cc771b5af6805bf6738206e931fe994}{Set\+Offset}} (int \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\+\_\+x}}, int \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\+\_\+y}}, int \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\+\_\+global}}, int \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\+\_\+global}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{Apply\+Operator}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
+\item 
+void \mbox{\hyperlink{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}{Precondition}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
+\item 
+void \mbox{\hyperlink{classSolverCG_a252ab61ae011d656c12926681ee234dd}{Impose\+BC}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
+\item 
+void \mbox{\hyperlink{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}{Domain\+Inter\+Comunnication}} (double $\ast$A\+\_\+local)
+\item 
+void \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{Gather\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
+\item 
+void \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
+\item 
+void \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
+\item 
+double \mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{Compute\+Error\+Global\+Parallel}} (unsigned int n, double $\ast$a)
+\item 
+double \mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{Compute\+Dot\+Global\+Parallel}} (unsigned int n, double $\ast$a, double $\ast$b)
+\item 
+void \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}} (int nx, int ny, double $\ast$A)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}{dx}}
+\item 
+double \mbox{\hyperlink{classSolverCG_abe145d475db2856198417cf84d6ace03}{dy}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a485fb426187f0c4c89bc749504726149}{Nx}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a20729a3578afefb1f3313fa14c43ec72}{Ny}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a7187933ee0ef1e03e6a7231b3f9087f6}{r}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a62935239e4936b556715a625531ccbb9}{z}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}{iter\+\_\+max}}
+\item 
+bool \mbox{\hyperlink{classSolverCG_a91900eead48ae010dedad88e95abf640}{debug}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\+\_\+up}}
+\item 
+int \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\+\_\+down}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\+\_\+left}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\+\_\+right}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a48e70d14cf84bcd4269e71bf6002db19}{rank}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a8fdd422dedde276e913f0d5fd3b6cbd3}{root}} = 0
+\item 
+int \mbox{\hyperlink{classSolverCG_a091a0755896c5f8c45ee6c5cd40c7eb0}{Nprocs}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a64326a64a73f81f232d9a0674a4ff5db}{i\+\_\+start}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a3001d58239d7da3e57b14b7dd68c0ad7}{i\+\_\+end}}
+\item 
+int \mbox{\hyperlink{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}{j\+\_\+start}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}{j\+\_\+end}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\+\_\+x}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\+\_\+y}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\+\_\+global}}
+\item 
+int \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\+\_\+global}}
+\item 
+int \mbox{\hyperlink{classSolverCG_aed1416456dec9f0b99343e784e159cc5}{Npts}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a63308c3fba9fc3a9ccde321326b84747}{r\+\_\+global}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a952557da8c69bd7af8e84e1697f53057}{p\+\_\+global}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a859efadd0a7815424ce7bb73ea8d9420}{z\+\_\+global}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_acba6c4fd8fa46f3a3f7206f543665a6a}{t\+\_\+global}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a81e7d080247a041df8e3c871f53308a9}{buffer\+\_\+up\+\_\+send}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_ad19d9947a1c0705cfe27dbcc13f1717a}{buffer\+\_\+down\+\_\+send}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_ad89e2c4f0c6a01675d020daae1a762fe}{buffer\+\_\+up\+\_\+recv}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_ac9131858c1060134d37d13c379e979cd}{buffer\+\_\+down\+\_\+recv}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a546f64f7e7611c7e9252341d589c1d6a}{buffer\+\_\+left\+\_\+send}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a6ce683cc889fe633433154b765cd6839}{buffer\+\_\+right\+\_\+send}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a41c5eed6d9972b6decb5e2ba43af1de0}{buffer\+\_\+left\+\_\+recv}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{buffer\+\_\+right\+\_\+recv}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classSolverCG}{Solver\+CG}} class for solving a linear system using the Conjugate Gradient method. It is used to solve the laplace operator in the vorticity stream function eqution. This class supports the usage for both serial and parallel computation. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSolverCG_af2e6b28644c4379d49bffb377c020345}\label{classSolverCG_af2e6b28644c4379d49bffb377c020345}} 
+\index{SolverCG@{SolverCG}!SolverCG@{SolverCG}}
+\index{SolverCG@{SolverCG}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{SolverCG()}{SolverCG()}}
+{\footnotesize\ttfamily Solver\+CG\+::\+Solver\+CG (\begin{DoxyParamCaption}\item[{int}]{p\+Nx,  }\item[{int}]{p\+Ny,  }\item[{double}]{pdx,  }\item[{double}]{pdy }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}\label{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}} 
+\index{SolverCG@{SolverCG}!````~SolverCG@{$\sim$SolverCG}}
+\index{````~SolverCG@{$\sim$SolverCG}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{$\sim$SolverCG()}{~SolverCG()}}
+{\footnotesize\ttfamily Solver\+CG\+::$\sim$\+Solver\+CG (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}\label{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}} 
+\index{SolverCG@{SolverCG}!ApplyOperator@{ApplyOperator}}
+\index{ApplyOperator@{ApplyOperator}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{ApplyOperator()}{ApplyOperator()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Apply\+Operator (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a998cc834430b2b87464d7ac22983ac30}\label{classSolverCG_a998cc834430b2b87464d7ac22983ac30}} 
+\index{SolverCG@{SolverCG}!ComputeDotGlobalParallel@{ComputeDotGlobalParallel}}
+\index{ComputeDotGlobalParallel@{ComputeDotGlobalParallel}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{ComputeDotGlobalParallel()}{ComputeDotGlobalParallel()}}
+{\footnotesize\ttfamily double Solver\+CG\+::\+Compute\+Dot\+Global\+Parallel (\begin{DoxyParamCaption}\item[{unsigned int}]{n,  }\item[{double $\ast$}]{a,  }\item[{double $\ast$}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}\label{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}} 
+\index{SolverCG@{SolverCG}!ComputeErrorGlobalParallel@{ComputeErrorGlobalParallel}}
+\index{ComputeErrorGlobalParallel@{ComputeErrorGlobalParallel}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{ComputeErrorGlobalParallel()}{ComputeErrorGlobalParallel()}}
+{\footnotesize\ttfamily double Solver\+CG\+::\+Compute\+Error\+Global\+Parallel (\begin{DoxyParamCaption}\item[{unsigned int}]{n,  }\item[{double $\ast$}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}\label{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}} 
+\index{SolverCG@{SolverCG}!DomainInterComunnication@{DomainInterComunnication}}
+\index{DomainInterComunnication@{DomainInterComunnication}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{DomainInterComunnication()}{DomainInterComunnication()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Domain\+Inter\+Comunnication (\begin{DoxyParamCaption}\item[{double $\ast$}]{A\+\_\+local }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_af07949ab7beaa99ee197660aa68efd21}\label{classSolverCG_af07949ab7beaa99ee197660aa68efd21}} 
+\index{SolverCG@{SolverCG}!GatherDomain@{GatherDomain}}
+\index{GatherDomain@{GatherDomain}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{GatherDomain()}{GatherDomain()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Gather\+Domain (\begin{DoxyParamCaption}\item[{double $\ast$}]{A\+\_\+local,  }\item[{double $\ast$}]{A\+\_\+global }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a252ab61ae011d656c12926681ee234dd}\label{classSolverCG_a252ab61ae011d656c12926681ee234dd}} 
+\index{SolverCG@{SolverCG}!ImposeBC@{ImposeBC}}
+\index{ImposeBC@{ImposeBC}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{ImposeBC()}{ImposeBC()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BC (\begin{DoxyParamCaption}\item[{double $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}\label{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}} 
+\index{SolverCG@{SolverCG}!ImposeBCParallel@{ImposeBCParallel}}
+\index{ImposeBCParallel@{ImposeBCParallel}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{ImposeBCParallel()}{ImposeBCParallel()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BCParallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}\label{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}} 
+\index{SolverCG@{SolverCG}!Precondition@{Precondition}}
+\index{Precondition@{Precondition}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Precondition()}{Precondition()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a123782d564c3527edb06d819814e31fc}\label{classSolverCG_a123782d564c3527edb06d819814e31fc}} 
+\index{SolverCG@{SolverCG}!PreconditionParallel@{PreconditionParallel}}
+\index{PreconditionParallel@{PreconditionParallel}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{PreconditionParallel()}{PreconditionParallel()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition\+Parallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}\label{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}} 
+\index{SolverCG@{SolverCG}!Printmatrix@{Printmatrix}}
+\index{Printmatrix@{Printmatrix}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Printmatrix()}{Printmatrix()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Printmatrix (\begin{DoxyParamCaption}\item[{int}]{nx,  }\item[{int}]{ny,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}\label{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}} 
+\index{SolverCG@{SolverCG}!SetNeighbour@{SetNeighbour}}
+\index{SetNeighbour@{SetNeighbour}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{SetNeighbour()}{SetNeighbour()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Set\+Neighbour (\begin{DoxyParamCaption}\item[{int}]{rank\+\_\+up,  }\item[{int}]{rank\+\_\+down,  }\item[{int}]{rank\+\_\+left,  }\item[{int}]{rank\+\_\+right }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSolverCG_a6cc771b5af6805bf6738206e931fe994}\label{classSolverCG_a6cc771b5af6805bf6738206e931fe994}} 
+\index{SolverCG@{SolverCG}!SetOffset@{SetOffset}}
+\index{SetOffset@{SetOffset}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{SetOffset()}{SetOffset()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Set\+Offset (\begin{DoxyParamCaption}\item[{int}]{offset\+\_\+x,  }\item[{int}]{offset\+\_\+y,  }\item[{int}]{Nx\+\_\+global,  }\item[{int}]{Ny\+\_\+global }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSolverCG_a912137e50d0887235b01d42327976441}\label{classSolverCG_a912137e50d0887235b01d42327976441}} 
+\index{SolverCG@{SolverCG}!Solve@{Solve}}
+\index{Solve@{Solve}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Solve()}{Solve()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Solve (\begin{DoxyParamCaption}\item[{double $\ast$}]{b,  }\item[{double $\ast$}]{x,  }\item[{bool}]{verbose }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}\label{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}} 
+\index{SolverCG@{SolverCG}!SolveParallel@{SolveParallel}}
+\index{SolveParallel@{SolveParallel}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{SolveParallel()}{SolveParallel()}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Solve\+Parallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{b,  }\item[{double $\ast$}]{x,  }\item[{bool}]{verbose }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classSolverCG_ac9131858c1060134d37d13c379e979cd}\label{classSolverCG_ac9131858c1060134d37d13c379e979cd}} 
+\index{SolverCG@{SolverCG}!buffer\_down\_recv@{buffer\_down\_recv}}
+\index{buffer\_down\_recv@{buffer\_down\_recv}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_down\_recv}{buffer\_down\_recv}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+down\+\_\+recv = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ad19d9947a1c0705cfe27dbcc13f1717a}\label{classSolverCG_ad19d9947a1c0705cfe27dbcc13f1717a}} 
+\index{SolverCG@{SolverCG}!buffer\_down\_send@{buffer\_down\_send}}
+\index{buffer\_down\_send@{buffer\_down\_send}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_down\_send}{buffer\_down\_send}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+down\+\_\+send = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a41c5eed6d9972b6decb5e2ba43af1de0}\label{classSolverCG_a41c5eed6d9972b6decb5e2ba43af1de0}} 
+\index{SolverCG@{SolverCG}!buffer\_left\_recv@{buffer\_left\_recv}}
+\index{buffer\_left\_recv@{buffer\_left\_recv}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_left\_recv}{buffer\_left\_recv}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+left\+\_\+recv = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a546f64f7e7611c7e9252341d589c1d6a}\label{classSolverCG_a546f64f7e7611c7e9252341d589c1d6a}} 
+\index{SolverCG@{SolverCG}!buffer\_left\_send@{buffer\_left\_send}}
+\index{buffer\_left\_send@{buffer\_left\_send}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_left\_send}{buffer\_left\_send}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+left\+\_\+send = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}\label{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}} 
+\index{SolverCG@{SolverCG}!buffer\_right\_recv@{buffer\_right\_recv}}
+\index{buffer\_right\_recv@{buffer\_right\_recv}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_right\_recv}{buffer\_right\_recv}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+right\+\_\+recv = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a6ce683cc889fe633433154b765cd6839}\label{classSolverCG_a6ce683cc889fe633433154b765cd6839}} 
+\index{SolverCG@{SolverCG}!buffer\_right\_send@{buffer\_right\_send}}
+\index{buffer\_right\_send@{buffer\_right\_send}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_right\_send}{buffer\_right\_send}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+right\+\_\+send = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ad89e2c4f0c6a01675d020daae1a762fe}\label{classSolverCG_ad89e2c4f0c6a01675d020daae1a762fe}} 
+\index{SolverCG@{SolverCG}!buffer\_up\_recv@{buffer\_up\_recv}}
+\index{buffer\_up\_recv@{buffer\_up\_recv}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_up\_recv}{buffer\_up\_recv}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+up\+\_\+recv = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a81e7d080247a041df8e3c871f53308a9}\label{classSolverCG_a81e7d080247a041df8e3c871f53308a9}} 
+\index{SolverCG@{SolverCG}!buffer\_up\_send@{buffer\_up\_send}}
+\index{buffer\_up\_send@{buffer\_up\_send}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{buffer\_up\_send}{buffer\_up\_send}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::buffer\+\_\+up\+\_\+send = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a91900eead48ae010dedad88e95abf640}\label{classSolverCG_a91900eead48ae010dedad88e95abf640}} 
+\index{SolverCG@{SolverCG}!debug@{debug}}
+\index{debug@{debug}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{debug}{debug}}
+{\footnotesize\ttfamily bool Solver\+CG\+::debug\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}\label{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}} 
+\index{SolverCG@{SolverCG}!dx@{dx}}
+\index{dx@{dx}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{dx}{dx}}
+{\footnotesize\ttfamily double Solver\+CG\+::dx\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_abe145d475db2856198417cf84d6ace03}\label{classSolverCG_abe145d475db2856198417cf84d6ace03}} 
+\index{SolverCG@{SolverCG}!dy@{dy}}
+\index{dy@{dy}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{dy}{dy}}
+{\footnotesize\ttfamily double Solver\+CG\+::dy\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a3001d58239d7da3e57b14b7dd68c0ad7}\label{classSolverCG_a3001d58239d7da3e57b14b7dd68c0ad7}} 
+\index{SolverCG@{SolverCG}!i\_end@{i\_end}}
+\index{i\_end@{i\_end}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{i\_end}{i\_end}}
+{\footnotesize\ttfamily int Solver\+CG\+::i\+\_\+end\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a64326a64a73f81f232d9a0674a4ff5db}\label{classSolverCG_a64326a64a73f81f232d9a0674a4ff5db}} 
+\index{SolverCG@{SolverCG}!i\_start@{i\_start}}
+\index{i\_start@{i\_start}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{i\_start}{i\_start}}
+{\footnotesize\ttfamily int Solver\+CG\+::i\+\_\+start\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}\label{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}} 
+\index{SolverCG@{SolverCG}!iter\_max@{iter\_max}}
+\index{iter\_max@{iter\_max}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{iter\_max}{iter\_max}}
+{\footnotesize\ttfamily int Solver\+CG\+::iter\+\_\+max\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}\label{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}} 
+\index{SolverCG@{SolverCG}!j\_end@{j\_end}}
+\index{j\_end@{j\_end}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{j\_end}{j\_end}}
+{\footnotesize\ttfamily int Solver\+CG\+::j\+\_\+end\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}\label{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}} 
+\index{SolverCG@{SolverCG}!j\_start@{j\_start}}
+\index{j\_start@{j\_start}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{j\_start}{j\_start}}
+{\footnotesize\ttfamily int Solver\+CG\+::j\+\_\+start\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a091a0755896c5f8c45ee6c5cd40c7eb0}\label{classSolverCG_a091a0755896c5f8c45ee6c5cd40c7eb0}} 
+\index{SolverCG@{SolverCG}!Nprocs@{Nprocs}}
+\index{Nprocs@{Nprocs}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Nprocs}{Nprocs}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Nprocs\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_aed1416456dec9f0b99343e784e159cc5}\label{classSolverCG_aed1416456dec9f0b99343e784e159cc5}} 
+\index{SolverCG@{SolverCG}!Npts@{Npts}}
+\index{Npts@{Npts}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Npts}{Npts}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Npts\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a485fb426187f0c4c89bc749504726149}\label{classSolverCG_a485fb426187f0c4c89bc749504726149}} 
+\index{SolverCG@{SolverCG}!Nx@{Nx}}
+\index{Nx@{Nx}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Nx}{Nx}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Nx\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}\label{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}} 
+\index{SolverCG@{SolverCG}!Nx\_global@{Nx\_global}}
+\index{Nx\_global@{Nx\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Nx\_global}{Nx\_global}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Nx\+\_\+global\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a20729a3578afefb1f3313fa14c43ec72}\label{classSolverCG_a20729a3578afefb1f3313fa14c43ec72}} 
+\index{SolverCG@{SolverCG}!Ny@{Ny}}
+\index{Ny@{Ny}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Ny}{Ny}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Ny\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}\label{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}} 
+\index{SolverCG@{SolverCG}!Ny\_global@{Ny\_global}}
+\index{Ny\_global@{Ny\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{Ny\_global}{Ny\_global}}
+{\footnotesize\ttfamily int Solver\+CG\+::\+Ny\+\_\+global\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}\label{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}} 
+\index{SolverCG@{SolverCG}!offset\_x@{offset\_x}}
+\index{offset\_x@{offset\_x}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{offset\_x}{offset\_x}}
+{\footnotesize\ttfamily int Solver\+CG\+::offset\+\_\+x\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}\label{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}} 
+\index{SolverCG@{SolverCG}!offset\_y@{offset\_y}}
+\index{offset\_y@{offset\_y}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{offset\_y}{offset\_y}}
+{\footnotesize\ttfamily int Solver\+CG\+::offset\+\_\+y\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}\label{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}} 
+\index{SolverCG@{SolverCG}!p@{p}}
+\index{p@{p}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{p}{p}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::p\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a952557da8c69bd7af8e84e1697f53057}\label{classSolverCG_a952557da8c69bd7af8e84e1697f53057}} 
+\index{SolverCG@{SolverCG}!p\_global@{p\_global}}
+\index{p\_global@{p\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{p\_global}{p\_global}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::p\+\_\+global = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a7187933ee0ef1e03e6a7231b3f9087f6}\label{classSolverCG_a7187933ee0ef1e03e6a7231b3f9087f6}} 
+\index{SolverCG@{SolverCG}!r@{r}}
+\index{r@{r}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{r}{r}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::r\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a63308c3fba9fc3a9ccde321326b84747}\label{classSolverCG_a63308c3fba9fc3a9ccde321326b84747}} 
+\index{SolverCG@{SolverCG}!r\_global@{r\_global}}
+\index{r\_global@{r\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{r\_global}{r\_global}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::r\+\_\+global = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a48e70d14cf84bcd4269e71bf6002db19}\label{classSolverCG_a48e70d14cf84bcd4269e71bf6002db19}} 
+\index{SolverCG@{SolverCG}!rank@{rank}}
+\index{rank@{rank}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{rank}{rank}}
+{\footnotesize\ttfamily int Solver\+CG\+::rank\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}\label{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}} 
+\index{SolverCG@{SolverCG}!rank\_down@{rank\_down}}
+\index{rank\_down@{rank\_down}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{rank\_down}{rank\_down}}
+{\footnotesize\ttfamily int Solver\+CG\+::rank\+\_\+down\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}\label{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}} 
+\index{SolverCG@{SolverCG}!rank\_left@{rank\_left}}
+\index{rank\_left@{rank\_left}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{rank\_left}{rank\_left}}
+{\footnotesize\ttfamily int Solver\+CG\+::rank\+\_\+left\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}\label{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}} 
+\index{SolverCG@{SolverCG}!rank\_right@{rank\_right}}
+\index{rank\_right@{rank\_right}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{rank\_right}{rank\_right}}
+{\footnotesize\ttfamily int Solver\+CG\+::rank\+\_\+right\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}\label{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}} 
+\index{SolverCG@{SolverCG}!rank\_up@{rank\_up}}
+\index{rank\_up@{rank\_up}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{rank\_up}{rank\_up}}
+{\footnotesize\ttfamily int Solver\+CG\+::rank\+\_\+up\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a8fdd422dedde276e913f0d5fd3b6cbd3}\label{classSolverCG_a8fdd422dedde276e913f0d5fd3b6cbd3}} 
+\index{SolverCG@{SolverCG}!root@{root}}
+\index{root@{root}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{root}{root}}
+{\footnotesize\ttfamily int Solver\+CG\+::root = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}\label{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}} 
+\index{SolverCG@{SolverCG}!t@{t}}
+\index{t@{t}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{t}{t}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::t\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_acba6c4fd8fa46f3a3f7206f543665a6a}\label{classSolverCG_acba6c4fd8fa46f3a3f7206f543665a6a}} 
+\index{SolverCG@{SolverCG}!t\_global@{t\_global}}
+\index{t\_global@{t\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{t\_global}{t\_global}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::t\+\_\+global = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a62935239e4936b556715a625531ccbb9}\label{classSolverCG_a62935239e4936b556715a625531ccbb9}} 
+\index{SolverCG@{SolverCG}!z@{z}}
+\index{z@{z}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::z\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a859efadd0a7815424ce7bb73ea8d9420}\label{classSolverCG_a859efadd0a7815424ce7bb73ea8d9420}} 
+\index{SolverCG@{SolverCG}!z\_global@{z\_global}}
+\index{z\_global@{z\_global}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{z\_global}{z\_global}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::z\+\_\+global = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/kkl20/\+High Performance Computing/\+Revert Old version/\+HPC-\/\+Fluid-\/\+Solver/src/\mbox{\hyperlink{SolverCG_8h}{Solver\+CG.\+h}}\item 
+/home/kkl20/\+High Performance Computing/\+Revert Old version/\+HPC-\/\+Fluid-\/\+Solver/src/\mbox{\hyperlink{SolverCG_8cpp}{Solver\+CG.\+cpp}}\end{DoxyCompactItemize}

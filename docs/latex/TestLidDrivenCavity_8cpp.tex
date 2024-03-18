@@ -1,0 +1,157 @@
+\hypertarget{TestLidDrivenCavity_8cpp}{}\doxysection{/home/kkl20/\+High Performance Computing/\+Revert Old version/\+HPC-\/\+Fluid-\/\+Solver/test/\+Test\+Lid\+Driven\+Cavity.cpp File Reference}
+\label{TestLidDrivenCavity_8cpp}\index{/home/kkl20/High Performance Computing/Revert Old version/HPC-\/Fluid-\/Solver/test/TestLidDrivenCavity.cpp@{/home/kkl20/High Performance Computing/Revert Old version/HPC-\/Fluid-\/Solver/test/TestLidDrivenCavity.cpp}}
+{\ttfamily \#include \char`\"{}../src/\+Lid\+Driven\+Cavity.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$mpi.\+h$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$boost/algorithm/cxx11/all\+\_\+of.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/test/unit\+\_\+test.\+hpp$>$}\newline
+Include dependency graph for Test\+Lid\+Driven\+Cavity.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{TestLidDrivenCavity_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structMPIFixture}{MPIFixture}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_a7ec1f4ce4a5496676ffb64ea2face430}{BOOST\+\_\+\+GLOBAL\+\_\+\+FIXTURE}} (\mbox{\hyperlink{structMPIFixture}{MPIFixture}})
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_a7681d6ec33669b87739135da142234eb}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Domain\+Check)
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_a80d4be6c3bc90650963315cd74c3c428}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Reynolds\+Check)
+\item 
+bool \mbox{\hyperlink{TestLidDrivenCavity_8cpp_a924c5b9c303930fbb758ffe3ecdd35a7}{Check\+Zero\+Matrix}} (const double $\ast$A, int size)
+\item 
+void \mbox{\hyperlink{TestLidDrivenCavity_8cpp_af6d5a51ae3b5630350952400d91840dc}{Extract\+Inner\+Rectangle}} (double $\ast$A, double $\ast$B, int Nx, int Ny)
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_afd4279a11e1c198fa489368dff378c56}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Initial\+Condition\+Check)
+\item 
+void \mbox{\hyperlink{TestLidDrivenCavity_8cpp_a2416796601c284f00522d72b87746f98}{Extract\+Row}} (double $\ast$A, double $\ast$B, int Nx, int row)
+\item 
+void \mbox{\hyperlink{TestLidDrivenCavity_8cpp_a0c33976f7026b6803be6dde724f69995}{Extract\+Column}} (double $\ast$A, double $\ast$B, int Nx, int Ny, int col)
+\item 
+bool \mbox{\hyperlink{TestLidDrivenCavity_8cpp_ab12eb0c8ae79b3e90af8d1a537eca0a9}{Check\+One\+Matrix}} (const double $\ast$A, int size)
+\item 
+bool \mbox{\hyperlink{TestLidDrivenCavity_8cpp_aebb2e65a1864b497bba56ae4b2b273ef}{Check\+Zero\+One\+Matrix}} (const double $\ast$A, int size)
+\item 
+void \mbox{\hyperlink{TestLidDrivenCavity_8cpp_af2b85ee8ffd2ab8750c48cf46f7e1c1e}{Extract\+Boundary}} (double $\ast$u0, double $\ast$u1, double $\ast$u0\+\_\+top, double $\ast$u1\+\_\+top, double $\ast$u0\+\_\+bottom, double $\ast$u1\+\_\+bottom, double $\ast$u0\+\_\+right, double $\ast$u1\+\_\+right, double $\ast$u0\+\_\+left, double $\ast$u1\+\_\+left, int Nx, int Ny)
+\item 
+void \mbox{\hyperlink{TestLidDrivenCavity_8cpp_a413bdf6ae317cf862b0c21d30dd1a3c7}{Check\+Boundary\+Conditions}} (double $\ast$u0\+\_\+top, double $\ast$u1\+\_\+top, double $\ast$u0\+\_\+bottom, double $\ast$u1\+\_\+bottom, double $\ast$u0\+\_\+right, double $\ast$u1\+\_\+right, double $\ast$u0\+\_\+left, double $\ast$u1\+\_\+left, size\+\_\+t Nx, size\+\_\+t Ny)
+\item 
+bool \mbox{\hyperlink{TestLidDrivenCavity_8cpp_afa8d75c3502e3cbeb82afff5c64634ad}{Compare\+Files}} (const std\+::string \&filename1, const std\+::string \&filename2, int Npts)
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_aa95cc2530d9705c7d6f732d18ec0f35b}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Final\+Results\+Check)
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_a1ef3107465aa942e60a5c87ce9b5afb5}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Final\+Results2\+Check)
+\item 
+\mbox{\hyperlink{TestLidDrivenCavity_8cpp_af3ec853823d6b252d5a4c4b2ddb398aa}{BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE}} (Final\+Results3\+Check)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a7681d6ec33669b87739135da142234eb}\label{TestLidDrivenCavity_8cpp_a7681d6ec33669b87739135da142234eb}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Domain\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a1ef3107465aa942e60a5c87ce9b5afb5}\label{TestLidDrivenCavity_8cpp_a1ef3107465aa942e60a5c87ce9b5afb5}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Final\+Results2\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_af3ec853823d6b252d5a4c4b2ddb398aa}\label{TestLidDrivenCavity_8cpp_af3ec853823d6b252d5a4c4b2ddb398aa}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Final\+Results3\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_aa95cc2530d9705c7d6f732d18ec0f35b}\label{TestLidDrivenCavity_8cpp_aa95cc2530d9705c7d6f732d18ec0f35b}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Final\+Results\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_afd4279a11e1c198fa489368dff378c56}\label{TestLidDrivenCavity_8cpp_afd4279a11e1c198fa489368dff378c56}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Initial\+Condition\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a80d4be6c3bc90650963315cd74c3c428}\label{TestLidDrivenCavity_8cpp_a80d4be6c3bc90650963315cd74c3c428}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}}
+\index{BOOST\_AUTO\_TEST\_CASE@{BOOST\_AUTO\_TEST\_CASE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_AUTO\_TEST\_CASE()}{BOOST\_AUTO\_TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily BOOST\+\_\+\+AUTO\+\_\+\+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{Reynolds\+Check}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a7ec1f4ce4a5496676ffb64ea2face430}\label{TestLidDrivenCavity_8cpp_a7ec1f4ce4a5496676ffb64ea2face430}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!BOOST\_GLOBAL\_FIXTURE@{BOOST\_GLOBAL\_FIXTURE}}
+\index{BOOST\_GLOBAL\_FIXTURE@{BOOST\_GLOBAL\_FIXTURE}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{BOOST\_GLOBAL\_FIXTURE()}{BOOST\_GLOBAL\_FIXTURE()}}
+{\footnotesize\ttfamily BOOST\+\_\+\+GLOBAL\+\_\+\+FIXTURE (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMPIFixture}{MPIFixture}}}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a413bdf6ae317cf862b0c21d30dd1a3c7}\label{TestLidDrivenCavity_8cpp_a413bdf6ae317cf862b0c21d30dd1a3c7}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!CheckBoundaryConditions@{CheckBoundaryConditions}}
+\index{CheckBoundaryConditions@{CheckBoundaryConditions}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{CheckBoundaryConditions()}{CheckBoundaryConditions()}}
+{\footnotesize\ttfamily void Check\+Boundary\+Conditions (\begin{DoxyParamCaption}\item[{double $\ast$}]{u0\+\_\+top,  }\item[{double $\ast$}]{u1\+\_\+top,  }\item[{double $\ast$}]{u0\+\_\+bottom,  }\item[{double $\ast$}]{u1\+\_\+bottom,  }\item[{double $\ast$}]{u0\+\_\+right,  }\item[{double $\ast$}]{u1\+\_\+right,  }\item[{double $\ast$}]{u0\+\_\+left,  }\item[{double $\ast$}]{u1\+\_\+left,  }\item[{size\+\_\+t}]{Nx,  }\item[{size\+\_\+t}]{Ny }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_ab12eb0c8ae79b3e90af8d1a537eca0a9}\label{TestLidDrivenCavity_8cpp_ab12eb0c8ae79b3e90af8d1a537eca0a9}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!CheckOneMatrix@{CheckOneMatrix}}
+\index{CheckOneMatrix@{CheckOneMatrix}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{CheckOneMatrix()}{CheckOneMatrix()}}
+{\footnotesize\ttfamily bool Check\+One\+Matrix (\begin{DoxyParamCaption}\item[{const double $\ast$}]{A,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a924c5b9c303930fbb758ffe3ecdd35a7}\label{TestLidDrivenCavity_8cpp_a924c5b9c303930fbb758ffe3ecdd35a7}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!CheckZeroMatrix@{CheckZeroMatrix}}
+\index{CheckZeroMatrix@{CheckZeroMatrix}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{CheckZeroMatrix()}{CheckZeroMatrix()}}
+{\footnotesize\ttfamily bool Check\+Zero\+Matrix (\begin{DoxyParamCaption}\item[{const double $\ast$}]{A,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_aebb2e65a1864b497bba56ae4b2b273ef}\label{TestLidDrivenCavity_8cpp_aebb2e65a1864b497bba56ae4b2b273ef}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!CheckZeroOneMatrix@{CheckZeroOneMatrix}}
+\index{CheckZeroOneMatrix@{CheckZeroOneMatrix}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{CheckZeroOneMatrix()}{CheckZeroOneMatrix()}}
+{\footnotesize\ttfamily bool Check\+Zero\+One\+Matrix (\begin{DoxyParamCaption}\item[{const double $\ast$}]{A,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_afa8d75c3502e3cbeb82afff5c64634ad}\label{TestLidDrivenCavity_8cpp_afa8d75c3502e3cbeb82afff5c64634ad}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!CompareFiles@{CompareFiles}}
+\index{CompareFiles@{CompareFiles}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{CompareFiles()}{CompareFiles()}}
+{\footnotesize\ttfamily bool Compare\+Files (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename1,  }\item[{const std\+::string \&}]{filename2,  }\item[{int}]{Npts }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_af2b85ee8ffd2ab8750c48cf46f7e1c1e}\label{TestLidDrivenCavity_8cpp_af2b85ee8ffd2ab8750c48cf46f7e1c1e}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!ExtractBoundary@{ExtractBoundary}}
+\index{ExtractBoundary@{ExtractBoundary}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{ExtractBoundary()}{ExtractBoundary()}}
+{\footnotesize\ttfamily void Extract\+Boundary (\begin{DoxyParamCaption}\item[{double $\ast$}]{u0,  }\item[{double $\ast$}]{u1,  }\item[{double $\ast$}]{u0\+\_\+top,  }\item[{double $\ast$}]{u1\+\_\+top,  }\item[{double $\ast$}]{u0\+\_\+bottom,  }\item[{double $\ast$}]{u1\+\_\+bottom,  }\item[{double $\ast$}]{u0\+\_\+right,  }\item[{double $\ast$}]{u1\+\_\+right,  }\item[{double $\ast$}]{u0\+\_\+left,  }\item[{double $\ast$}]{u1\+\_\+left,  }\item[{int}]{Nx,  }\item[{int}]{Ny }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a0c33976f7026b6803be6dde724f69995}\label{TestLidDrivenCavity_8cpp_a0c33976f7026b6803be6dde724f69995}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!ExtractColumn@{ExtractColumn}}
+\index{ExtractColumn@{ExtractColumn}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{ExtractColumn()}{ExtractColumn()}}
+{\footnotesize\ttfamily void Extract\+Column (\begin{DoxyParamCaption}\item[{double $\ast$}]{A,  }\item[{double $\ast$}]{B,  }\item[{int}]{Nx,  }\item[{int}]{Ny,  }\item[{int}]{col }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_af6d5a51ae3b5630350952400d91840dc}\label{TestLidDrivenCavity_8cpp_af6d5a51ae3b5630350952400d91840dc}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!ExtractInnerRectangle@{ExtractInnerRectangle}}
+\index{ExtractInnerRectangle@{ExtractInnerRectangle}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{ExtractInnerRectangle()}{ExtractInnerRectangle()}}
+{\footnotesize\ttfamily void Extract\+Inner\+Rectangle (\begin{DoxyParamCaption}\item[{double $\ast$}]{A,  }\item[{double $\ast$}]{B,  }\item[{int}]{Nx,  }\item[{int}]{Ny }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TestLidDrivenCavity_8cpp_a2416796601c284f00522d72b87746f98}\label{TestLidDrivenCavity_8cpp_a2416796601c284f00522d72b87746f98}} 
+\index{TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}!ExtractRow@{ExtractRow}}
+\index{ExtractRow@{ExtractRow}!TestLidDrivenCavity.cpp@{TestLidDrivenCavity.cpp}}
+\doxysubsubsection{\texorpdfstring{ExtractRow()}{ExtractRow()}}
+{\footnotesize\ttfamily void Extract\+Row (\begin{DoxyParamCaption}\item[{double $\ast$}]{A,  }\item[{double $\ast$}]{B,  }\item[{int}]{Nx,  }\item[{int}]{row }\end{DoxyParamCaption})}
+

@@ -1,14 +1,18 @@
 # Build system for 2D Lid Driven Cavity Incompressible Flow
 # all: 			builds the main solver executable
 # unittests: 	builds the test cases executable for the involved classes
-# run_test: 	executes the test executable
-# run: 			executes the main solver executable
+# run_test: 	executes the test executable for unit tests (LidDrivenCavity and SolverCG)
+# run: 			executes the main solver executable with a general simulation configuration
+# run_evaluate: executes the main solver executable with a grid size of 201 x 201
+# run_profiler: executes and collects data from the main solver executable for code optimisation
 # doc:			generates documentation using Doxygen
-# clean:		cleans object files, executables, test report, documentation, and results
+# clean:		removes object files, executables, test report, documentation, and results
+# clean_doc:	removes latex and html folder generated from doxygen
 
 # Common variables
 CC = mpicxx
 MPI_CC = mpiexec
+OMPI_CXX = g++-10 mpicxx -v
 CFLAGS = -std=c++11 -Wall -O0 -pedantic -fopenmp
 LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi 
 TEST_LIBS = -lboost_unit_test_framework
@@ -50,6 +54,9 @@ DOC_DIR = docs
 DOCX = Doxyfile
 HTML = html
 LATEX = latex
+
+# Profiler
+PROF_DIR = profiler
 
 # parameters to run the main solver executable (can be overwritten)
 Np ?= 1 # Number of processors
@@ -98,13 +105,19 @@ $(TEST_OUTPUT): $(TEST_OBJS) $(TEST_SRC_OBJS)
 run_test: $(TEST_OUTPUT)
 	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(TEST_OUTPUT) --log_level=test_suite --report_level=short --output_format=HRF --log_sink=$(TEST_REPORT)
 
-# Executes the main solver executable
+# Executes the main solver executable for general purposes
 run: $(OUTPUT)
-	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx $(Lx) --Ly $(Ly) --dt $(dt) --T $(T) --Re $(Re) --Nx $(Nx) --Ny $(Ny) --verbose $(verbose)
+	OMP_NUM_THREADS=$(Nt) $(MPI_CC) --bind-to none -np $(Np) ./$(OUTPUT) --Lx $(Lx) --Ly $(Ly) --dt $(dt) --T $(T) --Re $(Re) --Nx $(Nx) --Ny $(Ny) --verbose $(verbose)
 
-# Executes the main solver executable
+# Executes the main solver executable for evaluation
 run_evaluate: $(OUTPUT)
-	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
+	OMP_NUM_THREADS=$(Nt) $(MPI_CC) --bind-to none -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
+
+run_profiler: $(PROF_DIR) $(OUTPUT)
+	OMP_NUM_THREADS=1 collect -o $(PROF_DIR)/experiment2.er ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
+
+$(PROF_DIR):
+	mkdir -p $(PROF_DIR)
 
 doc:
 	mkdir -p $(DOC_DIR)

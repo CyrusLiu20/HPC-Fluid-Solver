@@ -43,7 +43,7 @@ void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
 /**
  * @brief (Primarily for debugging purposes, not used in the code) Scatters the global domain data from the root process to all other processes, ensuring proper distribution of data.
  * 
- * The function receives the global domain data at the root process and scatters it to all other processes in the communicator.
+ * The function scatters the global matrix to all other processes.
  * It ensures proper alignment and distribution of data based on the process rank and offset values.
  * 
  * @param A_local Pointer to the local domain array (vorticity or stream function) of size Nx_local * Ny_local.
@@ -101,10 +101,7 @@ void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
  * 
  * @details This function is responsible for gathering the local domain data from each process and sending it to the root process
  * to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication
- * between processes in a parallel environment. If the current process is not the root process, it sends the local domain data to the
- * root process. Upon receiving the data, the root process reconstructs the global domain by placing the received data in the appropriate
- * positions. The function also handles adjustments to the local grid size based on neighboring processes to ensure consistency in the
- * gathered domain data.
+ * between processes in a parallel environment
  * 
  * @see ScatterDomain()
  */
@@ -630,6 +627,7 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel()
  * 
  * @param A_local Pointer to the local domain array containing the data to be communicated.
  * 
+ * @see DomainDecomposition()
 */
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
@@ -912,7 +910,7 @@ void LidDrivenCavity::Integrate()
  * During each time step, the simulation state is advanced by calling the `Advance` function.
  * Optionally, verbose output can be enabled for the first time step for detailed logging.
  * 
- * @deprecated This function is deprecated and will be removed in future versions. Consider using the AdvanceParallel() function for parallel integration.
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the AdvanceParallel() function for parallel time step advancement.
  * 
  * @see AdvanceParallel(), IntegrateParallel()
  */

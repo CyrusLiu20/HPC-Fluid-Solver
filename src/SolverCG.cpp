@@ -11,9 +11,19 @@ using namespace std;
 
 #include "SolverCG.h"
 
+/**
+ * @brief Natural ordering based on global x and y coordinates
+ */
 #define IDX(I,J) ((J)*Nx + (I))
 #define IDX_local(I,J) ((J)*Nx + (I)) // Nx_local same as Nx in SolverCG Class
 
+
+/**
+ * @brief Prints the content of a 2D matrix to the standard output.
+ * @param nx The number of columns in the matrix.
+ * @param ny The number of rows in the matrix.
+ * @param A Pointer to the 1D array representing the matrix.
+*/
 void SolverCG::Printmatrix(int nx, int ny, double* A) {
     cout.precision(4);
     for (int j = ny-1; j >= 0; --j) {
@@ -25,7 +35,20 @@ void SolverCG::Printmatrix(int nx, int ny, double* A) {
     cout << endl;
 }
 
-
+/**
+ * @brief Initializes the SolverCG conjugate gradient solver solver for parallel execution.
+ * 
+ * Allocates memory for local residual vector (r), local conjugate direction vector (p), local preconditioned vector (z),
+ * local temporary vector (t) as well as buffers required for inter-domain communication.
+ * Initializes all arrays to prevent arbitrary and unpredictable values.
+ * 
+ * @param pNX The number of local grid points in x-direction
+ * @param pNy The number of local grid points in y-direction
+ * @param pdx Grid spacing in x-direction
+ * @param pdy Grid spacing in y-direction
+ * 
+ * 
+ */
 SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
 {
     dx = pdx;
@@ -80,6 +103,17 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
 
 }
 
+/**
+ * @brief Configures the neighboring process ranks for inter-process communication.
+ * 
+ * This function sets the ranks of the neighboring processes (up, down, left, and right) 
+ * for the current process to facilitate inter-process communication in a distributed environment.
+ * 
+ * @param rank_up    Rank of the neighboring process above the current process.
+ * @param rank_down  Rank of the neighboring process below the current process.
+ * @param rank_left  Rank of the neighboring process to the left of the current process.
+ * @param rank_right Rank of the neighboring process to the right of the current process.
+ */
 void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right){
     this->rank_up = rank_up;
     this->rank_down = rank_down;
@@ -98,6 +132,18 @@ void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_
 
 }
 
+/**
+ * @brief (Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain
+ * and initialises memory at root process for assembling global domain
+ * 
+ * Global position can be computed with offset details, this faciliates gathering of all 
+ * local domains for debugging purposes. Global matrices are initialised as zero
+ * to prevent arbitrary and unpredictable values
+ * 
+ * @warning Will be removed future versions
+ * 
+ * @see GatherDomain()
+*/
 void SolverCG::SetOffset(int offset_x, int offset_y, int Nx_global, int Ny_global){
     this->offset_x = offset_x;
     this->offset_y = offset_y;
@@ -121,7 +167,9 @@ void SolverCG::SetOffset(int offset_x, int offset_y, int Nx_global, int Ny_globa
     }
 }
 
-
+/**
+ * @brief Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector
+*/
 SolverCG::~SolverCG()
 {
     delete[] r;
@@ -130,7 +178,22 @@ SolverCG::~SolverCG()
     delete[] t;
 }
 
-
+/**
+ * @brief Solve a linear system using the Conjugate Gradient method in parallel.
+ * 
+ * 
+ * @param b Pointer to the right-hand side vector (Vorticity in this code).
+ * @param x Pointer to the solution vector (Stream function in this code).
+ * @param verbose Whether to display convergence details during simulation
+ * 
+ * @details This method solves a linear system Ax = b using the Conjugate Gradient (CG) method
+ * in parallel. It initializes necessary variables, computes error tolerance, and performs
+ * iterative CG steps until convergence or reaching the maximum number of iterations.
+ * 
+ * @note Program terminates if convergence is not reached within the maximum number of iterations
+ * 
+ * @see ApplyOperatorParallel(), PreconditionParallel(), ImposeBCParallel()
+*/
 void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     unsigned int n = Nx*Ny;
     int k;
@@ -222,6 +285,17 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     }
 }
 
+
+/**
+ * @brief Apply the Laplace operator to the input vector.
+ * 
+ * @param in pointer to the input vector
+ * @param out pointer to the operator vector
+ * 
+ * 
+ * @details This method applies the Laplace operator to the input vector
+ * representing the linear system, producing the output vector.
+*/ 
 void SolverCG::ApplyOperator(double* in, double* out) {
     // Assume ordered with y-direction fastest (column-by-column)
     double dx2i = 1.0/dx/dx;
@@ -242,7 +316,16 @@ void SolverCG::ApplyOperator(double* in, double* out) {
     }
 }
 
-
+/**
+ * @brief Apply parallel preconditioning to the input vector.
+ * 
+ * @details This method applies parallel preconditioning to the input vector,
+ * producing the output vector. Preconditioning is a technique used to improve
+ * the convergence of iterative methods by transforming the linear system.
+ * 
+ * @param in Pointer to the input vector.
+ * @param out Pointer to the output vector.
+ */
 void SolverCG::PreconditionParallel(double* in, double* out) {
     int i, j;
     double dx2i = 1.0/dx/dx;
@@ -261,8 +344,8 @@ void SolverCG::PreconditionParallel(double* in, double* out) {
     if (rank_right != -2) {i_end_temp++;}
 
 
-    for (i = i_start_temp; i < i_end_temp; ++i) {
-        for (j = j_start_temp; j < j_end_temp; ++j) {
+    for (j = j_start_temp; j < j_end_temp; ++j) {
+        for (i = i_start_temp; i < i_end_temp; ++i) {
             out[IDX(i,j)] = in[IDX(i,j)]/factor;
         }
     }
@@ -286,6 +369,15 @@ void SolverCG::PreconditionParallel(double* in, double* out) {
     }
 }
 
+
+/**
+ * @brief Impose boundary conditions on the input vector in parallel.
+ * 
+ * @details This method imposes boundary conditions on the input vector in parallel,
+ * modifying the values of boundary elements to satisfy specified boundary conditions.
+ * 
+ * @param inout Pointer to the modified input vector.
+ */
 void SolverCG::ImposeBCParallel(double* inout) {
     // Boundaries
     for (int i = 0; i < Nx; ++i) {
@@ -309,6 +401,15 @@ void SolverCG::ImposeBCParallel(double* inout) {
 }
 
 
+/**
+ * @brief Manages inter-domain communication for the conjugate gradient solver.
+ * 
+ * This function handles communication between neighboring processes in the parallel 
+ * domain decomposition of the Lid-Driven Cavity simulation. It exchanges boundary 
+ * information between adjacent domains to ensure consistency in the simulation results.
+ * 
+ * @param A_local Pointer to the local domain array containing the data to be communicated.
+*/
 void SolverCG::DomainInterComunnication(double* A_local){
 
     int Nx_local = Nx;
@@ -405,6 +506,20 @@ void SolverCG::DomainInterComunnication(double* A_local){
     }       
 }
 
+
+/**
+ * @brief (Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain.
+ * The function ensures proper alignment and communication between processes in a parallel environment.
+ * 
+ * @param A_local Pointer to the local domain array.
+ * @param A_global Pointer to the global domain array.
+ * 
+ * @details This function is responsible for gathering the local domain data from each process and sending it to the root process
+ * to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication
+ * between processes in a parallel environment
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions.
+ */
 void SolverCG::GatherDomain(double* A_local, double* A_global){
 
     int Nx_local = Nx;
@@ -479,6 +594,20 @@ void SolverCG::GatherDomain(double* A_local, double* A_global){
 
 }
 
+/**
+ * @brief Compute the global error of a vector in parallel.
+ * 
+ * @details This method computes the global error of a vector in parallel by summing
+ * the squared values of its elements across all MPI ranks and then taking the square root
+ * of the sum.
+ * 
+ * @param n The total number of elements in the vector.
+ * @param a Pointer to the local error vector.
+ * 
+ * @return The global reduced error.
+ * 
+ * @see ComputeDotGlobalParallel()
+ */
 double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
     double error = 0; // squared without norm yet
     double error_global = 0;
@@ -497,7 +626,21 @@ double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
     return error_global;
 }
 
-
+/**
+ * @brief Compute the global dot prduct of two vectors in parallel.
+ * 
+ * @details This method computes the global dot product of two vector in parallel by summing
+ * the values of its elements across all MPI ranks.
+ * 
+ * @param n The total number of elements in the vector.
+ * @param a Pointer to the first vector.
+ * @param b Pointer to the second vector.
+ * 
+ * 
+ * @return The global dot product.
+ * 
+ * @see ComputeErrorGlobalParallel()
+ */
 double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
     double value = 0; // squared without norm yet
     double value_global = 0;
@@ -539,10 +682,27 @@ double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
 
 
 
+//////////////////////////////////////////    Legacy baseline code    //////////////////////////////////////////
 
 
-
-
+/**
+ * @brief Solve a linear system using the Conjugate Gradient method in serial.
+ * 
+ * 
+ * @param b Pointer to the right-hand side vector (Vorticity in this code).
+ * @param x Pointer to the solution vector (Stream function in this code).
+ * @param verbose Whether to display convergence details during simulation
+ * 
+ * @details This method solves a linear system Ax = b using the Conjugate Gradient (CG) method
+ * in serial. It initializes necessary variables, computes error tolerance, and performs
+ * iterative CG steps until convergence or reaching the maximum number of iterations.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the SolveParallel() function for parallel cg solve.
+ * 
+ * @note Program terminates if convergence is not reached within the maximum number of iterations
+ * 
+ * @see ApplyOperatorParallel(), PreconditionParallel(), ImposeBCParallel()
+*/
 void SolverCG::Solve(double* b, double* x, bool verbose) {
     unsigned int n = Nx*Ny;
     int k;
@@ -606,6 +766,20 @@ void SolverCG::Solve(double* b, double* x, bool verbose) {
     }
 }
 
+
+/**
+ * @brief Apply serial preconditioning to the input vector.
+ * 
+ * @details This method applies preconditioning to the input vector,
+ * producing the output vector. Preconditioning is a technique used to improve
+ * the convergence of iterative methods by transforming the linear system.
+ * 
+ * @param in Pointer to the input vector.
+ * @param out Pointer to the output vector.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the PreconditionParallel() function for parallel preconditioning.
+ * 
+ */
 void SolverCG::Precondition(double* in, double* out) {
     int i, j;
     double dx2i = 1.0/dx/dx;
@@ -628,6 +802,17 @@ void SolverCG::Precondition(double* in, double* out) {
     }
 }
 
+
+/**
+ * @brief Impose boundary conditions on the input vector in serial.
+ * 
+ * @details This method imposes boundary conditions on the input vector in serial.
+ * modifying the values of boundary elements to satisfy specified boundary conditions.
+ * 
+ * @param inout Pointer to the modified input vector.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the ImposeBCParallel() function for parallel boundary imposing
+ */
 void SolverCG::ImposeBC(double* inout) {
         // Boundaries
     for (int i = 0; i < Nx; ++i) {
