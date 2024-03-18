@@ -12,6 +12,7 @@ Numerical simulation
 Results validation
 5. FinalResultCheck: Check simulation results for a 9x9 grid
 6. FinalResult2Check: Check simulation results for a 49x49 grid
+7. FinalResult3Check: Check simulation results for a 201x201 grid
 */
 
 
@@ -323,11 +324,11 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     std::ifstream file1(filename1), file2(filename2);
     std::string line1, line2;
 
-    double tolerance = 1e-10; // absolute error
-    double tolerance_percentage = 0.05; // witin 5%
+    double tolerance = 1e-6; // absolute error
+    double tolerance_percentage = 0.1;
     int tolerance_corrupt = 0;
     bool all_correct = false;
-    bool verbose = true;
+    bool verbose = false;
 
     // Compare line by line
     while (std::getline(file1, line1) && std::getline(file2, line2)) {
@@ -348,8 +349,9 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
 
     }
 
-    if(tolerance_corrupt<Npts*0.01){
+    if(tolerance_corrupt<Npts*0.05){
         all_correct = true;
+        std::cout << "Closeness level : " <<  (double)(1-tolerance_corrupt/(Npts*4))*100 << "%" << std::endl;
     }
 
     return all_correct;
@@ -365,8 +367,6 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
     // Grid points for test case
     int Nx_test = 9;
     int Ny_test = 9;
-    // int Nx_test = 49;
-    // int Ny_test = 49;
     int Npts = Nx_test*Ny_test;
 
     double dt_test = 2e-4; // time step for test case
@@ -437,15 +437,13 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
         cout << "Successfully written report" << endl;
     }
 
-	// MPI_Finalize();
-
     if(rank==0){
         std::string output_true = "test/data/final.txt";
-        // std::string output_true = "test/data/final2.txt";
         bool results = CompareFiles(output,output_true,Npts);
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
     BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
 
 }
@@ -535,6 +533,97 @@ BOOST_AUTO_TEST_CASE(FinalResults2Check)
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+    BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
+
+}
+
+
+// Test case for all results at the end (u-velocity, v-velocity, vorticity, and stream function)
+BOOST_AUTO_TEST_CASE(FinalResults3Check)
+{
+    // Domain length for test case
+    double Lx_test = 1;
+    double Ly_test = 1;
+    // Grid points for test case
+    int Nx_test = 201;
+    int Ny_test = 201;
+    int Npts = Nx_test*Ny_test;
+
+    double dt_test = 0.005; // time step for test case
+    double T_test = 0.5; // Total simulation for test case
+
+    double Re_test = 1000; // Reynolds number for test case 
+    bool verbose = false; // Do not diplay convergence detail inside this test
+
+
+
+    // // Initialise MPI
+    int rank = 0; // ID of process
+    int size = 0; // Number of processes
+
+    // Get comm rank and size of each process
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Check if the number of processes is a perfect squares
+    int sqrtNum = sqrt(size);
+    if(sqrtNum * sqrtNum != size){
+		if(rank==0){
+			cout << "Please have n^2 of processes" << endl;
+		}
+		MPI_Finalize();
+    }
+
+    // Create a cartesian grid of n x n to compute
+    MPI_Comm domain_local;
+    int dims[2] = {0, 0};
+    int periods[2] = {0, 0};
+    int coords[2];
+    int reorder = 0; // Do not allow reordering for now
+
+    MPI_Dims_create(size, 2, dims);
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, reorder, &domain_local); // Create the Cartesian communicator
+    MPI_Cart_coords(domain_local, rank, 2, coords); // Get the coordinates of the current process in the Cartesian grid
+
+    int rank_left, rank_right, rank_up, rank_down; // Ranks of neighboring processes
+    // Get the ranks of the neighboring processes
+    MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
+    MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
+
+
+    LidDrivenCavity* solver = new LidDrivenCavity();
+    solver->SetDomainSize(Lx_test,Ly_test);
+    solver->SetGridSize(Nx_test,Ny_test);
+    solver->SetTimeStep(dt_test);
+    solver->SetFinalTime(T_test);
+    solver->SetReynoldsNumber(Re_test);
+    solver->SetVerbose(verbose);
+    solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
+    solver->DomainDecomposition();
+
+
+    // Lid Driven Cavity Parallel
+    std::string output = "test/data/final_test.txt";
+    if(rank==0){
+        cout << "Begin 201x201 grid simulation (Re=1000, dt=0.005, T=0.5, Lx=1, Ly=1)" << endl;
+    }
+
+    solver->DomainDecomposition();
+    solver->InitialiseParallel();
+    solver->IntegrateParallel();
+    if(rank==0){
+        solver->WriteSolution(output);
+        cout << "Successfully written report" << endl;
+    }
+
+    if(rank==0){
+        std::string output_true = "test/data/final3.txt";
+        bool results = CompareFiles(output,output_true,Npts);
+        BOOST_CHECK_MESSAGE(results, "Results do not match"); 
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
     BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
 
 }

@@ -57,6 +57,7 @@ T  ?= 1.0 # Total simulation time
 Re ?= 10 # Reynolds number
 Nx ?= 9 # Number of grid points in x-direction
 Ny ?= 9 # Number of grid points in y-direction
+Nt ?= 1 # Number of threads
 verbose ?= false # Verbosity
 
 
@@ -71,6 +72,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+
+$(RES_DIR):
+	mkdir -p $(RES_DIR)
 
 # Builds the test cases executable for the involved classes
 unittests: $(TEST_BUILD_DIR) $(TEST_OUTPUT)
@@ -89,11 +93,11 @@ $(TEST_OUTPUT): $(TEST_OBJS) $(TEST_SRC_OBJS)
 
 # Executes the test executable
 run_test: $(TEST_OUTPUT)
-	$(MPI_CC) -np $(Np) ./$(TEST_OUTPUT) --log_level=test_suite --report_level=short --output_format=HRF --log_sink=$(TEST_REPORT)
+	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(TEST_OUTPUT) --log_level=test_suite --report_level=short --output_format=HRF --log_sink=$(TEST_REPORT)
 
 # Executes the main solver executable
 run: $(OUTPUT)
-	$(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx $(Lx) --Ly $(Ly) --dt $(dt) --T $(T) --Re $(Re) --Nx $(Nx) --Ny $(Ny) --verbose $(verbose)
+	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx $(Lx) --Ly $(Ly) --dt $(dt) --T $(T) --Re $(Re) --Nx $(Nx) --Ny $(Ny) --verbose $(verbose)
 
 doc:
 	doxygen -g $(DOCX)

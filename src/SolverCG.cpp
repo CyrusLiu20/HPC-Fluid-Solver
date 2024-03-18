@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <mpi.h>
+#include <omp.h>
 using namespace std;
 
 #include <cblas.h>
@@ -140,9 +141,6 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     double tol = 0.001;
 
     eps = ComputeErrorGlobalParallel(n,b);
-    // if (rank==root){
-    //     std::cout << "Error (eps) : " << eps << std::endl;
-    // }
     if (eps < tol*tol) {
         std::fill(x, x+n, 0.0);
         cout << "Norm is " << eps << endl;
@@ -153,40 +151,16 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     DomainInterComunnication(p); // Remove if unnecessary
     ApplyOperator(x, t);
 
-    // GatherDomain(t,t_global);
-    // if (rank==root){
-    //     std::cout << "t (t) : "<< std::endl;
-    //     Printmatrix(Nx_global,Ny_global,t_global);
-    // }
-
     cblas_dcopy(n, b, 1, r, 1);        // r_0 = b (i.e. b)
     ImposeBCParallel(r);
 
-    // GatherDomain(r,r_global);
-    // if (rank==root){
-    //     std::cout << "r (r) : "<< std::endl;
-    //     Printmatrix(Nx_global,Ny_global,r_global);
-    // }
-
     cblas_daxpy(n, -1.0, t, 1, r, 1);
-    // Precondition(r, z);
     PreconditionParallel(r, z);
     DomainInterComunnication(z); // Remove if unnecessary
 
 
-    // GatherDomain(z,z_global);
-    // if (rank==root){
-    //     std::cout << "z (z) : "<< std::endl;
-    //     Printmatrix(Nx_global,Ny_global,z_global);
-    // }
-
     cblas_dcopy(n, z, 1, p, 1);        // p_0 = r_0
 
-    // GatherDomain(p,p_global);
-    // if (rank==root){
-    //     std::cout << "p (p) : "<< std::endl;
-    //     Printmatrix(Nx_global,Ny_global,p_global);
-    // }
     DomainInterComunnication(p); // Remove if unnecessary
 
     k = 0;
@@ -199,11 +173,6 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         alpha1_global = ComputeDotGlobalParallel(n,t,p);
         alpha2_global = ComputeDotGlobalParallel(n,r,z);
         alpha_global = alpha2_global/alpha1_global;
-        // if (rank==root){
-        //     std::cout << "Step size (alpha1_global) : " << alpha1_global << std::endl;
-        //     std::cout << "Step size (alpha2_global) : " << alpha2_global << std::endl;
-        //     std::cout << "Step size (alpha_global) : " << alpha_global << std::endl;
-        // }
 
         // One single new search direction for all processes (beta_global)
         beta1_global  = alpha2_global;
@@ -214,32 +183,20 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         DomainInterComunnication(x); // Remove if unnecessary
         DomainInterComunnication(r); // Remove if unnecessary
 
-        // eps = cblas_dnrm2(n, r, 1);
         eps = ComputeErrorGlobalParallel(n,r);
-        // if (rank==root){
-        //     std::cout << "Error (eps) : " << eps << std::endl;
-        // }
+
         if (eps < tol*tol) {
             break;
         }
-        // Precondition(r, z);
         PreconditionParallel(r, z);
 
-        // beta2 = cblas_ddot(n, r, 1, z, 1);
-        // MPI_Allreduce(&beta2, &beta2_global, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         beta2_global = ComputeDotGlobalParallel(n,r,z);
         beta_global = beta2_global / beta1_global;
-        // if (rank==root){
-        //     std::cout << "Direction coefficient (beta_global) : " << beta_global << std::endl;
-        // }
 
         cblas_dcopy(n, z, 1, t, 1);
-        // cblas_daxpy(n, beta, p, 1, t, 1);
         cblas_daxpy(n, beta_global, p, 1, t, 1);
         DomainInterComunnication(p); // Remove if unnecessary
         cblas_dcopy(n, t, 1, p, 1);
-        // std::cout << "Search direction (p) : "<< std::endl;
-        // Printmatrix(Nx,Ny,p);
     } while (k < iter_max); // Set a maximum number of iterations
 
 

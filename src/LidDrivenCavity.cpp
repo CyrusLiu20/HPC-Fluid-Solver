@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <mpi.h>
+#include <omp.h>
 
 using namespace std;
 

@@ -4,6 +4,7 @@
 #include <ctime>
 #include <math.h>
 #include <mpi.h>
+#include <omp.h>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
