@@ -1,5 +1,10 @@
 #pragma once
 
+/**
+ * @brief SolverCG class for solving a linear system using the Conjugate Gradient method. It is used to
+ * solve the laplace operator in the vorticity stream function eqution.
+ * This class supports the usage for both serial and parallel computation.
+ */
 class SolverCG
 {
 public:
@@ -51,6 +56,8 @@ private:
     int i_end;
     int j_start;
     int j_end;
+
+    
     int offset_x;
     int offset_y;
     int Nx_global;

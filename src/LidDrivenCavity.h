@@ -5,6 +5,12 @@ using namespace std;
 
 class SolverCG;
 
+
+/**
+ * @brief LidDrivenCavity is a class designed to simulate fluid flow within a two-dimensional
+ * lid-driven cavity. This fluid problem is commonly used as a benchmark problem to evaluate CFD
+ * algorithm performances.
+*/
 class LidDrivenCavity
 {
 public:
@@ -55,7 +61,6 @@ private:
 
     double* v   = nullptr;
     double* s   = nullptr;
-    // double* tmp = nullptr;
 
     double* u0   = nullptr;
     double* u1   = nullptr;
@@ -91,7 +96,6 @@ private:
     int    offset_y;
 
     double* v_local = nullptr; // local vorticity matrix
-    double* v_next_local = nullptr; // local vorticity matrix
     double* s_local = nullptr; // local stream function matrix
 
     double* A_global_temp = nullptr; // temporary pointer storing global matrix
@@ -136,19 +140,11 @@ private:
     void ComputeNextVorticityParallel();
     void ComputeLaplaceOperatorParallel();
 
-
-
-    int Local2Global(int i_local, int j_local);
-    bool CheckBoundary(int i_local, int j_local);
-
     // Threading
     int Nt;
 
 
-
-
     void CreateU();
-    void PrintMatrix(int nsv, double* A);
     void Printmatrix(int nx, int ny, double* A);
 };
 

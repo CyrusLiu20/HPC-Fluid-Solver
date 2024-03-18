@@ -10,15 +10,25 @@ using namespace std;
 
 #include <cblas.h>
 
+/**
+ * @brief Natural ordering based on global x and y coordinates
+ */
 #define IDX(I,J) ((J)*Nx + (I))
+/**
+ * @brief Natural ordering based on local x and y coordinates
+ */
 #define IDX_local(I_local,J_local) ((J_local)*Nx_local + (I_local))
-#define IDX_local_buffer(I_local,J_local) ((J_local+1)*(Nx_local+2) + (I_local+1))
-
-
 
 #include "LidDrivenCavity.h"
 #include "SolverCG.h"
 
+
+/**
+ * @brief Prints the content of a 2D matrix to the standard output.
+ * @param nx The number of columns in the matrix.
+ * @param ny The number of rows in the matrix.
+ * @param A Pointer to the 1D array representing the matrix.
+*/
 void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
     cout.precision(4);
     for (int j = ny-1; j >= 0; --j) {
@@ -30,39 +40,21 @@ void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
     cout << endl;
 }
 
-void LidDrivenCavity::PrintMatrix(int nsv, double* A) {
-    cout.precision(4);
-    for (int i = 0; i < nsv; ++i) {
-        for (int j = 0; j < nsv; ++j) {
-            cout << setw(13) << A[j*nsv+i] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-}
-
-int LidDrivenCavity::Local2Global(int i_local, int j_local){
-    int index_global = (j_local + offset_y + 1)*Nx + (i_local + offset_x + 1);
-    return index_global;
-}
-
-
-// Function to check if a number is at the boundary of a grid
-bool LidDrivenCavity::CheckBoundary(int i_local, int j_local)
-{
-    int index = Local2Global(i_local,j_local);
-    int rows = Ny;
-    int cols = Nx;
-    return index < cols ||                // Top row
-           index >= (rows - 1) * cols ||  // Bottom row
-           index % cols == 0 ||           // Leftmost column
-           index % cols == cols - 1;      // Rightmost column
-}
-
+/**
+ * @brief (Primarily for debugging purposes, not used in the code) Scatters the global domain data from the root process to all other processes, ensuring proper distribution of data.
+ * 
+ * The function receives the global domain data at the root process and scatters it to all other processes in the communicator.
+ * It ensures proper alignment and distribution of data based on the process rank and offset values.
+ * 
+ * @param A_local Pointer to the local domain array (vorticity or stream function) of size Nx_local * Ny_local.
+ * @param A_global Pointer to the global domain array (vorticity or stream function) at the root process of size Nx * Ny.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions.
+ * 
+ * @see GatherDomain()
+ */
 void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
 {
-
-
 
     if(rank==root){
         for (int src = 1; src < Nprocs; ++src) {
@@ -100,7 +92,22 @@ void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
 
 }
 
-
+/**
+ * @brief Gathers the local domain data from each process and sends it to the root process to assemble the global domain.
+ * The function ensures proper alignment and communication between processes in a parallel environment.
+ * 
+ * @param A_local Pointer to the local domain array (vorticity or stream function) of size Nx_local * Ny_local.
+ * @param A_global Pointer to the global domain array (vorticity or stream function) at the root process of size Nx * Ny.
+ * 
+ * @details This function is responsible for gathering the local domain data from each process and sending it to the root process
+ * to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication
+ * between processes in a parallel environment. If the current process is not the root process, it sends the local domain data to the
+ * root process. Upon receiving the data, the root process reconstructs the global domain by placing the received data in the appropriate
+ * positions. The function also handles adjustments to the local grid size based on neighboring processes to ensure consistency in the
+ * gathered domain data.
+ * 
+ * @see ScatterDomain()
+ */
 void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
 
     int Nx_local_temp = Nx_local;
@@ -177,11 +184,19 @@ LidDrivenCavity::LidDrivenCavity()
 {
 }
 
+/**
+ * @brief Delete unnecessary memory for good practices
+*/
 LidDrivenCavity::~LidDrivenCavity()
 {
     CleanUp();
 }
 
+/**
+ * @brief Configure global domain size
+ * @param xlen (double) global domain length in x-direction
+ * @param ylen (double) global domain length in y-direction
+*/
 void LidDrivenCavity::SetDomainSize(double xlen, double ylen)
 {
     this->Lx = xlen;
@@ -189,6 +204,11 @@ void LidDrivenCavity::SetDomainSize(double xlen, double ylen)
     UpdateDxDy();
 }
 
+/**
+ * @brief Configure global grid size and update mesh
+ * @param nx (double) number of global grid points in x-direction
+ * @param ny (double) number of global grid points in y-direction
+*/
 void LidDrivenCavity::SetGridSize(int nx, int ny)
 {
     this->Nx = nx;
@@ -201,32 +221,74 @@ void LidDrivenCavity::SetGridSize(int nx, int ny)
     UpdateDxDy();
 }
 
+/**
+ * @brief Configure grid spacing based on domain size and number of grid points
+*/
+void LidDrivenCavity::UpdateDxDy()
+{
+    dx = Lx / (Nx-1);
+    dy = Ly / (Ny-1);
+    Npts = Nx * Ny;
+}
+
+
+/**
+ * @brief Configure time step
+ * @param deltat (double) simulation time step
+*/
 void LidDrivenCavity::SetTimeStep(double deltat)
 {
     this->dt = deltat;
 }
 
+/**
+ * @brief Configure total simulation time
+ * @param finalt (double) total simulation time
+*/
 void LidDrivenCavity::SetFinalTime(double finalt)
 {
     this->T = finalt;
 }
 
+/**
+ * @brief Configure simulation reynolds number
+ * @param re (double) reynolds number
+*/
 void LidDrivenCavity::SetReynoldsNumber(double re)
 {
     this->Re = re;
     this->nu = 1.0/re;
 }
 
+/**
+ * @brief Configure verbosity option to display simulation time step and CG convergence detail
+ * @param verbose (bool) verbosity option
+*/
 void LidDrivenCavity::SetVerbose(bool verbose)
 {
     this->verbose = verbose;
 }
 
+/**
+ * @brief Configure the number of threads
+ * @param Nt (int) number of threads
+*/
 void LidDrivenCavity::SetThreads(int Nt)
 {
     this->Nt = Nt;
 }
 
+/**
+ * @brief Configures the neighboring process ranks for inter-process communication.
+ * 
+ * This function sets the ranks of the neighboring processes (up, down, left, and right) 
+ * for the current process to facilitate inter-process communication in a distributed environment.
+ * 
+ * @param rank_up    Rank of the neighboring process above the current process.
+ * @param rank_down  Rank of the neighboring process below the current process.
+ * @param rank_left  Rank of the neighboring process to the left of the current process.
+ * @param rank_right Rank of the neighboring process to the right of the current process.
+ */
 void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right)
 {
     this->rank_up = rank_up;
@@ -236,6 +298,18 @@ void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, in
 
 }
 
+/**
+ * @brief Performs domain decomposition for parallel computation.
+ * 
+ * This function divides the computational domain into smaller subdomains for parallel 
+ * computation using the MPI library. Each process is assigned a portion of the domain 
+ * based on its rank, allowing for parallel execution of the Lid-Driven Cavity simulation.
+ * 
+ * The domain decomposition ensures that each process works on a distinct portion of 
+ * the domain, facilitating efficient parallelization of the computation.
+ * 
+ * Note: This function requires the MPI library for parallel communication.
+ */
 void LidDrivenCavity::DomainDecomposition()
 {
 
@@ -280,11 +354,17 @@ void LidDrivenCavity::DomainDecomposition()
 
 }
 
+/**
+ * @brief Initializes the LidDrivenCavity solver for parallel execution.
+ * 
+ * Allocates memory for local vorticity and stream function arrays, as well as buffers required for inter-domain communication.
+ * Initializes all arrays to prevent arbitrary and unpredictable values.
+ */
 void LidDrivenCavity::InitialiseParallel()
 {
     v_local = new double[Npts_local];
     s_local = new double[Npts_local];
-    v_next_local = new double[Npts_local];
+    // v_next_local = new double[Npts_local];
     cg = new SolverCG(Nx_local,Ny_local,dx,dy);
     cg->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     cg->SetOffset(offset_x,offset_y,Nx,Ny);
@@ -293,7 +373,7 @@ void LidDrivenCavity::InitialiseParallel()
     for (int i=0;i<Npts_local;i++) {
         v_local[i] = 0;
         s_local[i] = 0;
-        v_next_local[i] = 0;
+        // v_next_local[i] = 0;
     }    
 
     if(rank==root){
@@ -330,6 +410,9 @@ void LidDrivenCavity::InitialiseParallel()
     }    
 }
 
+/**
+ * @brief Allocate memory for global u and v velocity to prevent memory leakage
+*/
 void LidDrivenCavity::CreateU(){
     u0 = new double[Npts];
     u1 = new double[Npts];
@@ -337,6 +420,23 @@ void LidDrivenCavity::CreateU(){
 
 }
 
+/**
+ * @brief Integrates the Lid-Driven Cavity simulation over time in parallel.
+ * This function iterates over time steps, advancing the simulation state at each step.
+ * Gathers all local vorticity and stream for writing purposes
+ * 
+ * @details
+ * The simulation proceeds for a total of `NSteps` time steps, where `NSteps` is determined
+ * based on the total simulation time (`T`) and the time step size (`dt`).
+ * 
+ * During each time step, the simulation state is advanced by calling the `AdvanceParallel` function.
+ * Optionally, verbose output can be enabled for the first time step for detailed logging.
+ * 
+ * Finally, the local simulation domain data is gathered from each process to reconstruct the 
+ * complete simulation state for post-processing and analysis.
+ * 
+ *  @see AdvanceParallel(), ComputeBoundaryVorticityParallel(), ComputeInteriorVorticityParallel(), ComputeNextVorticityParallel(), ComputeLaplaceOperatorParallel()
+ */
 void LidDrivenCavity::IntegrateParallel(){
     int NSteps = ceil(T/dt);
 
@@ -356,12 +456,23 @@ void LidDrivenCavity::IntegrateParallel(){
     GatherDomain(s_local,s);
 }
 
+
+
+/**
+ * @brief Advances the Lid-Driven Cavity simulation to the next time step in parallel.
+ * 
+ * This function performs the necessary computations to advance the Lid-Driven Cavity 
+ * simulation to the next time step in a parallel environment. It includes several steps 
+ * such as computing boundary and interior vorticity, domain inter-communication, computing 
+ * the Laplace operator, and updating the vorticity and stream function matrices.
+ * 
+ *  @see IntegrateParallel(), ComputeBoundaryVorticityParallel(), ComputeInteriorVorticityParallel(), ComputeNextVorticityParallel(), ComputeLaplaceOperatorParallel()
+*/
 void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
     ComputeBoundaryVorticityParallel();
     ComputeInteriorVorticityParallel();
 
-    // GatherDomain(v_local,v);
     if(rank==root&&verbose_advance){
         std::cout << "(Interior vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -371,8 +482,6 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
     ComputeNextVorticityParallel();
     DomainInterComunnication(v_local);  
 
-    // GatherDomain(v_local,v);
-    // GatherDomain(s_local,s);
     if(rank==root&&verbose_advance){
         std::cout << "(Next vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -382,8 +491,6 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
     ComputeLaplaceOperatorParallel();
 
-    // GatherDomain(v_local,v);
-    // GatherDomain(s_local,s);
     if(rank==root&&verbose_advance){
         std::cout << "(Laplace operator) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
@@ -394,6 +501,19 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 }
 
 
+/**
+ * @brief Computes the boundary vorticity for the Lid-Driven Cavity simulation in parallel.
+ * 
+ * This function calculates the boundary vorticity values of the local domain in a parallel 
+ * environment. It computes the vorticity values along the top, bottom, left, and right 
+ * boundaries of the local domain based on the given stream function values.
+ * 
+ * @details The boundary vorticity is computed using finite difference approximations 
+ * and is updated directly in the local vorticity array. Boundary conditions are applied 
+ * according to the MPI ranks of neighboring processes. For example, if a process has 
+ * no neighbor on its top boundary (rank_up == -2), it computes the vorticity along 
+ * the top boundary using a specified boundary condition (e.g., uniform velocity).
+*/
 void LidDrivenCavity::ComputeBoundaryVorticityParallel()
 {
 
@@ -428,11 +548,21 @@ void LidDrivenCavity::ComputeBoundaryVorticityParallel()
             v_local[IDX_local(Nx_local-1,j)] = 2.0 * dx2i * (s_local[IDX_local(Nx_local-1,j)]    - s_local[IDX_local(Nx_local-2,j)]);
         }
     }
-
-
-    // std::cout << "Compute Boundary" << std::endl;
 }
 
+
+/**
+ * @brief Computes the interior vorticity for the Lid-Driven Cavity simulation in parallel.
+ * 
+ * This function calculates the interior vorticity values of the local domain in a parallel 
+ * environment. It computes the vorticity values for interior grid points based on the 
+ * given stream function values using finite difference approximations.
+ * 
+ * @details The interior vorticity values are updated directly in the local vorticity array 
+ * based on the computed finite difference equations. The computation is performed for 
+ * interior grid points excluding boundary points to avoid redundant computation.
+ * 
+*/
 void LidDrivenCavity::ComputeInteriorVorticityParallel(){
     double dx2i = 1.0/dx/dx;
     for (int i=1;i<Nx_local-1;i++){
@@ -445,6 +575,16 @@ void LidDrivenCavity::ComputeInteriorVorticityParallel(){
     }
 }
 
+
+
+/**
+ * @brief Computes the next vorticity values for the Lid-Driven Cavity simulation in parallel.
+ * 
+ * This function advances the vorticity values of the local domain to the next time step 
+ * using the given stream function values and the current vorticity values. It implements 
+ * the time integration scheme for the vorticity equation using finite difference 
+ * approximations and updates the vorticity values accordingly.
+*/
 void LidDrivenCavity::ComputeNextVorticityParallel(){
     double dxi  = 1.0/dx;
     double dyi  = 1.0/dy;
@@ -465,6 +605,14 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
 }
 
 
+/**
+ * @brief Computes the Laplace operator for the Lid-Driven Cavity simulation in parallel.
+ * 
+ * This function computes the Laplace operator (Laplacian) of the stream function 
+ * in the local domain using a parallel Conjugate Gradient (CG) solver. It solves 
+ * the Poisson equation ∇^2(s) = -v in the local domain, where ∇^2 represents the 
+ * Laplacian operator, s is the stream function, and v is the vorticity
+*/
 void LidDrivenCavity::ComputeLaplaceOperatorParallel()
 {
     // Solve Poisson problem
@@ -472,6 +620,17 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel()
  
 }
 
+
+/**
+ * @brief Manages inter-domain communication for the Lid-Driven Cavity simulation.
+ * 
+ * This function handles communication between neighboring processes in the parallel 
+ * domain decomposition of the Lid-Driven Cavity simulation. It exchanges boundary 
+ * information between adjacent domains to ensure consistency in the simulation results.
+ * 
+ * @param A_local Pointer to the local domain array containing the data to be communicated.
+ * 
+*/
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Top and bottom communication
@@ -566,73 +725,20 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void LidDrivenCavity::Initialise()
-{
-    CleanUp();
-
-    v   = new double[Npts]();
-    s   = new double[Npts]();
-    // tmp = new double[Npts]();
-    cg  = new SolverCG(Nx, Ny, dx, dy);
-    CreateU();
-}
-
-void LidDrivenCavity::Integrate()
-{
-    int NSteps = ceil(T/dt);
-    bool verbose_advance = false;
-    for (int t = 0; t < NSteps; ++t)
-    {
-        if(verbose){
-            std::cout << "Step: " << setw(8) << t
-                    << "  Time: " << setw(8) << t*dt
-                    << std::endl;
-        }
-
-        if(t==-1){verbose_advance=true;}
-        else{verbose_advance=false;}
-        Advance(verbose_advance);
-    }
-}
-
+/**
+ * @brief Writes the solution data to a file.
+ * 
+ * This function writes the solution data, including vorticity, stream function, 
+ * and velocity components, to a specified file in a structured format. It calculates 
+ * the velocity components (u and v) from the stream function using finite differences 
+ * and writes all solution data to the file.
+ * 
+ * @param file The name of the file to which the solution data will be written.
+ * 
+ * @note This function assumes that the solution data arrays (v, s, u0, u1) have been 
+ * properly initialized and filled with appropriate values prior to the function call.
+ * 
+*/
 void LidDrivenCavity::WriteSolution(std::string file)
 {
 
@@ -671,6 +777,16 @@ void LidDrivenCavity::WriteSolution(std::string file)
 }
 
 
+/**
+ * @brief Prints the configuration parameters of the Lid-Driven Cavity simulation.
+ * 
+ * This function prints various configuration parameters of the Lid-Driven Cavity simulation,
+ * including grid size, spacing, length, number of grid points, timestep, number of steps,
+ * Reynolds number, number of processes, number of threads, and the linear solver used.
+ * 
+ * Additionally, it checks if the time-step restriction is satisfied based on the Courant-Friedrichs-Lewy (CFL) condition,
+ * and displays an error message if the condition is violated, indicating that the maximum allowable time-step has been exceeded.
+*/
 void LidDrivenCavity::PrintConfiguration()
 {
     cout << "Grid size: " << Nx << " x " << Ny << endl;
@@ -693,25 +809,113 @@ void LidDrivenCavity::PrintConfiguration()
 }
 
 
+/**
+ * @brief Cleans up memory allocated for vorticity, stream function, and the conjugate gradient solver.
+*/
 void LidDrivenCavity::CleanUp()
 {
     if (v) {
         delete[] v;
         delete[] s;
-        // delete[] tmp;
         delete cg;
     }
 }
 
 
-void LidDrivenCavity::UpdateDxDy()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////    Legacy baseline code    //////////////////////////////////////////
+
+
+/**
+ * @brief Initializes the LidDrivenCavity object by allocating memory for vorticity, stream function, and creating a solver object.
+ * Also initializes velocity components.
+ * 
+ * @details This function cleans up any existing memory, allocates memory for vorticity (`v`), stream function (`s`), and creates a
+ * conjugate gradient solver object (`cg`). Additionally, it initializes velocity components using the CreateU() function.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the InitialiseParallel() function for parallel initialization.
+ * 
+ * @see CleanUp(), CreateU(), InitialiseParallel()
+ */
+void LidDrivenCavity::Initialise()
 {
-    dx = Lx / (Nx-1);
-    dy = Ly / (Ny-1);
-    Npts = Nx * Ny;
+    CleanUp();
+
+    v   = new double[Npts]();
+    s   = new double[Npts]();
+    // tmp = new double[Npts]();
+    cg  = new SolverCG(Nx, Ny, dx, dy);
+    CreateU();
 }
 
 
+/**
+ * @brief Integrates the LidDrivenCavity object over time using a simple time-stepping scheme.
+ * 
+ * @details This function advances the simulation over time by iterating through a specified number of time steps.
+ * Each time step involves calling the Advance function to update the solution. If the verbose mode is enabled,
+ * it prints the step number and corresponding time at each iteration.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the IntegrateParallel() function for parallel integration.
+ * 
+ * @see Advance(), IntegrateParallel()
+ */
+void LidDrivenCavity::Integrate()
+{
+    int NSteps = ceil(T/dt);
+    bool verbose_advance = false;
+    for (int t = 0; t < NSteps; ++t)
+    {
+        if(verbose){
+            std::cout << "Step: " << setw(8) << t
+                    << "  Time: " << setw(8) << t*dt
+                    << std::endl;
+        }
+
+        if(t==-1){verbose_advance=true;}
+        else{verbose_advance=false;}
+        Advance(verbose_advance);
+    }
+}
+
+/**
+ * @brief Integrates the Lid-Driven Cavity simulation over time in serial.
+ * This function iterates over time steps, advancing the simulation state at each step.
+ * 
+ * @details
+ * The simulation proceeds for a total of `NSteps` time steps, where `NSteps` is determined
+ * based on the total simulation time (`T`) and the time step size (`dt`).
+ * 
+ * During each time step, the simulation state is advanced by calling the `Advance` function.
+ * Optionally, verbose output can be enabled for the first time step for detailed logging.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions. Consider using the AdvanceParallel() function for parallel integration.
+ * 
+ * @see AdvanceParallel(), IntegrateParallel()
+ */
 void LidDrivenCavity::Advance(bool verbose_advance)
 {
     double dxi  = 1.0/dx;
@@ -746,9 +950,9 @@ void LidDrivenCavity::Advance(bool verbose_advance)
 
     if(verbose_advance){
         std::cout << "Interior vorticity" << std::endl;
-        PrintMatrix(Nx,v);
+        Printmatrix(Nx,Ny,v);
         std::cout << "(Interior vorticity) Stream function" << std::endl;
-        PrintMatrix(Nx,s);
+        Printmatrix(Nx,Ny,s);
     }
 
     // Time advance vorticity
@@ -791,38 +995,74 @@ void LidDrivenCavity::Advance(bool verbose_advance)
 
     if(verbose_advance){
         std::cout << "Laplace Operator (vorticity)" << std::endl;
-        PrintMatrix(Nx,v);
+        Printmatrix(Nx,Ny,v);
         std::cout << "Laplace Operator (stream function)" << std::endl;
-        PrintMatrix(Nx,s);
+        Printmatrix(Nx,Ny,s);
     }
 
 }
 
+
+/**
+ * @brief Returns the grid spacing in the x-direction.
+ * 
+ * @return The grid spacing in the x-direction.
+ */
 double LidDrivenCavity::get_dx()
 {
     return dx;
 }
 
+
+/**
+ * @brief Returns the grid spacing in the y-direction.
+ * 
+ * @return The grid spacing in the y-direction.
+ */
 double LidDrivenCavity::get_dy()
 {
     return dy;
 }
 
+
+/**
+ * @brief Returns the total number of grid points in the domain.
+ * 
+ * @return The total number of grid points in the domain.
+ */
 int LidDrivenCavity::get_Npts()
 {
     return Npts;
 }
 
+
+/**
+ * @brief Returns the kinematic viscosity of the fluid.
+ * 
+ * @return The kinematic viscosity of the fluid.
+ */
 double LidDrivenCavity::get_nu()
 {
     return nu;
 }
 
+
+/**
+ * @brief Returns a pointer to the array storing the vorticity field.
+ * 
+ * @return A pointer to the array storing the vorticity field.
+ */
 double* LidDrivenCavity::get_v()
 {
     return v;
 }
 
+
+/**
+ * @brief Returns a pointer to the array storing the stream function field.
+ * 
+ * @return A pointer to the array storing the stream function field.
+ */
 double* LidDrivenCavity::get_s()
 {
     return s;

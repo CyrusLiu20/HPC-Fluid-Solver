@@ -46,7 +46,10 @@ TEST_SRC_OBJS = $(filter-out $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(EXCL
 TEST_REPORT = test_report.txt
 
 # Doxygen file generated
+DOC_DIR = docs
 DOCX = Doxyfile
+HTML = html
+LATEX = latex
 
 # parameters to run the main solver executable (can be overwritten)
 Np ?= 1 # Number of processors
@@ -104,9 +107,14 @@ run_evaluate: $(OUTPUT)
 	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 doc:
-	doxygen -g $(DOCX)
+	mkdir -p $(DOC_DIR)
+	doxygen -g $(DOC_DIR)/$(DOCX)
+	echo "\nPlease configure Doxygen configuration file: INPUT = ../ | RECURSIVE = YES | EXTRACT_ALL = YES | EXTRACT_PRIVATE = YES"
+
+clean_doc:
+	rm -rf $(DOC_DIR)/$(HTML) $(DOC_DIR)/$(LATEX) 
 
 clean:
-	rm -rf $(BUILD_DIR)/*.o $(OUTPUT) $(TEST_BUILD_DIR)/*.o $(TEST_OUTPUT) $(DOCX) $(TEST_REPORT) $(RES_DIR)/*.txt
+	rm -rf $(BUILD_DIR)/*.o $(OUTPUT) $(TEST_BUILD_DIR)/*.o $(TEST_OUTPUT) $(TEST_REPORT) $(RES_DIR)/*.txt
 
 .PHONY: all clean
