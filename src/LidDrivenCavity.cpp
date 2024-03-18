@@ -680,6 +680,7 @@ void LidDrivenCavity::PrintConfiguration()
     cout << "Timestep:  " << dt << endl;
     cout << "Steps:     " << ceil(T/dt) << endl;
     cout << "Reynolds number: " << Re << endl;
+    cout << "Number of processes: " << Nprocs << endl;
     cout << "Number of threads: " << Nt << endl;
     cout << "Linear solver: preconditioned conjugate gradient" << endl;
 

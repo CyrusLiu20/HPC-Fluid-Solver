@@ -227,7 +227,7 @@ void SolverCG::ApplyOperator(double* in, double* out) {
     double dx2i = 1.0/dx/dx;
     double dy2i = 1.0/dy/dy;
     // int jm1 = 0, jp1 = 2;
-    // #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2)
     for (int j = 1; j < Ny - 1; ++j) {
         for (int i = 1; i < Nx - 1; ++i) {
             out[IDX(i,j)] = ( -     in[IDX(i-1, j)]
