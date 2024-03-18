@@ -40,7 +40,11 @@ struct MPIFixture {
         }
 
         ~MPIFixture() {
-            std::cout << "Finalising MPI" << std::endl;
+            int rank = 0;
+            MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+            if(rank==0){
+                std::cout << "Finalising MPI" << std::endl;
+            }
             MPI_Finalize();
         }
 
@@ -328,7 +332,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     double tolerance_percentage = 0.1;
     int tolerance_corrupt = 0;
     bool all_correct = false;
-    bool verbose = false;
+    bool verbose = true;
 
     // Compare line by line
     while (std::getline(file1, line1) && std::getline(file2, line2)) {
@@ -443,7 +447,7 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    // MPI_Barrier(MPI_COMM_WORLD);
     BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
 
 }
@@ -533,7 +537,7 @@ BOOST_AUTO_TEST_CASE(FinalResults2Check)
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    // MPI_Barrier(MPI_COMM_WORLD);
     BOOST_TEST_MESSAGE("\n  Test results: LidDrivenCavity solved correctly\n");
 
 }

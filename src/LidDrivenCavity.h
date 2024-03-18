@@ -17,6 +17,8 @@ public:
     void SetFinalTime(double finalt);
     void SetReynoldsNumber(double Re);
     void SetVerbose(bool verbose);
+    void SetThreads(int Nt);
+
     void SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right);
     void DomainDecomposition();
 
@@ -139,7 +141,8 @@ private:
     int Local2Global(int i_local, int j_local);
     bool CheckBoundary(int i_local, int j_local);
 
-
+    // Threading
+    int Nt;
 
 
 

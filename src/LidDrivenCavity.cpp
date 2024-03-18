@@ -222,6 +222,11 @@ void LidDrivenCavity::SetVerbose(bool verbose)
     this->verbose = verbose;
 }
 
+void LidDrivenCavity::SetThreads(int Nt)
+{
+    this->Nt = Nt;
+}
+
 void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right)
 {
     this->rank_up = rank_up;
@@ -675,7 +680,9 @@ void LidDrivenCavity::PrintConfiguration()
     cout << "Timestep:  " << dt << endl;
     cout << "Steps:     " << ceil(T/dt) << endl;
     cout << "Reynolds number: " << Re << endl;
+    cout << "Number of threads: " << Nt << endl;
     cout << "Linear solver: preconditioned conjugate gradient" << endl;
+
     cout << endl;
     if (nu * dt / dx / dy > 0.25) {
         cout << "ERROR: Time-step restriction not satisfied!" << endl;

@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(SolveRealCheck)
         }
     }
     BOOST_CHECK_MESSAGE(all_within, "Solved stream function not within tolerance");
-
+    BOOST_TEST_MESSAGE("\n  Test results: Conjugate gradient solver2 solves correctly\n");
 }
 
 /*

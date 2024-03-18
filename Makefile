@@ -9,7 +9,7 @@
 # Common variables
 CC = mpicxx
 MPI_CC = mpiexec
-CFLAGS = -std=c++11 -Wall -O0 -pedantic
+CFLAGS = -std=c++11 -Wall -O0 -pedantic -fopenmp
 LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi 
 TEST_LIBS = -lboost_unit_test_framework
 
@@ -98,6 +98,10 @@ run_test: $(TEST_OUTPUT)
 # Executes the main solver executable
 run: $(OUTPUT)
 	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx $(Lx) --Ly $(Ly) --dt $(dt) --T $(T) --Re $(Re) --Nx $(Nx) --Ny $(Ny) --verbose $(verbose)
+
+# Executes the main solver executable
+run_evaluate: $(OUTPUT)
+	OMP_NUM_THREADS=$(Nt) $(MPI_CC) -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 doc:
 	doxygen -g $(DOCX)

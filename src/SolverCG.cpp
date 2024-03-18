@@ -178,8 +178,14 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         beta1_global  = alpha2_global;
 
 
-        cblas_daxpy(n,  alpha_global, p, 1, x, 1);  // x_{k+1} = x_k + alpha_k p_k
-        cblas_daxpy(n, -alpha_global, t, 1, r, 1); // r_{k+1} = r_k - alpha_k A p_k
+        // cblas_daxpy(n,  alpha_global, p, 1, x, 1);  // x_{k+1} = x_k + alpha_k p_k
+        // cblas_daxpy(n, -alpha_global, t, 1, r, 1); // r_{k+1} = r_k - alpha_k A p_k
+        #pragma omp parallel for
+        for (unsigned int i = 0; i < n; ++i) {
+            x[i] += alpha_global * p[i];
+            r[i] -= alpha_global * t[i];
+        }
+
         DomainInterComunnication(x); // Remove if unnecessary
         DomainInterComunnication(r); // Remove if unnecessary
 
@@ -194,9 +200,15 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         beta_global = beta2_global / beta1_global;
 
         cblas_dcopy(n, z, 1, t, 1);
-        cblas_daxpy(n, beta_global, p, 1, t, 1);
+        // cblas_daxpy(n, beta_global, p, 1, t, 1);
+        // cblas_dcopy(n, t, 1, p, 1);
+        #pragma omp parallel for 
+        for (unsigned int i=0; i<n; i++) {
+            t[i]=z[i] + beta_global*p[i];
+            p[i]=t[i];
+        }
+
         DomainInterComunnication(p); // Remove if unnecessary
-        cblas_dcopy(n, t, 1, p, 1);
     } while (k < iter_max); // Set a maximum number of iterations
 
 
@@ -207,6 +219,26 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
 
     if(rank==root && verbose){
         cout << "Converged in " << k << " iterations. eps = " << eps << endl;
+    }
+}
+
+void SolverCG::ApplyOperator(double* in, double* out) {
+    // Assume ordered with y-direction fastest (column-by-column)
+    double dx2i = 1.0/dx/dx;
+    double dy2i = 1.0/dy/dy;
+    // int jm1 = 0, jp1 = 2;
+    // #pragma omp parallel for collapse(2)
+    for (int j = 1; j < Ny - 1; ++j) {
+        for (int i = 1; i < Nx - 1; ++i) {
+            out[IDX(i,j)] = ( -     in[IDX(i-1, j)]
+                              + 2.0*in[IDX(i,   j)]
+                              -     in[IDX(i+1, j)])*dx2i
+                          + ( -     in[IDX(i, j-1)]
+                              + 2.0*in[IDX(i,   j)]
+                              -     in[IDX(i, j+1)])*dy2i;
+        }
+        // jm1++;
+        // jp1++;
     }
 }
 
@@ -227,6 +259,7 @@ void SolverCG::PreconditionParallel(double* in, double* out) {
     if (rank_down != -2) {;j_start_temp--;}
     if (rank_left != -2) {i_start_temp--;}
     if (rank_right != -2) {i_end_temp++;}
+
 
     for (i = i_start_temp; i < i_end_temp; ++i) {
         for (j = j_start_temp; j < j_end_temp; ++j) {
@@ -450,6 +483,8 @@ double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
     double error = 0; // squared without norm yet
     double error_global = 0;
     // error = cblas_ddot(n, a, 1, a, 1); // the square root process can only be done after global ddot error is gathered
+
+    #pragma omp parallel for collapse(2) reduction(+:error)
     for(int j=j_start;j<j_end;j++){
         for(int i=i_start;i<i_end;i++){
             error += a[IDX_local(i,j)]*a[IDX_local(i,j)];
@@ -467,6 +502,8 @@ double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
     double value = 0; // squared without norm yet
     double value_global = 0;
     // error = cblas_ddot(n, a, 1, a, 1); // the square root process can only be done after global ddot error is gathered
+
+    #pragma omp parallel for collapse(2) reduction(+:value)
     for(int j=j_start;j<j_end;j++){
         for(int i=i_start;i<i_end;i++){
             value += a[IDX_local(i,j)]*b[IDX_local(i,j)];
@@ -566,25 +603,6 @@ void SolverCG::Solve(double* b, double* x, bool verbose) {
 
     if(verbose){
         cout << "Converged in " << k << " iterations. eps = " << eps << endl;
-    }
-}
-
-void SolverCG::ApplyOperator(double* in, double* out) {
-    // Assume ordered with y-direction fastest (column-by-column)
-    double dx2i = 1.0/dx/dx;
-    double dy2i = 1.0/dy/dy;
-    int jm1 = 0, jp1 = 2;
-    for (int j = 1; j < Ny - 1; ++j) {
-        for (int i = 1; i < Nx - 1; ++i) {
-            out[IDX(i,j)] = ( -     in[IDX(i-1, j)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i+1, j)])*dx2i
-                          + ( -     in[IDX(i, jm1)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i, jp1)])*dy2i;
-        }
-        jm1++;
-        jp1++;
     }
 }
 

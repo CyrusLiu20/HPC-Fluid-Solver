@@ -96,6 +96,13 @@ int main(int argc, char **argv)
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
 
+    int Nt;
+    #pragma omp parallel
+    {
+        Nt = omp_get_num_threads();
+    }
+
+
     auto start = std::chrono::system_clock::now();
     // Begin program and displays current time
     if(rank==root){
@@ -112,6 +119,7 @@ int main(int argc, char **argv)
     solver->SetFinalTime(vm["T"].as<double>());
     solver->SetReynoldsNumber(vm["Re"].as<double>());
     solver->SetVerbose(verbose);
+    solver->SetThreads(Nt);
     solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     solver->DomainDecomposition();
 
