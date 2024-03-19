@@ -306,7 +306,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     double tolerance_percentage = 0.1;
     int tolerance_corrupt = 0;
     bool all_correct = false;
-    bool verbose = false;
+    bool verbose = true;
 
     // Compare line by line
     while (std::getline(file1, line1) && std::getline(file2, line2)) {
@@ -329,7 +329,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
 
     if(tolerance_corrupt<Npts*0.05){
         all_correct = true;
-        std::cout << "Closeness level : " <<  (double)(1-tolerance_corrupt/(Npts*4))*100 << "%" << std::endl;
+        std::cout << "Solver accuracy : " <<  (double)(1-tolerance_corrupt/(Npts*4))*100 << "%" << std::endl;
     }
 
     return all_correct;
@@ -520,7 +520,8 @@ BOOST_AUTO_TEST_CASE(FinalResults2Check)
     }
 
     if(rank==0){
-        std::string output_true = "test/data/final2.txt";
+        // std::string output_true = "test/data/final2.txt";
+        std::string output_true = "test/data/final2_updated.txt";
         bool results = CompareFiles(output,output_true,Npts);
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }
@@ -610,7 +611,8 @@ BOOST_AUTO_TEST_CASE(FinalResults3Check)
     }
 
     if(rank==0){
-        std::string output_true = "test/data/final3.txt";
+        // std::string output_true = "test/data/final3.txt";
+        std::string output_true = "test/data/final3_updated.txt";
         bool results = CompareFiles(output,output_true,Npts);
         BOOST_CHECK_MESSAGE(results, "Results do not match"); 
     }

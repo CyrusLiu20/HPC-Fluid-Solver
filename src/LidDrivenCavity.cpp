@@ -399,6 +399,7 @@ void LidDrivenCavity::DomainDecomposition()
 void LidDrivenCavity::InitialiseParallel()
 {
     v_local = new double[Npts_local];
+    v_next_local = new double[Npts_local];
     s_local = new double[Npts_local];
     // v_next_local = new double[Npts_local];
     cg = new SolverCG(Nx_local,Ny_local,dx,dy);
@@ -464,9 +465,6 @@ void LidDrivenCavity::CreateU(){
  * @details
  * The simulation proceeds for a total of `NSteps` time steps, where `NSteps` is determined
  * based on the total simulation time (`T`) and the time step size (`dt`).
- * 
- * During each time step, the simulation state is advanced by calling the `AdvanceParallel` function.
- * Optionally, verbose output can be enabled for the first time step for detailed logging.
  * 
  * Finally, the local simulation domain data is gathered from each process to reconstruct the 
  * complete simulation state for post-processing and analysis.
@@ -629,7 +627,8 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
     // Time advance vorticity
     for (int i=1;i<Nx_local-1;i++){
         for (int j=1;j<Ny_local-1;j++){ // Check whether to use another variable or not
-            v_local[IDX_local(i,j)] = v_local[IDX_local(i,j)] + dt*(
+            // v_local[IDX_local(i,j)] = v_local[IDX_local(i,j)] + dt*(
+            v_next_local[IDX_local(i,j)] = v_local[IDX_local(i,j)] + dt*(
                 ( (s_local[IDX_local(i+1,j)] - s_local[IDX_local(i-1,j)]) * 0.5 * dxi
                  *(v_local[IDX_local(i,j+1)] - v_local[IDX_local(i,j-1)]) * 0.5 * dyi)
               - ( (s_local[IDX_local(i,j+1)] - s_local[IDX_local(i,j-1)]) * 0.5 * dyi
@@ -652,8 +651,9 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
 void LidDrivenCavity::ComputeLaplaceOperatorParallel()
 {
     // Solve Poisson problem
-    cg->SolveParallel(v_local, s_local, verbose);
- 
+    // cg->SolveParallel(v_local, s_local, verbose);
+    cg->SolveParallel(v_next_local, s_local, verbose);
+
 }
 
 
@@ -847,15 +847,33 @@ void LidDrivenCavity::PrintConfiguration()
 
 
 /**
- * @brief Cleans up memory allocated for vorticity, stream function, and the conjugate gradient solver.
+ * @brief Cleans up memory allocated for vorticity, stream function, communication buffer, and the conjugate gradient solver.
 */
 void LidDrivenCavity::CleanUp()
 {
-    if (v) {
-        delete[] v;
-        delete[] s;
-        delete cg;
+    if (v) {delete[] v;}
+    if (s) {delete[] s;}
+    if (v_new) {delete[] v_new;}
+
+    if (v_local) {delete[] v_local;}
+    if (s_local) {delete[] s_local;}
+    if (v_next_local) {delete[] v_next_local;}
+    if (cg) {delete cg;}
+
+    if(buffer_up_send){
+        delete[] buffer_up_send;
+        delete[] buffer_down_send;
+        delete[] buffer_up_recv;
+        delete[] buffer_down_recv;
+
+        delete[] buffer_left_send;
+        delete[] buffer_right_send;
+        delete[] buffer_left_recv;
+        delete[] buffer_right_recv;
     }
+
+    if(u0){delete[] u0;}
+    if(u1){delete[] u1;}
 }
 
 
@@ -931,8 +949,8 @@ void LidDrivenCavity::Initialise()
     CleanUp();
 
     v   = new double[Npts]();
+    v_new = new double[Npts]();
     s   = new double[Npts]();
-    // tmp = new double[Npts]();
     cg  = new SolverCG(Nx, Ny, dx, dy);
     CreateU();
 }
@@ -1024,7 +1042,8 @@ void LidDrivenCavity::Advance(bool verbose_advance)
     // Time advance vorticity
     for (int i = 1; i < Nx - 1; ++i) {
         for (int j = 1; j < Ny - 1; ++j) {
-            v[IDX(i,j)] = v[IDX(i,j)] + dt*(
+            // v[IDX(i,j)] = v[IDX(i,j)] + dt*(
+            v_new[IDX(i,j)] = v[IDX(i,j)] + dt*(
                 ( (s[IDX(i+1,j)] - s[IDX(i-1,j)]) * 0.5 * dxi
                  *(v[IDX(i,j+1)] - v[IDX(i,j-1)]) * 0.5 * dyi)
               - ( (s[IDX(i,j+1)] - s[IDX(i,j-1)]) * 0.5 * dyi
@@ -1057,7 +1076,9 @@ void LidDrivenCavity::Advance(bool verbose_advance)
     */
 
     // Solve Poisson problem
-    cg->Solve(v, s, verbose);
+    // cg->Solve(v, s, verbose);
+    cg->Solve(v_new, s, verbose);
+
 
     if(verbose_advance){
         std::cout << "Laplace Operator (vorticity)" << std::endl;

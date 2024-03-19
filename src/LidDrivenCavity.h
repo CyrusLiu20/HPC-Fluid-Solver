@@ -60,6 +60,7 @@ public:
 private:
 
     double* v   = nullptr;
+    double* v_new   = nullptr;
     double* s   = nullptr;
 
     double* u0   = nullptr;
@@ -96,6 +97,7 @@ private:
     int    offset_y;
 
     double* v_local = nullptr; // local vorticity matrix
+    double* v_next_local = nullptr; // local vorticity matrix for next time step
     double* s_local = nullptr; // local stream function matrix
 
     double* A_global_temp = nullptr; // temporary pointer storing global matrix

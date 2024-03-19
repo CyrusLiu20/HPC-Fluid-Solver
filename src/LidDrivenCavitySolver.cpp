@@ -34,6 +34,8 @@ int main(int argc, char **argv)
 	int Nx; // Number of grid points in x-direction
 	int Ny; // Number of grid points in y-direction
 	bool verbose = true; // Display more hint message
+	bool legacy = false; // Execute legacy baseline numerical code
+
 
     int root = 0; // Root process
     std::string folder_results = "results/";
@@ -49,6 +51,7 @@ int main(int argc, char **argv)
         ("Nx",	po::value<int>(&Nx)->default_value(9), "Number of grid points in x-direction")
         ("Ny", 	po::value<int>(&Ny)->default_value(9), "Number of grid points in y-direction")
         ("verbose", po::value<bool>(&verbose)->default_value(true), "Display more hint message")
+        ("legacy", po::value<bool>(&legacy)->default_value(false), "Execute legacy serial baseline numerical solver")
 		("help", "Display argument details");
 
 
@@ -148,13 +151,15 @@ int main(int argc, char **argv)
         solver->PrintConfiguration();
     }
 
-    // bool parallel = false;
-    bool parallel = true;
+    if (legacy && rank==root) {
+        std::cout << "Warning: Legacy mode is enabled. Executing legacy baseline numerical code.\n" << std::endl;
+    }
 
-    if (parallel==false) {
-        solver->Initialise();
-    } else {
+
+    if (not(legacy)) {
         solver->InitialiseParallel();
+    } else {
+        solver->Initialise();
     }
     
     if(rank==root){
@@ -162,10 +167,10 @@ int main(int argc, char **argv)
     }
 
 
-    if (parallel==false) {
-        solver->Integrate();
-    } else {
+    if (not(legacy)) {
         solver->IntegrateParallel();
+    } else {
+        solver->Integrate();
     }
 
     if(rank==root){
