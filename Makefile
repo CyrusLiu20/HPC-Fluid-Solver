@@ -72,7 +72,7 @@ verbose ?= false # Verbosity
 
 
 # Builds the main solver executable
-all: $(BUILD_DIR) $(OUTPUT) doc
+all: $(BUILD_DIR) $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)

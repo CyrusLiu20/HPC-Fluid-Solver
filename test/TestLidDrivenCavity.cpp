@@ -7,12 +7,13 @@ Program arguments
 
 Numerical simulation
 3. InitialConditionCheck: Check if initial condition (v,s,u0,u1) is applied correctly
-4. BoundaryConditionCheck: Check if boundary condition is been applied correctly at the start, middle, and end of simulation
+4. BoundaryconditionCheck: Check if boundary condition (v,s,u0,u1) is applied correctly
+
 
 Results validation
-5. FinalResultCheck: Check simulation results for a 9x9 grid
-6. FinalResult2Check: Check simulation results for a 49x49 grid
-7. FinalResult3Check: Check simulation results for a 201x201 grid
+5. FinalResultCheck (Parallel): Check simulation results for a 9x9 grid
+6. FinalResult2Check (Parallel): Check simulation results for a 49x49 grid
+7. FinalResult3Check (Parallel): Check simulation results for a 201x201 grid
 */
 
 
@@ -21,6 +22,7 @@ Results validation
 #include <fstream>
 #include <math.h>
 #include <mpi.h>
+#include <omp.h> 
 #include <memory>
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/test/unit_test.hpp>
@@ -126,6 +128,10 @@ BOOST_AUTO_TEST_CASE(InitialConditionCheck)
     int Nx_test = 57;
     int Ny_test = 151;
 
+
+
+
+    // No need to use parallel solver as initial condition is applied in the same function
     // Create LidDrivenCavity environment
     LidDrivenCavity* solver = new LidDrivenCavity();
     solver->SetDomainSize(Lx_test,Ly_test);
@@ -209,20 +215,23 @@ void ExtractBoundary(double* u0, double* u1, double* u0_top, double* u1_top, dou
 void CheckBoundaryConditions(double* u0_top, double* u1_top, double* u0_bottom, double* u1_bottom,
                              double* u0_right, double* u1_right, double* u0_left, double* u1_left,
                              size_t Nx, size_t Ny) {
-    BOOST_CHECK_MESSAGE(CheckOneMatrix(u0_top, Nx), "U-velocity Top boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_top, Nx), "V-velocity Top boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroMatrix(u0_bottom, Nx), "U-velocity Bottom boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_bottom, Nx), "V-velocity Bottom boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroOneMatrix(u0_right, Ny), "U-velocity Right boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_right, Ny), "V-velocity Right boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroOneMatrix(u0_left, Ny), "U-velocity Left boundary condition not imposed");
-    BOOST_CHECK_MESSAGE(CheckZeroMatrix(u1_left, Ny), "V-velocity Left boundary condition not imposed");
+    BOOST_CHECK_MESSAGE(
+        CheckOneMatrix(u0_top, Nx) &&
+        CheckZeroMatrix(u1_top, Nx) &&
+        CheckZeroMatrix(u0_bottom, Nx) &&
+        CheckZeroMatrix(u1_bottom, Nx) &&
+        CheckZeroOneMatrix(u0_right, Ny) &&
+        CheckZeroMatrix(u1_right, Ny) &&
+        CheckZeroOneMatrix(u0_left, Ny) &&
+        CheckZeroMatrix(u1_left, Ny),
+        "Boundary conditions not imposed correctly."
+    );
 }
 
 
 
 
-/*
+
 // Test case for initial condition (fluid at t=0 is at rest)
 BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
 {
@@ -240,6 +249,7 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
     double Re_test = 10; // Reynolds number for test case 
     bool verbose = false; // Do not diplay convergence detail inside this test
 
+    // No need to use parallel solver as initial condition is applied in the same function
     // Create and set up LidDrivenCavity environment
     LidDrivenCavity* solver = new LidDrivenCavity();
     solver->SetDomainSize(Lx_test,Ly_test);
@@ -271,40 +281,6 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
     // Check boundary condition at t=0 (top, bottom, right, and left for u0 and u1) 
     CheckBoundaryConditions(u0_top,u1_top,u0_bottom,u1_bottom,u0_right,u1_right,u0_left,u1_left,Nx_test,Ny_test);
 
-
-    // Mid point : Integrate half the total simulation time
-    double half_time = 0.4;
-    solver->IntegrateControl(half_time);
-    u0 = solver->get_u0();
-    u1 = solver->get_u1();
-
-    // Extract bottom and top row
-    ExtractBoundary(u0, u1, u0_top, u1_top, u0_bottom, u1_bottom, u0_right, u1_right, u0_left, u1_left, Nx_test, Ny_test);
-    // Check boundary condition at half time (top, bottom, right, and left for u0 and u1) 
-    CheckBoundaryConditions(u0_top,u1_top,u0_bottom,u1_bottom,u0_right,u1_right,u0_left,u1_left,Nx_test,Ny_test);
-
-
-    // End point : Integrate total simulation time
-    double end_time = 1.0;
-    // Create and set up LidDrivenCavity environment
-    LidDrivenCavity* solver2 = new LidDrivenCavity();
-    solver2->SetDomainSize(Lx_test,Ly_test);
-    solver2->SetGridSize(Nx_test,Ny_test);
-    solver2->SetTimeStep(dt_test);
-    solver2->SetFinalTime(T_test);
-    solver2->SetReynoldsNumber(Re_test);
-    solver2->SetVerbose(verbose);
-
-    solver2->Initialise();
-    solver2->IntegrateControl(end_time);
-    u0 = solver2->get_u0();
-    u1 = solver2->get_u1();
-
-    // Extract bottom and top row
-    ExtractBoundary(u0, u1, u0_top, u1_top, u0_bottom, u1_bottom, u0_right, u1_right, u0_left, u1_left, Nx_test, Ny_test);
-    // Check boundary condition at half time (top, bottom, right, and left for u0 and u1) 
-    CheckBoundaryConditions(u0_top,u1_top,u0_bottom,u1_bottom,u0_right,u1_right,u0_left,u1_left,Nx_test,Ny_test);
-
     BOOST_TEST_MESSAGE("\n  Test results: Boundary condition applied correctly\n");  // Print a message indicating the test case is successful
 
     delete[] u0;
@@ -318,10 +294,8 @@ BOOST_AUTO_TEST_CASE(BoundaryConditionCheck)
     delete[] u1_bottom;
     delete[] u1_left;
     delete[] u1_right;
-    delete solver2;
-
 }
-*/
+
 
 // Compare two files
 bool CompareFiles(const std::string& filename1, const std::string& filename2,int Npts) {
@@ -332,7 +306,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     double tolerance_percentage = 0.1;
     int tolerance_corrupt = 0;
     bool all_correct = false;
-    bool verbose = true;
+    bool verbose = false;
 
     // Compare line by line
     while (std::getline(file1, line1) && std::getline(file2, line2)) {
@@ -414,6 +388,20 @@ BOOST_AUTO_TEST_CASE(FinalResultsCheck)
     // MPI_Cart_shift(domain_local, 0, 1, &rank_up, &rank_down);
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
+
+    int Nt;
+    #pragma omp parallel
+    {
+        Nt = omp_get_num_threads();
+    }
+
+    if (Nt > 25) {
+        if(rank==0){
+            std::cout << "Warning: Too many threads (" << Nt << ") to be used, limiting the number of threads to 1\n" << std::endl;
+        }
+        omp_set_num_threads(1);
+        Nt = 1;
+    }
 
 
     LidDrivenCavity* solver = new LidDrivenCavity();

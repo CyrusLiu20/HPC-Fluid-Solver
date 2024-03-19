@@ -5,6 +5,7 @@
 #include <math.h>
 #include <mpi.h>
 #include <omp.h>
+
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
@@ -108,10 +109,18 @@ int main(int argc, char **argv)
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
 
-    int Nt;
+    int Nt =1;
     #pragma omp parallel
     {
         Nt = omp_get_num_threads();
+    }
+
+    if (Nt > 25) {
+        if(rank==0){
+            std::cout << "Warning: Too many threads (" << Nt << ") to be used, limiting the number of threads to 1\n" << std::endl;
+        }
+        omp_set_num_threads(1);
+        Nt = 1;
     }
 
 
