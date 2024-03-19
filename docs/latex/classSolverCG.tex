@@ -13,40 +13,40 @@
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classSolverCG_af2e6b28644c4379d49bffb377c020345}{Solver\+CG}} (int p\+Nx, int p\+Ny, double pdx, double pdy)
-\item 
+\begin{DoxyCompactList}\small\item\em Initializes the \mbox{\hyperlink{classSolverCG}{Solver\+CG}} conjugate gradient solver solver for parallel execution. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}{$\sim$\+Solver\+CG}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a912137e50d0887235b01d42327976441}{Solve}} (double $\ast$b, double $\ast$x, bool verbose)
-\item 
+\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in serial. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}{Solve\+Parallel}} (double $\ast$b, double $\ast$x, bool verbose)
-\item 
+\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in parallel. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}{Set\+Neighbour}} (int \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\+\_\+up}}, int \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\+\_\+down}}, int \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\+\_\+left}}, int \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\+\_\+right}})
-\item 
+\begin{DoxyCompactList}\small\item\em Configures the neighboring process ranks for inter-\/process communication. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a6cc771b5af6805bf6738206e931fe994}{Set\+Offset}} (int \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\+\_\+x}}, int \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\+\_\+y}}, int \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\+\_\+global}}, int \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\+\_\+global}})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em (Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{Apply\+Operator}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
-\item 
+\begin{DoxyCompactList}\small\item\em Apply the Laplace operator to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}{Precondition}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
-\item 
+\begin{DoxyCompactList}\small\item\em Apply serial preconditioning to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a252ab61ae011d656c12926681ee234dd}{Impose\+BC}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
-\item 
+\begin{DoxyCompactList}\small\item\em Impose boundary conditions on the input vector in serial. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}{Domain\+Inter\+Comunnication}} (double $\ast$A\+\_\+local)
-\item 
+\begin{DoxyCompactList}\small\item\em Manages inter-\/domain communication for the conjugate gradient solver. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{Gather\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
-\item 
+\begin{DoxyCompactList}\small\item\em (Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
-\item 
+\begin{DoxyCompactList}\small\item\em Apply parallel preconditioning to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
-\item 
+\begin{DoxyCompactList}\small\item\em Impose boundary conditions on the input vector in parallel. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{Compute\+Error\+Global\+Parallel}} (unsigned int n, double $\ast$a)
-\item 
+\begin{DoxyCompactList}\small\item\em Compute the global error of a vector in parallel. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{Compute\+Dot\+Global\+Parallel}} (unsigned int n, double $\ast$a, double $\ast$b)
-\item 
+\begin{DoxyCompactList}\small\item\em Compute the global dot prduct of two vectors in parallel. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}} (int nx, int ny, double $\ast$A)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Prints the content of a 2D matrix to the standard output. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -65,6 +65,8 @@ double $\ast$ \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{
 double $\ast$ \mbox{\hyperlink{classSolverCG_a62935239e4936b556715a625531ccbb9}{z}}
 \item 
 double $\ast$ \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}}
+\item 
+double $\ast$ \mbox{\hyperlink{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}{dot\+\_\+buffer}} = nullptr
 \item 
 int \mbox{\hyperlink{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}{iter\+\_\+max}}
 \item 
@@ -138,6 +140,23 @@ double $\ast$ \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{
 \doxysubsubsection{\texorpdfstring{SolverCG()}{SolverCG()}}
 {\footnotesize\ttfamily Solver\+CG\+::\+Solver\+CG (\begin{DoxyParamCaption}\item[{int}]{p\+Nx,  }\item[{int}]{p\+Ny,  }\item[{double}]{pdx,  }\item[{double}]{pdy }\end{DoxyParamCaption})}
 
+
+
+Initializes the \mbox{\hyperlink{classSolverCG}{Solver\+CG}} conjugate gradient solver solver for parallel execution. 
+
+Allocates memory for local residual vector (r), local conjugate direction vector (p), local preconditioned vector (z), local temporary vector (t) as well as buffers required for inter-\/domain communication. Initializes all arrays to prevent arbitrary and unpredictable values.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+NX} & The number of local grid points in x-\/direction \\
+\hline
+{\em p\+Ny} & The number of local grid points in y-\/direction \\
+\hline
+{\em pdx} & Grid spacing in x-\/direction \\
+\hline
+{\em pdy} & Grid spacing in y-\/direction \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}\label{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}} 
 \index{SolverCG@{SolverCG}!````~SolverCG@{$\sim$SolverCG}}
 \index{````~SolverCG@{$\sim$SolverCG}!SolverCG@{SolverCG}}
@@ -146,91 +165,312 @@ double $\ast$ \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{
 
 
 
+Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector. 
+
+
+
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}\label{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}} 
 \index{SolverCG@{SolverCG}!ApplyOperator@{ApplyOperator}}
 \index{ApplyOperator@{ApplyOperator}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{ApplyOperator()}{ApplyOperator()}}
-{\footnotesize\ttfamily void Solver\+CG\+::\+Apply\+Operator (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Apply\+Operator (\begin{DoxyParamCaption}\item[{double $\ast$}]{in,  }\item[{double $\ast$}]{out }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
-\mbox{\Hypertarget{classSolverCG_a998cc834430b2b87464d7ac22983ac30}\label{classSolverCG_a998cc834430b2b87464d7ac22983ac30}} 
+
+
+Apply the Laplace operator to the input vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em in} & pointer to the input vector \\
+\hline
+{\em out} & pointer to the operator vector\\
+\hline
+\end{DoxyParams}
+This method applies the Laplace operator to the input vector representing the linear system, producing the output vector. \mbox{\Hypertarget{classSolverCG_a998cc834430b2b87464d7ac22983ac30}\label{classSolverCG_a998cc834430b2b87464d7ac22983ac30}} 
 \index{SolverCG@{SolverCG}!ComputeDotGlobalParallel@{ComputeDotGlobalParallel}}
 \index{ComputeDotGlobalParallel@{ComputeDotGlobalParallel}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{ComputeDotGlobalParallel()}{ComputeDotGlobalParallel()}}
 {\footnotesize\ttfamily double Solver\+CG\+::\+Compute\+Dot\+Global\+Parallel (\begin{DoxyParamCaption}\item[{unsigned int}]{n,  }\item[{double $\ast$}]{a,  }\item[{double $\ast$}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Compute the global dot prduct of two vectors in parallel. 
+
+This method computes the global dot product of two vector in parallel by summing the values of its elements across all MPI ranks.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The total number of elements in the vector. \\
+\hline
+{\em a} & Pointer to the first vector. \\
+\hline
+{\em b} & Pointer to the second vector.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The global dot product.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{Compute\+Error\+Global\+Parallel()}} 
+\end{DoxySeeAlso}
 \mbox{\Hypertarget{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}\label{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}} 
 \index{SolverCG@{SolverCG}!ComputeErrorGlobalParallel@{ComputeErrorGlobalParallel}}
 \index{ComputeErrorGlobalParallel@{ComputeErrorGlobalParallel}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{ComputeErrorGlobalParallel()}{ComputeErrorGlobalParallel()}}
 {\footnotesize\ttfamily double Solver\+CG\+::\+Compute\+Error\+Global\+Parallel (\begin{DoxyParamCaption}\item[{unsigned int}]{n,  }\item[{double $\ast$}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Compute the global error of a vector in parallel. 
+
+This method computes the global error of a vector in parallel by summing the squared values of its elements across all MPI ranks and then taking the square root of the sum.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The total number of elements in the vector. \\
+\hline
+{\em a} & Pointer to the local error vector.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The global reduced error.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{Compute\+Dot\+Global\+Parallel()}} 
+\end{DoxySeeAlso}
 \mbox{\Hypertarget{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}\label{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}} 
 \index{SolverCG@{SolverCG}!DomainInterComunnication@{DomainInterComunnication}}
 \index{DomainInterComunnication@{DomainInterComunnication}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{DomainInterComunnication()}{DomainInterComunnication()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Domain\+Inter\+Comunnication (\begin{DoxyParamCaption}\item[{double $\ast$}]{A\+\_\+local }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Manages inter-\/domain communication for the conjugate gradient solver. 
+
+This function handles communication between neighboring processes in the parallel domain decomposition of the Lid-\/\+Driven Cavity simulation. It exchanges boundary information between adjacent domains to ensure consistency in the simulation results.
+
+
+\begin{DoxyParams}{Parameters}
+{\em A\+\_\+local} & Pointer to the local domain array containing the data to be communicated. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_af07949ab7beaa99ee197660aa68efd21}\label{classSolverCG_af07949ab7beaa99ee197660aa68efd21}} 
 \index{SolverCG@{SolverCG}!GatherDomain@{GatherDomain}}
 \index{GatherDomain@{GatherDomain}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{GatherDomain()}{GatherDomain()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Gather\+Domain (\begin{DoxyParamCaption}\item[{double $\ast$}]{A\+\_\+local,  }\item[{double $\ast$}]{A\+\_\+global }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A\+\_\+local} & Pointer to the local domain array. \\
+\hline
+{\em A\+\_\+global} & Pointer to the global domain array.\\
+\hline
+\end{DoxyParams}
+This function is responsible for gathering the local domain data from each process and sending it to the root process to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication between processes in a parallel environment
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\mbox{\hyperlink{deprecated__deprecated000005}{Deprecated}}]This function is deprecated and will be removed in future versions. \end{DoxyRefDesc}
 \mbox{\Hypertarget{classSolverCG_a252ab61ae011d656c12926681ee234dd}\label{classSolverCG_a252ab61ae011d656c12926681ee234dd}} 
 \index{SolverCG@{SolverCG}!ImposeBC@{ImposeBC}}
 \index{ImposeBC@{ImposeBC}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{ImposeBC()}{ImposeBC()}}
-{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BC (\begin{DoxyParamCaption}\item[{double $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BC (\begin{DoxyParamCaption}\item[{double $\ast$}]{inout }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Impose boundary conditions on the input vector in serial. 
+
+This method imposes boundary conditions on the input vector in serial. modifying the values of boundary elements to satisfy specified boundary conditions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em inout} & Pointer to the modified input vector.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\mbox{\hyperlink{deprecated__deprecated000008}{Deprecated}}]This function is deprecated and will be removed in future versions. Consider using the \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel()}} function for parallel boundary imposing \end{DoxyRefDesc}
 \mbox{\Hypertarget{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}\label{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}} 
 \index{SolverCG@{SolverCG}!ImposeBCParallel@{ImposeBCParallel}}
 \index{ImposeBCParallel@{ImposeBCParallel}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{ImposeBCParallel()}{ImposeBCParallel()}}
-{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BCParallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Impose\+BCParallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{inout }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Impose boundary conditions on the input vector in parallel. 
+
+This method imposes boundary conditions on the input vector in parallel, modifying the values of boundary elements to satisfy specified boundary conditions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em inout} & Pointer to the modified input vector. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}\label{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}} 
 \index{SolverCG@{SolverCG}!Precondition@{Precondition}}
 \index{Precondition@{Precondition}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{Precondition()}{Precondition()}}
-{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition (\begin{DoxyParamCaption}\item[{double $\ast$}]{in,  }\item[{double $\ast$}]{out }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Apply serial preconditioning to the input vector. 
+
+This method applies preconditioning to the input vector, producing the output vector. Preconditioning is a technique used to improve the convergence of iterative methods by transforming the linear system.
+
+
+\begin{DoxyParams}{Parameters}
+{\em in} & Pointer to the input vector. \\
+\hline
+{\em out} & Pointer to the output vector.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\mbox{\hyperlink{deprecated__deprecated000007}{Deprecated}}]This function is deprecated and will be removed in future versions. Consider using the \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel()}} function for parallel preconditioning.\end{DoxyRefDesc}
 \mbox{\Hypertarget{classSolverCG_a123782d564c3527edb06d819814e31fc}\label{classSolverCG_a123782d564c3527edb06d819814e31fc}} 
 \index{SolverCG@{SolverCG}!PreconditionParallel@{PreconditionParallel}}
 \index{PreconditionParallel@{PreconditionParallel}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{PreconditionParallel()}{PreconditionParallel()}}
-{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition\+Parallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{p,  }\item[{double $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void Solver\+CG\+::\+Precondition\+Parallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{in,  }\item[{double $\ast$}]{out }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Apply parallel preconditioning to the input vector. 
+
+This method applies parallel preconditioning to the input vector, producing the output vector. Preconditioning is a technique used to improve the convergence of iterative methods by transforming the linear system.
+
+
+\begin{DoxyParams}{Parameters}
+{\em in} & Pointer to the input vector. \\
+\hline
+{\em out} & Pointer to the output vector. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}\label{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}} 
 \index{SolverCG@{SolverCG}!Printmatrix@{Printmatrix}}
 \index{Printmatrix@{Printmatrix}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{Printmatrix()}{Printmatrix()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Printmatrix (\begin{DoxyParamCaption}\item[{int}]{nx,  }\item[{int}]{ny,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
+
+
+Prints the content of a 2D matrix to the standard output. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nx} & The number of columns in the matrix. \\
+\hline
+{\em ny} & The number of rows in the matrix. \\
+\hline
+{\em A} & Pointer to the 1D array representing the matrix. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}\label{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}} 
 \index{SolverCG@{SolverCG}!SetNeighbour@{SetNeighbour}}
 \index{SetNeighbour@{SetNeighbour}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{SetNeighbour()}{SetNeighbour()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Set\+Neighbour (\begin{DoxyParamCaption}\item[{int}]{rank\+\_\+up,  }\item[{int}]{rank\+\_\+down,  }\item[{int}]{rank\+\_\+left,  }\item[{int}]{rank\+\_\+right }\end{DoxyParamCaption})}
 
+
+
+Configures the neighboring process ranks for inter-\/process communication. 
+
+This function sets the ranks of the neighboring processes (up, down, left, and right) for the current process to facilitate inter-\/process communication in a distributed environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em rank\+\_\+up} & Rank of the neighboring process above the current process. \\
+\hline
+{\em rank\+\_\+down} & Rank of the neighboring process below the current process. \\
+\hline
+{\em rank\+\_\+left} & Rank of the neighboring process to the left of the current process. \\
+\hline
+{\em rank\+\_\+right} & Rank of the neighboring process to the right of the current process. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classSolverCG_a6cc771b5af6805bf6738206e931fe994}\label{classSolverCG_a6cc771b5af6805bf6738206e931fe994}} 
 \index{SolverCG@{SolverCG}!SetOffset@{SetOffset}}
 \index{SetOffset@{SetOffset}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{SetOffset()}{SetOffset()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Set\+Offset (\begin{DoxyParamCaption}\item[{int}]{offset\+\_\+x,  }\item[{int}]{offset\+\_\+y,  }\item[{int}]{Nx\+\_\+global,  }\item[{int}]{Ny\+\_\+global }\end{DoxyParamCaption})}
 
+
+
+(Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain 
+
+Global position can be computed with offset details, this faciliates gathering of all local domains for debugging purposes. Global matrices are initialised as zero to prevent arbitrary and unpredictable values
+
+\begin{DoxyWarning}{Warning}
+Will be removed future versions
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{Gather\+Domain()}} 
+\end{DoxySeeAlso}
 \mbox{\Hypertarget{classSolverCG_a912137e50d0887235b01d42327976441}\label{classSolverCG_a912137e50d0887235b01d42327976441}} 
 \index{SolverCG@{SolverCG}!Solve@{Solve}}
 \index{Solve@{Solve}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{Solve()}{Solve()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Solve (\begin{DoxyParamCaption}\item[{double $\ast$}]{b,  }\item[{double $\ast$}]{x,  }\item[{bool}]{verbose }\end{DoxyParamCaption})}
 
+
+
+Solve a linear system using the Conjugate Gradient method in serial. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & Pointer to the right-\/hand side vector (Vorticity in this code). \\
+\hline
+{\em x} & Pointer to the solution vector (Stream function in this code). \\
+\hline
+{\em verbose} & Whether to display convergence details during simulation\\
+\hline
+\end{DoxyParams}
+This method solves a linear system Ax = b using the Conjugate Gradient (CG) method in serial. It initializes necessary variables, computes error tolerance, and performs iterative CG steps until convergence or reaching the maximum number of iterations.
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\mbox{\hyperlink{deprecated__deprecated000006}{Deprecated}}]This function is deprecated and will be removed in future versions. Consider using the \mbox{\hyperlink{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}{Solve\+Parallel()}} function for parallel cg solve.\end{DoxyRefDesc}
+
+
+\begin{DoxyNote}{Note}
+Program terminates if convergence is not reached within the maximum number of iterations
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+Apply\+Operator\+Parallel(), \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel()}}, \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel()}} 
+\end{DoxySeeAlso}
 \mbox{\Hypertarget{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}\label{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}} 
 \index{SolverCG@{SolverCG}!SolveParallel@{SolveParallel}}
 \index{SolveParallel@{SolveParallel}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{SolveParallel()}{SolveParallel()}}
 {\footnotesize\ttfamily void Solver\+CG\+::\+Solve\+Parallel (\begin{DoxyParamCaption}\item[{double $\ast$}]{b,  }\item[{double $\ast$}]{x,  }\item[{bool}]{verbose }\end{DoxyParamCaption})}
 
+
+
+Solve a linear system using the Conjugate Gradient method in parallel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & Pointer to the right-\/hand side vector (Vorticity in this code). \\
+\hline
+{\em x} & Pointer to the solution vector (Stream function in this code). \\
+\hline
+{\em verbose} & Whether to display convergence details during simulation\\
+\hline
+\end{DoxyParams}
+This method solves a linear system Ax = b using the Conjugate Gradient (CG) method in parallel. It initializes necessary variables, computes error tolerance, and performs iterative CG steps until convergence or reaching the maximum number of iterations.
+
+\begin{DoxyNote}{Note}
+Program terminates if convergence is not reached within the maximum number of iterations
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+Apply\+Operator\+Parallel(), \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel()}}, \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel()}} 
+\end{DoxySeeAlso}
 
 
 \doxysubsection{Member Data Documentation}
@@ -287,6 +527,12 @@ double $\ast$ \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{
 \index{debug@{debug}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{debug}{debug}}
 {\footnotesize\ttfamily bool Solver\+CG\+::debug\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}\label{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}} 
+\index{SolverCG@{SolverCG}!dot\_buffer@{dot\_buffer}}
+\index{dot\_buffer@{dot\_buffer}!SolverCG@{SolverCG}}
+\doxysubsubsection{\texorpdfstring{dot\_buffer}{dot\_buffer}}
+{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::dot\+\_\+buffer = nullptr\hspace{0.3cm}{\ttfamily [private]}}
 
 \mbox{\Hypertarget{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}\label{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}} 
 \index{SolverCG@{SolverCG}!dx@{dx}}

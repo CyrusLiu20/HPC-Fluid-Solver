@@ -27,63 +27,65 @@
 \DoxyCodeLine{28     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a62935239e4936b556715a625531ccbb9}{z}};}
 \DoxyCodeLine{29     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}};}
 \DoxyCodeLine{30 }
-\DoxyCodeLine{31     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}{iter\_max}}; \textcolor{comment}{// Maximum iteration}}
-\DoxyCodeLine{32     \textcolor{comment}{// double error\_global = -\/1; // Computing the global error}}
-\DoxyCodeLine{33     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSolverCG_a91900eead48ae010dedad88e95abf640}{debug}};}
-\DoxyCodeLine{34 }
-\DoxyCodeLine{35     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{ApplyOperator}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
-\DoxyCodeLine{36     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}{Precondition}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
-\DoxyCodeLine{37     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a252ab61ae011d656c12926681ee234dd}{ImposeBC}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}});}
-\DoxyCodeLine{38 }
-\DoxyCodeLine{39     \textcolor{comment}{// Parallel computing}}
-\DoxyCodeLine{40     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}{DomainInterComunnication}}(\textcolor{keywordtype}{double}* A\_local);}
-\DoxyCodeLine{41     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{GatherDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
-\DoxyCodeLine{42 }
-\DoxyCodeLine{43     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{PreconditionParallel}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
-\DoxyCodeLine{44     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{ImposeBCParallel}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}});}
-\DoxyCodeLine{45 }
-\DoxyCodeLine{46     \textcolor{keywordtype}{double} \mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{ComputeErrorGlobalParallel}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{double} *a);}
-\DoxyCodeLine{47     \textcolor{keywordtype}{double} \mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{ComputeDotGlobalParallel}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{double} *a, \textcolor{keywordtype}{double} *b);}
-\DoxyCodeLine{48 }
-\DoxyCodeLine{49 }
-\DoxyCodeLine{50     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\_up}}, \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\_down}}, \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\_left}}, \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\_right}}; \textcolor{comment}{// Neighbour ranking}}
-\DoxyCodeLine{51     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a48e70d14cf84bcd4269e71bf6002db19}{rank}};}
-\DoxyCodeLine{52     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a8fdd422dedde276e913f0d5fd3b6cbd3}{root}} = 0;}
-\DoxyCodeLine{53     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a091a0755896c5f8c45ee6c5cd40c7eb0}{Nprocs}};}
-\DoxyCodeLine{54 }
-\DoxyCodeLine{55     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a64326a64a73f81f232d9a0674a4ff5db}{i\_start}};}
-\DoxyCodeLine{56     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a3001d58239d7da3e57b14b7dd68c0ad7}{i\_end}};}
-\DoxyCodeLine{57     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}{j\_start}};}
-\DoxyCodeLine{58     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}{j\_end}};}
-\DoxyCodeLine{59 }
-\DoxyCodeLine{60     }
-\DoxyCodeLine{61     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\_x}};}
-\DoxyCodeLine{62     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\_y}};}
-\DoxyCodeLine{63     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\_global}};}
-\DoxyCodeLine{64     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\_global}};}
-\DoxyCodeLine{65     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_aed1416456dec9f0b99343e784e159cc5}{Npts}};}
-\DoxyCodeLine{66 }
-\DoxyCodeLine{67 }
-\DoxyCodeLine{68     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a63308c3fba9fc3a9ccde321326b84747}{r\_global}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{69     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a952557da8c69bd7af8e84e1697f53057}{p\_global}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{70     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a859efadd0a7815424ce7bb73ea8d9420}{z\_global}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{71     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_acba6c4fd8fa46f3a3f7206f543665a6a}{t\_global}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{72 }
-\DoxyCodeLine{73     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a81e7d080247a041df8e3c871f53308a9}{buffer\_up\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{74     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ad19d9947a1c0705cfe27dbcc13f1717a}{buffer\_down\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{75     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ad89e2c4f0c6a01675d020daae1a762fe}{buffer\_up\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{76     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac9131858c1060134d37d13c379e979cd}{buffer\_down\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{77 }
-\DoxyCodeLine{78     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a546f64f7e7611c7e9252341d589c1d6a}{buffer\_left\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{79     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a6ce683cc889fe633433154b765cd6839}{buffer\_right\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{80     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a41c5eed6d9972b6decb5e2ba43af1de0}{buffer\_left\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{81     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{buffer\_right\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{82 }
-\DoxyCodeLine{83 }
-\DoxyCodeLine{84     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny, \textcolor{keywordtype}{double}* A);}
+\DoxyCodeLine{31     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}{dot\_buffer}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}{iter\_max}}; \textcolor{comment}{// Maximum iteration}}
+\DoxyCodeLine{34     \textcolor{comment}{// double error\_global = -\/1; // Computing the global error}}
+\DoxyCodeLine{35     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classSolverCG_a91900eead48ae010dedad88e95abf640}{debug}};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{ApplyOperator}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
+\DoxyCodeLine{38     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}{Precondition}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
+\DoxyCodeLine{39     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a252ab61ae011d656c12926681ee234dd}{ImposeBC}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}});}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{comment}{// Parallel computing}}
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}{DomainInterComunnication}}(\textcolor{keywordtype}{double}* A\_local);}
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{GatherDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{PreconditionParallel}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}});}
+\DoxyCodeLine{46     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{ImposeBCParallel}}(\textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}});}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keywordtype}{double} \mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{ComputeErrorGlobalParallel}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{double} *a);}
+\DoxyCodeLine{49     \textcolor{keywordtype}{double} \mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{ComputeDotGlobalParallel}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{double} *a, \textcolor{keywordtype}{double} *b);}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\_up}}, \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\_down}}, \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\_left}}, \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\_right}}; \textcolor{comment}{// Neighbour ranking}}
+\DoxyCodeLine{53     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a48e70d14cf84bcd4269e71bf6002db19}{rank}};}
+\DoxyCodeLine{54     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a8fdd422dedde276e913f0d5fd3b6cbd3}{root}} = 0;}
+\DoxyCodeLine{55     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a091a0755896c5f8c45ee6c5cd40c7eb0}{Nprocs}};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a64326a64a73f81f232d9a0674a4ff5db}{i\_start}};}
+\DoxyCodeLine{58     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a3001d58239d7da3e57b14b7dd68c0ad7}{i\_end}};}
+\DoxyCodeLine{59     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}{j\_start}};}
+\DoxyCodeLine{60     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}{j\_end}};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     }
+\DoxyCodeLine{63     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\_x}};}
+\DoxyCodeLine{64     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\_y}};}
+\DoxyCodeLine{65     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\_global}};}
+\DoxyCodeLine{66     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\_global}};}
+\DoxyCodeLine{67     \textcolor{keywordtype}{int} \mbox{\hyperlink{classSolverCG_aed1416456dec9f0b99343e784e159cc5}{Npts}};}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a63308c3fba9fc3a9ccde321326b84747}{r\_global}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{71     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a952557da8c69bd7af8e84e1697f53057}{p\_global}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{72     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a859efadd0a7815424ce7bb73ea8d9420}{z\_global}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{73     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_acba6c4fd8fa46f3a3f7206f543665a6a}{t\_global}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a81e7d080247a041df8e3c871f53308a9}{buffer\_up\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{76     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ad19d9947a1c0705cfe27dbcc13f1717a}{buffer\_down\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{77     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ad89e2c4f0c6a01675d020daae1a762fe}{buffer\_up\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{78     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_ac9131858c1060134d37d13c379e979cd}{buffer\_down\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a546f64f7e7611c7e9252341d589c1d6a}{buffer\_left\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{81     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a6ce683cc889fe633433154b765cd6839}{buffer\_right\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{82     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a41c5eed6d9972b6decb5e2ba43af1de0}{buffer\_left\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{83     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classSolverCG_a6b744bf1ad5071405dc2c303e830a931}{buffer\_right\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{84 }
 \DoxyCodeLine{85 }
-\DoxyCodeLine{86 }
-\DoxyCodeLine{87 \};}
+\DoxyCodeLine{86     \textcolor{keywordtype}{void} \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny, \textcolor{keywordtype}{double}* A);}
+\DoxyCodeLine{87 }
 \DoxyCodeLine{88 }
+\DoxyCodeLine{89 \};}
+\DoxyCodeLine{90 }
 
 \end{DoxyCode}

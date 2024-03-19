@@ -21,7 +21,7 @@ Include dependency graph for Lid\+Driven\+Cavity\+Solver.\+cpp\+:
 \begin{DoxyCompactItemize}
 \item 
 int \mbox{\hyperlink{LidDrivenCavitySolver_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Entry point for solving the 2D lid-\/driven cavity incompressible flow problem. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
@@ -31,3 +31,19 @@ int \mbox{\hyperlink{LidDrivenCavitySolver_8cpp_a3c04138a5bfe5d72780bb7e82a18e62
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
 {\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
 
+
+
+Entry point for solving the 2D lid-\/driven cavity incompressible flow problem. 
+
+The main file sets up MPI, creates a Cartesian grid, initializes the solver, integrates the solution, and writes the final solution to a file. It also measures and displays the time taken for the computation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & Number of command-\/line arguments. \\
+\hline
+{\em argv} & Program arguments to specify simulation configuration \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer exit status 
+\end{DoxyReturn}

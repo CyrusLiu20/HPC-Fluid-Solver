@@ -60,12 +60,14 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
     p = new double[n];
     z = new double[n];
     t = new double[n]; //temp
+    dot_buffer = new double[n];
 
     for(int i=0;i<n;i++){
         r[i] = 0;
         p[i] = 0;
         z[i] = 0;
         t[i] = 0;
+        dot_buffer[i] = 0;
     }
 
 
@@ -243,7 +245,7 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
 
         // cblas_daxpy(n,  alpha_global, p, 1, x, 1);  // x_{k+1} = x_k + alpha_k p_k
         // cblas_daxpy(n, -alpha_global, t, 1, r, 1); // r_{k+1} = r_k - alpha_k A p_k
-        #pragma omp parallel for
+        #pragma omp for
         for (unsigned int i = 0; i < n; ++i) {
             x[i] += alpha_global * p[i];
             r[i] -= alpha_global * t[i];
@@ -262,10 +264,15 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         beta2_global = ComputeDotGlobalParallel(n,r,z);
         beta_global = beta2_global / beta1_global;
 
-        cblas_dcopy(n, z, 1, t, 1);
+        // cblas_dcopy(n, z, 1, t, 1);
+        #pragma omp for 
+        for (unsigned int i=0; i<n; i++) {
+            t[i]=z[i];
+        }
+
         // cblas_daxpy(n, beta_global, p, 1, t, 1);
         // cblas_dcopy(n, t, 1, p, 1);
-        #pragma omp parallel for 
+        #pragma omp for 
         for (unsigned int i=0; i<n; i++) {
             t[i]=z[i] + beta_global*p[i];
             p[i]=t[i];
@@ -301,19 +308,27 @@ void SolverCG::ApplyOperator(double* in, double* out) {
     double dx2i = 1.0/dx/dx;
     double dy2i = 1.0/dy/dy;
     // int jm1 = 0, jp1 = 2;
-    #pragma omp parallel for collapse(2)
+
+    int index_local;
+    #pragma omp for collapse(2) private(index_local)
     for (int j = 1; j < Ny - 1; ++j) {
         for (int i = 1; i < Nx - 1; ++i) {
-            out[IDX(i,j)] = ( -     in[IDX(i-1, j)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i+1, j)])*dx2i
-                          + ( -     in[IDX(i, j-1)]
-                              + 2.0*in[IDX(i,   j)]
-                              -     in[IDX(i, j+1)])*dy2i;
+            index_local = IDX(i,j);
+
+            // out[index_local] = ( -      in[index_local-1]
+            //                     + 2.0*in[index_local]
+            //                     -     in[index_local+1])*dx2i
+            //                 + ( -     in[index_local-Nx]
+            //                     + 2.0*in[index_local]
+            //                     -     in[index_local+Nx])*dy2i;
+
+            out[index_local] = (-in[index_local-1]-in[index_local+1])*dx2i + (2.0*dx2i+2.0*dy2i)*in[index_local] + (-in[index_local-Nx]-in[index_local+Nx])*dy2i;
+            
         }
         // jm1++;
         // jp1++;
     }
+
 }
 
 /**
@@ -644,12 +659,13 @@ double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
 double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
     double value = 0; // squared without norm yet
     double value_global = 0;
-    // error = cblas_ddot(n, a, 1, a, 1); // the square root process can only be done after global ddot error is gathered
 
-    #pragma omp parallel for collapse(2) reduction(+:value)
+    int index_local;
+    #pragma omp parallel for collapse(2) reduction(+:value) private(index_local)
     for(int j=j_start;j<j_end;j++){
         for(int i=i_start;i<i_end;i++){
-            value += a[IDX_local(i,j)]*b[IDX_local(i,j)];
+            index_local = IDX_local(i,j);
+            value += a[index_local]*b[index_local];
         }
     }
 

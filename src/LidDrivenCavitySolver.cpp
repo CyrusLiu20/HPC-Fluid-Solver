@@ -10,6 +10,18 @@ namespace po = boost::program_options;
 
 #include "LidDrivenCavity.h"
 
+
+/**
+ * @brief Entry point for solving the 2D lid-driven cavity incompressible flow problem.
+ * 
+ * The main file sets up MPI, creates a Cartesian grid,
+ * initializes the solver, integrates the solution, and writes the final solution to a file.
+ * It also measures and displays the time taken for the computation.
+ * 
+ * @param argc Number of command-line arguments.
+ * @param argv Program arguments to specify simulation configuration
+ * @return An integer exit status
+ */
 int main(int argc, char **argv)
 {
 	// Program arguments

@@ -366,7 +366,7 @@ Private Attributes</h2></td></tr>
 <p>Integrates the Lid-Driven Cavity simulation over time in serial. This function iterates over time steps, advancing the simulation state at each step. </p>
 <p >The simulation proceeds for a total of <code>NSteps</code> time steps, where <code>NSteps</code> is determined based on the total simulation time (<code>T</code>) and the time step size (<code>dt</code>).</p>
 <p >During each time step, the simulation state is advanced by calling the <code>Advance</code> function. Optionally, verbose output can be enabled for the first time step for detailed logging.</p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000004">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classLidDrivenCavity.html#ad6f85225e7526cd7f9f3c3fc48d8d3b0" title="Advances the Lid-Driven Cavity simulation to the next time step in parallel.">AdvanceParallel()</a> function for parallel integration.</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000004">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classLidDrivenCavity.html#ad6f85225e7526cd7f9f3c3fc48d8d3b0" title="Advances the Lid-Driven Cavity simulation to the next time step in parallel.">AdvanceParallel()</a> function for parallel time step advancement.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#ad6f85225e7526cd7f9f3c3fc48d8d3b0" title="Advances the Lid-Driven Cavity simulation to the next time step in parallel.">AdvanceParallel()</a>, <a class="el" href="classLidDrivenCavity.html#ac458ad4869ad3da2bb74e5500519298a" title="Integrates the Lid-Driven Cavity simulation over time in parallel. This function iterates over time s...">IntegrateParallel()</a> </dd></dl>
 
 </div>
@@ -619,10 +619,11 @@ Private Attributes</h2></td></tr>
 <p >This function handles communication between neighboring processes in the parallel domain decomposition of the Lid-Driven Cavity simulation. It exchanges boundary information between adjacent domains to ensure consistency in the simulation results.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">A_local</td><td>Pointer to the local domain array containing the data to be communicated. </td></tr>
+    <tr><td class="paramname">A_local</td><td>Pointer to the local domain array containing the data to be communicated.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#ac2d7312750b8506cc22474651ba8c685" title="Performs domain decomposition for parallel computation.">DomainDecomposition()</a> </dd></dl>
 
 </div>
 </div>
@@ -668,7 +669,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function is responsible for gathering the local domain data from each process and sending it to the root process to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication between processes in a parallel environment. If the current process is not the root process, it sends the local domain data to the root process. Upon receiving the data, the root process reconstructs the global domain by placing the received data in the appropriate positions. The function also handles adjustments to the local grid size based on neighboring processes to ensure consistency in the gathered domain data.</p>
+<p>This function is responsible for gathering the local domain data from each process and sending it to the root process to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication between processes in a parallel environment</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#ae9194a027b9adec8c5f8a7031ca8266a" title="(Primarily for debugging purposes, not used in the code) Scatters the global domain data from the roo...">ScatterDomain()</a> </dd></dl>
 
 </div>

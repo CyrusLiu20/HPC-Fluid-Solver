@@ -114,7 +114,7 @@ run_evaluate: $(OUTPUT)
 	OMP_NUM_THREADS=$(Nt) $(MPI_CC) --bind-to none -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 run_profiler: $(PROF_DIR) $(OUTPUT)
-	OMP_NUM_THREADS=1 collect -o $(PROF_DIR)/experiment2.er ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
+	OMP_NUM_THREADS=1 collect -o $(PROF_DIR)/experiment7.er ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 $(PROF_DIR):
 	mkdir -p $(PROF_DIR)

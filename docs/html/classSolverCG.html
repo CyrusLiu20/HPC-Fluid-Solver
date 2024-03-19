@@ -79,39 +79,55 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af2e6b28644c4379d49bffb377c020345"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#af2e6b28644c4379d49bffb377c020345">SolverCG</a> (int pNx, int pNy, double pdx, double pdy)</td></tr>
+<tr class="memdesc:af2e6b28644c4379d49bffb377c020345"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the <a class="el" href="classSolverCG.html" title="SolverCG class for solving a linear system using the Conjugate Gradient method. It is used to solve t...">SolverCG</a> conjugate gradient solver solver for parallel execution.  <a href="classSolverCG.html#af2e6b28644c4379d49bffb377c020345">More...</a><br /></td></tr>
 <tr class="separator:af2e6b28644c4379d49bffb377c020345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a996c32d6fce0b553c981a6c1f86387e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a996c32d6fce0b553c981a6c1f86387e8">~SolverCG</a> ()</td></tr>
+<tr class="memdesc:a996c32d6fce0b553c981a6c1f86387e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector.  <a href="classSolverCG.html#a996c32d6fce0b553c981a6c1f86387e8">More...</a><br /></td></tr>
 <tr class="separator:a996c32d6fce0b553c981a6c1f86387e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a912137e50d0887235b01d42327976441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a912137e50d0887235b01d42327976441">Solve</a> (double *b, double *x, bool verbose)</td></tr>
+<tr class="memdesc:a912137e50d0887235b01d42327976441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in serial.  <a href="classSolverCG.html#a912137e50d0887235b01d42327976441">More...</a><br /></td></tr>
 <tr class="separator:a912137e50d0887235b01d42327976441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">SolveParallel</a> (double *b, double *x, bool verbose)</td></tr>
+<tr class="memdesc:a96403ae1ec87dbe1f963fea60631ecaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in parallel.  <a href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">More...</a><br /></td></tr>
 <tr class="separator:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae17ac7e44454a7db31d22f77e55dc196"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ae17ac7e44454a7db31d22f77e55dc196">SetNeighbour</a> (int <a class="el" href="classSolverCG.html#a3ec7348532a68fa5c33e87f8ad5dba6c">rank_up</a>, int <a class="el" href="classSolverCG.html#ab6278ba5f5bc561481f4e62bf261f9a1">rank_down</a>, int <a class="el" href="classSolverCG.html#a44f8ffaff74d1b72ef931082725b6c4f">rank_left</a>, int <a class="el" href="classSolverCG.html#a80bbcaf78ff83054c0b90d174396cd41">rank_right</a>)</td></tr>
+<tr class="memdesc:ae17ac7e44454a7db31d22f77e55dc196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the neighboring process ranks for inter-process communication.  <a href="classSolverCG.html#ae17ac7e44454a7db31d22f77e55dc196">More...</a><br /></td></tr>
 <tr class="separator:ae17ac7e44454a7db31d22f77e55dc196"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc771b5af6805bf6738206e931fe994"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a6cc771b5af6805bf6738206e931fe994">SetOffset</a> (int <a class="el" href="classSolverCG.html#a8c1233f293e6c8db21bae2a863086e35">offset_x</a>, int <a class="el" href="classSolverCG.html#a7eb07f291c6d12087c830844641ce6d1">offset_y</a>, int <a class="el" href="classSolverCG.html#a85d9f37d436ae6a32daf8f815c5d6d5d">Nx_global</a>, int <a class="el" href="classSolverCG.html#a9c1664c5f5a8196c831d626e053b54ec">Ny_global</a>)</td></tr>
+<tr class="memdesc:a6cc771b5af6805bf6738206e931fe994"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain  <a href="classSolverCG.html#a6cc771b5af6805bf6738206e931fe994">More...</a><br /></td></tr>
 <tr class="separator:a6cc771b5af6805bf6738206e931fe994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">ApplyOperator</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
+<tr class="memdesc:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the Laplace operator to the input vector.  <a href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">More...</a><br /></td></tr>
 <tr class="separator:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8c4220fab79a6f34b8aa068e29d6511"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ad8c4220fab79a6f34b8aa068e29d6511">Precondition</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
+<tr class="memdesc:ad8c4220fab79a6f34b8aa068e29d6511"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply serial preconditioning to the input vector.  <a href="classSolverCG.html#ad8c4220fab79a6f34b8aa068e29d6511">More...</a><br /></td></tr>
 <tr class="separator:ad8c4220fab79a6f34b8aa068e29d6511"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a252ab61ae011d656c12926681ee234dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a252ab61ae011d656c12926681ee234dd">ImposeBC</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>)</td></tr>
+<tr class="memdesc:a252ab61ae011d656c12926681ee234dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Impose boundary conditions on the input vector in serial.  <a href="classSolverCG.html#a252ab61ae011d656c12926681ee234dd">More...</a><br /></td></tr>
 <tr class="separator:a252ab61ae011d656c12926681ee234dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc705faa3abbe6005e8d6d12bfe54021"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#adc705faa3abbe6005e8d6d12bfe54021">DomainInterComunnication</a> (double *A_local)</td></tr>
+<tr class="memdesc:adc705faa3abbe6005e8d6d12bfe54021"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages inter-domain communication for the conjugate gradient solver.  <a href="classSolverCG.html#adc705faa3abbe6005e8d6d12bfe54021">More...</a><br /></td></tr>
 <tr class="separator:adc705faa3abbe6005e8d6d12bfe54021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af07949ab7beaa99ee197660aa68efd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">GatherDomain</a> (double *A_local, double *A_global)</td></tr>
+<tr class="memdesc:af07949ab7beaa99ee197660aa68efd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment.  <a href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">More...</a><br /></td></tr>
 <tr class="separator:af07949ab7beaa99ee197660aa68efd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a123782d564c3527edb06d819814e31fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a123782d564c3527edb06d819814e31fc">PreconditionParallel</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
+<tr class="memdesc:a123782d564c3527edb06d819814e31fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply parallel preconditioning to the input vector.  <a href="classSolverCG.html#a123782d564c3527edb06d819814e31fc">More...</a><br /></td></tr>
 <tr class="separator:a123782d564c3527edb06d819814e31fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c829516d18272febbb4b9f7c9508d9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a4c829516d18272febbb4b9f7c9508d9d">ImposeBCParallel</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>)</td></tr>
+<tr class="memdesc:a4c829516d18272febbb4b9f7c9508d9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Impose boundary conditions on the input vector in parallel.  <a href="classSolverCG.html#a4c829516d18272febbb4b9f7c9508d9d">More...</a><br /></td></tr>
 <tr class="separator:a4c829516d18272febbb4b9f7c9508d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a8ecd10c7be80bbc0d98f14cb5ef725"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a9a8ecd10c7be80bbc0d98f14cb5ef725">ComputeErrorGlobalParallel</a> (unsigned int n, double *a)</td></tr>
+<tr class="memdesc:a9a8ecd10c7be80bbc0d98f14cb5ef725"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the global error of a vector in parallel.  <a href="classSolverCG.html#a9a8ecd10c7be80bbc0d98f14cb5ef725">More...</a><br /></td></tr>
 <tr class="separator:a9a8ecd10c7be80bbc0d98f14cb5ef725"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a998cc834430b2b87464d7ac22983ac30"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a998cc834430b2b87464d7ac22983ac30">ComputeDotGlobalParallel</a> (unsigned int n, double *a, double *b)</td></tr>
+<tr class="memdesc:a998cc834430b2b87464d7ac22983ac30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the global dot prduct of two vectors in parallel.  <a href="classSolverCG.html#a998cc834430b2b87464d7ac22983ac30">More...</a><br /></td></tr>
 <tr class="separator:a998cc834430b2b87464d7ac22983ac30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a077195062c4dfe4b350bf0d6e954cc57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">Printmatrix</a> (int nx, int ny, double *A)</td></tr>
+<tr class="memdesc:a077195062c4dfe4b350bf0d6e954cc57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the content of a 2D matrix to the standard output.  <a href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">More...</a><br /></td></tr>
 <tr class="separator:a077195062c4dfe4b350bf0d6e954cc57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
@@ -132,6 +148,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a62935239e4936b556715a625531ccbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac31fe70cffbaf995a39bad50ddef6bf6"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a></td></tr>
 <tr class="separator:ac31fe70cffbaf995a39bad50ddef6bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e238214060d7cc6e964e7b106e3ce11"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a6e238214060d7cc6e964e7b106e3ce11">dot_buffer</a> = nullptr</td></tr>
+<tr class="separator:a6e238214060d7cc6e964e7b106e3ce11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235a7c4ab694dd17bc300f9f2cf4b3cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a235a7c4ab694dd17bc300f9f2cf4b3cf">iter_max</a></td></tr>
 <tr class="separator:a235a7c4ab694dd17bc300f9f2cf4b3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91900eead48ae010dedad88e95abf640"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a91900eead48ae010dedad88e95abf640">debug</a></td></tr>
@@ -234,6 +252,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initializes the <a class="el" href="classSolverCG.html" title="SolverCG class for solving a linear system using the Conjugate Gradient method. It is used to solve t...">SolverCG</a> conjugate gradient solver solver for parallel execution. </p>
+<p >Allocates memory for local residual vector (r), local conjugate direction vector (p), local preconditioned vector (z), local temporary vector (t) as well as buffers required for inter-domain communication. Initializes all arrays to prevent arbitrary and unpredictable values.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pNX</td><td>The number of local grid points in x-direction </td></tr>
+    <tr><td class="paramname">pNy</td><td>The number of local grid points in y-direction </td></tr>
+    <tr><td class="paramname">pdx</td><td>Grid spacing in x-direction </td></tr>
+    <tr><td class="paramname">pdy</td><td>Grid spacing in y-direction </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a996c32d6fce0b553c981a6c1f86387e8" name="a996c32d6fce0b553c981a6c1f86387e8"></a>
@@ -251,6 +281,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -267,13 +299,13 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SolverCG::ApplyOperator </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
+          <td class="paramname"><em>in</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -287,6 +319,16 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Apply the Laplace operator to the input vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>pointer to the input vector </td></tr>
+    <tr><td class="paramname">out</td><td>pointer to the operator vector</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This method applies the Laplace operator to the input vector representing the linear system, producing the output vector. </p>
 
 </div>
 </div>
@@ -330,6 +372,19 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Compute the global dot prduct of two vectors in parallel. </p>
+<p >This method computes the global dot product of two vector in parallel by summing the values of its elements across all MPI ranks.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>The total number of elements in the vector. </td></tr>
+    <tr><td class="paramname">a</td><td>Pointer to the first vector. </td></tr>
+    <tr><td class="paramname">b</td><td>Pointer to the second vector.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The global dot product.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSolverCG.html#a9a8ecd10c7be80bbc0d98f14cb5ef725" title="Compute the global error of a vector in parallel.">ComputeErrorGlobalParallel()</a> </dd></dl>
+
 </div>
 </div>
 <a id="a9a8ecd10c7be80bbc0d98f14cb5ef725" name="a9a8ecd10c7be80bbc0d98f14cb5ef725"></a>
@@ -366,6 +421,18 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Compute the global error of a vector in parallel. </p>
+<p >This method computes the global error of a vector in parallel by summing the squared values of its elements across all MPI ranks and then taking the square root of the sum.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>The total number of elements in the vector. </td></tr>
+    <tr><td class="paramname">a</td><td>Pointer to the local error vector.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The global reduced error.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSolverCG.html#a998cc834430b2b87464d7ac22983ac30" title="Compute the global dot prduct of two vectors in parallel.">ComputeDotGlobalParallel()</a> </dd></dl>
+
 </div>
 </div>
 <a id="adc705faa3abbe6005e8d6d12bfe54021" name="adc705faa3abbe6005e8d6d12bfe54021"></a>
@@ -391,6 +458,15 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Manages inter-domain communication for the conjugate gradient solver. </p>
+<p >This function handles communication between neighboring processes in the parallel domain decomposition of the Lid-Driven Cavity simulation. It exchanges boundary information between adjacent domains to ensure consistency in the simulation results.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A_local</td><td>Pointer to the local domain array containing the data to be communicated. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -428,6 +504,17 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A_local</td><td>Pointer to the local domain array. </td></tr>
+    <tr><td class="paramname">A_global</td><td>Pointer to the global domain array.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function is responsible for gathering the local domain data from each process and sending it to the root process to assemble the global domain. It takes into account the local offsets and grid sizes to ensure proper alignment and communication between processes in a parallel environment</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000005">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. </dd></dl>
+
 </div>
 </div>
 <a id="a252ab61ae011d656c12926681ee234dd" name="a252ab61ae011d656c12926681ee234dd"></a>
@@ -443,7 +530,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SolverCG::ImposeBC </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
+          <td class="paramname"><em>inout</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -453,6 +540,16 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Impose boundary conditions on the input vector in serial. </p>
+<p >This method imposes boundary conditions on the input vector in serial. modifying the values of boundary elements to satisfy specified boundary conditions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inout</td><td>Pointer to the modified input vector.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000008">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classSolverCG.html#a4c829516d18272febbb4b9f7c9508d9d" title="Impose boundary conditions on the input vector in parallel.">ImposeBCParallel()</a> function for parallel boundary imposing </dd></dl>
 
 </div>
 </div>
@@ -469,7 +566,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SolverCG::ImposeBCParallel </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
+          <td class="paramname"><em>inout</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -479,6 +576,15 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Impose boundary conditions on the input vector in parallel. </p>
+<p >This method imposes boundary conditions on the input vector in parallel, modifying the values of boundary elements to satisfy specified boundary conditions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inout</td><td>Pointer to the modified input vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -495,13 +601,13 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SolverCG::Precondition </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
+          <td class="paramname"><em>in</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -515,6 +621,17 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Apply serial preconditioning to the input vector. </p>
+<p >This method applies preconditioning to the input vector, producing the output vector. Preconditioning is a technique used to improve the convergence of iterative methods by transforming the linear system.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to the input vector. </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to the output vector.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000007">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classSolverCG.html#a123782d564c3527edb06d819814e31fc" title="Apply parallel preconditioning to the input vector.">PreconditionParallel()</a> function for parallel preconditioning.</dd></dl>
 
 </div>
 </div>
@@ -531,13 +648,13 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SolverCG::PreconditionParallel </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
+          <td class="paramname"><em>in</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -551,6 +668,16 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Apply parallel preconditioning to the input vector. </p>
+<p >This method applies parallel preconditioning to the input vector, producing the output vector. Preconditioning is a technique used to improve the convergence of iterative methods by transforming the linear system.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to the input vector. </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to the output vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -594,6 +721,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Prints the content of a 2D matrix to the standard output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nx</td><td>The number of columns in the matrix. </td></tr>
+    <tr><td class="paramname">ny</td><td>The number of rows in the matrix. </td></tr>
+    <tr><td class="paramname">A</td><td>Pointer to the 1D array representing the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="ae17ac7e44454a7db31d22f77e55dc196" name="ae17ac7e44454a7db31d22f77e55dc196"></a>
@@ -633,6 +770,18 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Configures the neighboring process ranks for inter-process communication. </p>
+<p >This function sets the ranks of the neighboring processes (up, down, left, and right) for the current process to facilitate inter-process communication in a distributed environment.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rank_up</td><td>Rank of the neighboring process above the current process. </td></tr>
+    <tr><td class="paramname">rank_down</td><td>Rank of the neighboring process below the current process. </td></tr>
+    <tr><td class="paramname">rank_left</td><td>Rank of the neighboring process to the left of the current process. </td></tr>
+    <tr><td class="paramname">rank_right</td><td>Rank of the neighboring process to the right of the current process. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -674,6 +823,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>(Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain </p>
+<p >Global position can be computed with offset details, this faciliates gathering of all local domains for debugging purposes. Global matrices are initialised as zero to prevent arbitrary and unpredictable values</p>
+<dl class="section warning"><dt>Warning</dt><dd>Will be removed future versions</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21" title="(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each proc...">GatherDomain()</a> </dd></dl>
+
 </div>
 </div>
 <a id="a912137e50d0887235b01d42327976441" name="a912137e50d0887235b01d42327976441"></a>
@@ -708,6 +862,20 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Solve a linear system using the Conjugate Gradient method in serial. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td>Pointer to the right-hand side vector (Vorticity in this code). </td></tr>
+    <tr><td class="paramname">x</td><td>Pointer to the solution vector (Stream function in this code). </td></tr>
+    <tr><td class="paramname">verbose</td><td>Whether to display convergence details during simulation</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This method solves a linear system Ax = b using the Conjugate Gradient (CG) method in serial. It initializes necessary variables, computes error tolerance, and performs iterative CG steps until convergence or reaching the maximum number of iterations.</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000006">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa" title="Solve a linear system using the Conjugate Gradient method in parallel.">SolveParallel()</a> function for parallel cg solve.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Program terminates if convergence is not reached within the maximum number of iterations</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>ApplyOperatorParallel(), <a class="el" href="classSolverCG.html#a123782d564c3527edb06d819814e31fc" title="Apply parallel preconditioning to the input vector.">PreconditionParallel()</a>, <a class="el" href="classSolverCG.html#a4c829516d18272febbb4b9f7c9508d9d" title="Impose boundary conditions on the input vector in parallel.">ImposeBCParallel()</a> </dd></dl>
+
 </div>
 </div>
 <a id="a96403ae1ec87dbe1f963fea60631ecaa" name="a96403ae1ec87dbe1f963fea60631ecaa"></a>
@@ -741,6 +909,19 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Solve a linear system using the Conjugate Gradient method in parallel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td>Pointer to the right-hand side vector (Vorticity in this code). </td></tr>
+    <tr><td class="paramname">x</td><td>Pointer to the solution vector (Stream function in this code). </td></tr>
+    <tr><td class="paramname">verbose</td><td>Whether to display convergence details during simulation</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This method solves a linear system Ax = b using the Conjugate Gradient (CG) method in parallel. It initializes necessary variables, computes error tolerance, and performs iterative CG steps until convergence or reaching the maximum number of iterations.</p>
+<dl class="section note"><dt>Note</dt><dd>Program terminates if convergence is not reached within the maximum number of iterations</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>ApplyOperatorParallel(), <a class="el" href="classSolverCG.html#a123782d564c3527edb06d819814e31fc" title="Apply parallel preconditioning to the input vector.">PreconditionParallel()</a>, <a class="el" href="classSolverCG.html#a4c829516d18272febbb4b9f7c9508d9d" title="Impose boundary conditions on the input vector in parallel.">ImposeBCParallel()</a> </dd></dl>
 
 </div>
 </div>
@@ -932,6 +1113,28 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool SolverCG::debug</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e238214060d7cc6e964e7b106e3ce11" name="a6e238214060d7cc6e964e7b106e3ce11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e238214060d7cc6e964e7b106e3ce11">&#9670;&nbsp;</a></span>dot_buffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double* SolverCG::dot_buffer = nullptr</td>
         </tr>
       </table>
   </td>

@@ -28,6 +28,8 @@ private:
     double* z;
     double* t;
 
+    double* dot_buffer = nullptr;
+
     int iter_max; // Maximum iteration
     // double error_global = -1; // Computing the global error
     bool debug;

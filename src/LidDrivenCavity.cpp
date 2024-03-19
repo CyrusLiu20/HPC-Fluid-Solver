@@ -1,3 +1,42 @@
+/**
+ * Lid-Driven Cavity problem serves as an important test case for validating computational models, understanding fundamental 
+ * fluid dynamics principles, and gaining insights into complex flow phenomena in confined geometries.
+ * 
+ * Flowchart/Timeline:
+ * 
+ *  1-8:    Configuring LidDrivenCavity Class
+ *  1   SetDomainSize()
+ *  2   SetGridSize()
+ *  3   SetTimeStep()
+ *  4   SetReynoldsNumber()
+ *  5   SetVerbose()
+ *  6   SetThreads()
+ *  7   SetNeighbour()
+ *  8   DomainDecomposition()
+ * 
+ *  9-17:   Begin simulation
+ *  9   PrintConfiguration()
+ *  10  InitialiseParallel()
+ *      11  AdvanceParallel()
+ *          12 ComputeBoundaryVorticityParallel()
+ *          13 ComputeInteriorVorticityParalle()
+ *          14 DomainInterCommunication()
+ *          15 ComputeNextVorticityParallel()
+ *          16 DomainInterCommunication()
+ *          17 ComputeLaplaceOperatorParallel() : Compute Laplace operator with SolverCg
+ *      18  GatherDomain() : Assemble global voriticity and stream matrix for writing
+ * 
+ *  19-20   Outputing simulation results
+ *  19  WriteSollution()
+ *  20  CleanUp()
+ *  
+*/
+
+
+
+
+
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -818,6 +857,35 @@ void LidDrivenCavity::CleanUp()
         delete cg;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
