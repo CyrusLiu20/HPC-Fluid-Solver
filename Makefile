@@ -122,7 +122,7 @@ $(PROF_DIR):
 doc:
 	mkdir -p $(DOC_DIR)
 	doxygen -g $(DOC_DIR)/$(DOCX)
-	echo "\nPlease configure Doxygen configuration file: INPUT = ../ | RECURSIVE = YES | EXTRACT_ALL = YES | EXTRACT_PRIVATE = YES"
+	echo "\nPlease configure Doxygen configuration file (4 flags in total): INPUT = ../ | RECURSIVE = YES | EXTRACT_ALL = YES | EXTRACT_PRIVATE = YES"
 
 clean_doc:
 	rm -rf $(DOC_DIR)/$(HTML) $(DOC_DIR)/$(LATEX) 

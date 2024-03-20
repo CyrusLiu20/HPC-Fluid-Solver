@@ -302,8 +302,8 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
     std::ifstream file1(filename1), file2(filename2);
     std::string line1, line2;
 
-    double tolerance = 1e-6; // absolute error
-    double tolerance_percentage = 0.1;
+    double tolerance = 1e-8; // absolute error less than 1e-10
+    double tolerance_percentage = 0.001; // relative error less than 0.5%
     int tolerance_corrupt = 0;
     bool all_correct = false;
     bool verbose = true;
@@ -318,7 +318,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
 
             if (std::abs((num1 - num2)/num2) > tolerance_percentage && std::abs(num1 - num2) > tolerance) {
                 if(verbose){
-                    std::cout << " Number 1 : "  << num1 << " | Number 2 : " << num2 << " | error : " << std::abs(num1 - num2)<< std::endl;
+                    std::cout << " Parallel Solver : "  << num1 << " | Baseline : " << num2 << " | error : " << std::abs(num1 - num2)<< std::endl;
                 }
                 // all_correct = false;
                 tolerance_corrupt++;
@@ -327,7 +327,7 @@ bool CompareFiles(const std::string& filename1, const std::string& filename2,int
 
     }
 
-    if(tolerance_corrupt<Npts*0.05){
+    if(tolerance_corrupt<Npts*0.001){
         all_correct = true;
         std::cout << "Solver accuracy : " <<  (double)(1-tolerance_corrupt/(Npts*4))*100 << "%" << std::endl;
     }
