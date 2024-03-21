@@ -1,0 +1,2 @@
+ The lid-driven cavity problem is a classical benchmark in computational fluid dynamics that provides valuable insights into the behaviour and efficiency of the CFD algorithm. In this problem, a square cavity is filled with fluid, and the motion of the fluid is driven by the continuous movement of the top lid, while the other boundaries remain stationary.
+ 

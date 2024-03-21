@@ -33,10 +33,6 @@
 */
 
 
-
-
-
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -671,9 +667,6 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel()
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Top and bottom communication
-    // double buffer_up_send[Nx_local], buffer_down_send[Nx_local];
-    // double buffer_up_recv[Nx_local], buffer_down_recv[Nx_local];
-
     if(rank_up!=-2){
         int j_second_upper = (Ny_local-1)-1;
         for(int i=0;i<Nx_local;i++){
@@ -689,20 +682,16 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_up!=-2){
-        // MPI_Send(&buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
         MPI_Send(buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
     }
     if(rank_down!=-2){
-        // MPI_Send(&buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
         MPI_Send(buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
     }
 
     if(rank_down!=-2){
-        // MPI_Recv(&buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     if(rank_up!=-2){
-        // MPI_Recv(&buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
@@ -717,9 +706,6 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Left and right communication
     // Allocate memory for communication buffers
-    // double buffer_left_send[Ny_local], buffer_right_send[Ny_local];
-    // double buffer_left_recv[Ny_local], buffer_right_recv[Ny_local];
-
     if(rank_left!=-2){
         int i_second_left = (0) + 1;
         for(int j=0;j<Ny_local;j++){
@@ -735,20 +721,16 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Send and receive
     if(rank_left!=-2){
-        // MPI_Send(&buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
         MPI_Send(buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
     }
     if(rank_right!=-2){
-        // MPI_Send(&buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
         MPI_Send(buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
     }
 
     if(rank_right!=-2){
-        // MPI_Recv(&buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     if(rank_left!=-2){
-        // MPI_Recv(&buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
     }
@@ -806,11 +788,6 @@ void LidDrivenCavity::WriteSolution(std::string file)
         f << std::endl;
     }
     f.close();
-
-
-
-    // delete[] u0;
-    // delete[] u1;
 }
 
 

@@ -7,5 +7,7 @@ var searchData=
   ['dot_5fbuffer_4',['dot_buffer',['../classSolverCG.html#a6e238214060d7cc6e964e7b106e3ce11',1,'SolverCG']]],
   ['dt_5',['dt',['../classLidDrivenCavity.html#ae0b1f2686b38d6a478e06e8038b36dc6',1,'LidDrivenCavity']]],
   ['dx_6',['dx',['../classLidDrivenCavity.html#a465db02f65675ebb7dc152e6b0f3be5a',1,'LidDrivenCavity::dx()'],['../classSolverCG.html#a92a173d8a5f428ce3cf1685ab5aa4309',1,'SolverCG::dx()']]],
-  ['dy_7',['dy',['../classLidDrivenCavity.html#a16ffb5205c2faeb7a27b069e0f16a8fd',1,'LidDrivenCavity::dy()'],['../classSolverCG.html#abe145d475db2856198417cf84d6ace03',1,'SolverCG::dy()']]]
+  ['dx2i_7',['dx2i',['../classSolverCG.html#a79d59251f21cc5a24d83ecca6d776d30',1,'SolverCG']]],
+  ['dy_8',['dy',['../classLidDrivenCavity.html#a16ffb5205c2faeb7a27b069e0f16a8fd',1,'LidDrivenCavity::dy()'],['../classSolverCG.html#abe145d475db2856198417cf84d6ace03',1,'SolverCG::dy()']]],
+  ['dy2i_9',['dy2i',['../classSolverCG.html#ab5d29cfcc4b690afe11ef3d1baac4220',1,'SolverCG']]]
 ];

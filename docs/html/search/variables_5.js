@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['j_5fend_0',['j_end',['../classSolverCG.html#a9fd0379df711c8e44d78c8c81e2a6b1a',1,'SolverCG']]],
-  ['j_5fstart_1',['j_start',['../classSolverCG.html#ab58fbac89e04e65d634c71657bfff2c7',1,'SolverCG']]]
+  ['i_5fend_0',['i_end',['../classSolverCG.html#a3001d58239d7da3e57b14b7dd68c0ad7',1,'SolverCG']]],
+  ['i_5fstart_1',['i_start',['../classSolverCG.html#a64326a64a73f81f232d9a0674a4ff5db',1,'SolverCG']]],
+  ['iter_5fmax_2',['iter_max',['../classSolverCG.html#a235a7c4ab694dd17bc300f9f2cf4b3cf',1,'SolverCG']]]
 ];

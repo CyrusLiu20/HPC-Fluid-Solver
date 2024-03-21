@@ -70,7 +70,7 @@ Ny ?= 9 # Number of grid points in y-direction
 Nt ?= 1 # Number of threads
 verbose ?= false # Verbosity
 
-EXP ?= 10 # Profiler experiment number
+EXP ?= 2 # Profiler experiment number
 
 # Builds the main solver executable
 all: $(BUILD_DIR) $(OUTPUT)

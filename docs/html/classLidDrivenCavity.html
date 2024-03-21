@@ -168,7 +168,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:aa8be5cfc1901cfc1ad5954b026e3b63d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#aa8be5cfc1901cfc1ad5954b026e3b63d">CleanUp</a> ()</td></tr>
-<tr class="memdesc:aa8be5cfc1901cfc1ad5954b026e3b63d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up memory allocated for vorticity, stream function, and the conjugate gradient solver.  <a href="classLidDrivenCavity.html#aa8be5cfc1901cfc1ad5954b026e3b63d">More...</a><br /></td></tr>
+<tr class="memdesc:aa8be5cfc1901cfc1ad5954b026e3b63d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up memory allocated for vorticity, stream function, communication buffer, and the conjugate gradient solver.  <a href="classLidDrivenCavity.html#aa8be5cfc1901cfc1ad5954b026e3b63d">More...</a><br /></td></tr>
 <tr class="separator:aa8be5cfc1901cfc1ad5954b026e3b63d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9575dd6a4fb69b8b5aa6376ec60fda0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#af9575dd6a4fb69b8b5aa6376ec60fda0">UpdateDxDy</a> ()</td></tr>
 <tr class="memdesc:af9575dd6a4fb69b8b5aa6376ec60fda0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure grid spacing based on domain size and number of grid points.  <a href="classLidDrivenCavity.html#af9575dd6a4fb69b8b5aa6376ec60fda0">More...</a><br /></td></tr>
@@ -208,6 +208,8 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a2a3baea585bb5bd05b834fdde47cb73e"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#a2a3baea585bb5bd05b834fdde47cb73e">v</a> = nullptr</td></tr>
 <tr class="separator:a2a3baea585bb5bd05b834fdde47cb73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9535ff3518769d62238a9446ef2e975c"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#a9535ff3518769d62238a9446ef2e975c">v_new</a> = nullptr</td></tr>
+<tr class="separator:a9535ff3518769d62238a9446ef2e975c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefafb847d74c48e5edab903e3c1c6b1d"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#aefafb847d74c48e5edab903e3c1c6b1d">s</a> = nullptr</td></tr>
 <tr class="separator:aefafb847d74c48e5edab903e3c1c6b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d803bdf97c3e23e66ea79307e092300"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#a0d803bdf97c3e23e66ea79307e092300">u0</a> = nullptr</td></tr>
@@ -264,6 +266,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:af12a653c8e3cb5262c160f58f977dd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c795b319eaaf755f868fda4270c7d74"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#a0c795b319eaaf755f868fda4270c7d74">v_local</a> = nullptr</td></tr>
 <tr class="separator:a0c795b319eaaf755f868fda4270c7d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af38b9f2e37732c409890e8c9051adc11"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#af38b9f2e37732c409890e8c9051adc11">v_next_local</a> = nullptr</td></tr>
+<tr class="separator:af38b9f2e37732c409890e8c9051adc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab656c679a003185f923282d4839de86d"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#ab656c679a003185f923282d4839de86d">s_local</a> = nullptr</td></tr>
 <tr class="separator:ab656c679a003185f923282d4839de86d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92591c30c69b3d0f347a1b0ed83bb418"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLidDrivenCavity.html#a92591c30c69b3d0f347a1b0ed83bb418">A_global_temp</a> = nullptr</td></tr>
@@ -424,7 +428,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Cleans up memory allocated for vorticity, stream function, and the conjugate gradient solver. </p>
+<p>Cleans up memory allocated for vorticity, stream function, communication buffer, and the conjugate gradient solver. </p>
 
 </div>
 </div>
@@ -846,7 +850,7 @@ Private Attributes</h2></td></tr>
 <p>Initializes the <a class="el" href="classLidDrivenCavity.html" title="LidDrivenCavity is a class designed to simulate fluid flow within a two-dimensional lid-driven cavity...">LidDrivenCavity</a> object by allocating memory for vorticity, stream function, and creating a solver object. Also initializes velocity components. </p>
 <p >This function cleans up any existing memory, allocates memory for vorticity (<code>v</code>), stream function (<code>s</code>), and creates a conjugate gradient solver object (<code>cg</code>). Additionally, it initializes velocity components using the <a class="el" href="classLidDrivenCavity.html#ad3cc258bff230ce7f160132958762ca4" title="Allocate memory for global u and v velocity to prevent memory leakage.">CreateU()</a> function.</p>
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>This function is deprecated and will be removed in future versions. Consider using the <a class="el" href="classLidDrivenCavity.html#abd03496713e6fd52c2a88d94a8da6050" title="Initializes the LidDrivenCavity solver for parallel execution.">InitialiseParallel()</a> function for parallel initialization.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#aa8be5cfc1901cfc1ad5954b026e3b63d" title="Cleans up memory allocated for vorticity, stream function, and the conjugate gradient solver.">CleanUp()</a>, <a class="el" href="classLidDrivenCavity.html#ad3cc258bff230ce7f160132958762ca4" title="Allocate memory for global u and v velocity to prevent memory leakage.">CreateU()</a>, <a class="el" href="classLidDrivenCavity.html#abd03496713e6fd52c2a88d94a8da6050" title="Initializes the LidDrivenCavity solver for parallel execution.">InitialiseParallel()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#aa8be5cfc1901cfc1ad5954b026e3b63d" title="Cleans up memory allocated for vorticity, stream function, communication buffer, and the conjugate gr...">CleanUp()</a>, <a class="el" href="classLidDrivenCavity.html#ad3cc258bff230ce7f160132958762ca4" title="Allocate memory for global u and v velocity to prevent memory leakage.">CreateU()</a>, <a class="el" href="classLidDrivenCavity.html#abd03496713e6fd52c2a88d94a8da6050" title="Initializes the LidDrivenCavity solver for parallel execution.">InitialiseParallel()</a> </dd></dl>
 
 </div>
 </div>
@@ -927,7 +931,6 @@ Private Attributes</h2></td></tr>
 
 <p>Integrates the Lid-Driven Cavity simulation over time in parallel. This function iterates over time steps, advancing the simulation state at each step. Gathers all local vorticity and stream for writing purposes. </p>
 <p >The simulation proceeds for a total of <code>NSteps</code> time steps, where <code>NSteps</code> is determined based on the total simulation time (<code>T</code>) and the time step size (<code>dt</code>).</p>
-<p >During each time step, the simulation state is advanced by calling the <code>AdvanceParallel</code> function. Optionally, verbose output can be enabled for the first time step for detailed logging.</p>
 <p >Finally, the local simulation domain data is gathered from each process to reconstruct the complete simulation state for post-processing and analysis.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classLidDrivenCavity.html#ad6f85225e7526cd7f9f3c3fc48d8d3b0" title="Advances the Lid-Driven Cavity simulation to the next time step in parallel.">AdvanceParallel()</a>, <a class="el" href="classLidDrivenCavity.html#ac15e48c2b427bed53a595da550269a0b" title="Computes the boundary vorticity for the Lid-Driven Cavity simulation in parallel.">ComputeBoundaryVorticityParallel()</a>, <a class="el" href="classLidDrivenCavity.html#a687272ab3617ec1707303cd288458aad" title="Computes the interior vorticity for the Lid-Driven Cavity simulation in parallel.">ComputeInteriorVorticityParallel()</a>, <a class="el" href="classLidDrivenCavity.html#ad1cea55e23744eb99665b7420227aa48" title="Computes the next vorticity values for the Lid-Driven Cavity simulation in parallel.">ComputeNextVorticityParallel()</a>, <a class="el" href="classLidDrivenCavity.html#ae035aa99b3b514cdf843648592fceea9" title="Computes the Laplace operator for the Lid-Driven Cavity simulation in parallel.">ComputeLaplaceOperatorParallel()</a> </dd></dl>
 
@@ -2433,6 +2436,50 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">double* LidDrivenCavity::v_local = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9535ff3518769d62238a9446ef2e975c" name="a9535ff3518769d62238a9446ef2e975c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9535ff3518769d62238a9446ef2e975c">&#9670;&nbsp;</a></span>v_new</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double* LidDrivenCavity::v_new = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af38b9f2e37732c409890e8c9051adc11" name="af38b9f2e37732c409890e8c9051adc11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af38b9f2e37732c409890e8c9051adc11">&#9670;&nbsp;</a></span>v_next_local</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double* LidDrivenCavity::v_next_local = nullptr</td>
         </tr>
       </table>
   </td>
