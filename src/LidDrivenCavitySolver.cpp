@@ -72,6 +72,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	
+
     // Initialise MPI
     int rank = 0; // ID of process
     int size = 0; // Number of processes
@@ -94,6 +95,34 @@ int main(int argc, char **argv)
 		MPI_Finalize();
 		return 0;
     }
+
+    // Check domain length
+    if (Lx <= 0 || Ly <= 0 || Nx <= 0 || Ny <= 0) {
+        if (rank == root) {
+            std::cout << "Please ensure positive domain length and valid number of nodes." << std::endl;
+        }
+        MPI_Finalize();
+        return 0;
+    }
+
+    // Allow only positive time arguments
+    if(T<=0 || dt<=0){
+		if(rank==root){
+			cout << "Please have a positive time argument for the solver" << endl;
+		} 
+		MPI_Finalize();
+		return 0;    
+    }
+
+    // Allow only positive Reynolds number
+    if(Re<=0){
+		if(rank==root){
+			cout << "Please have a positive Reynolds number for the solver" << endl;
+		} 
+		MPI_Finalize();
+		return 0;    
+    }
+
 
 
     // Create a cartesian grid of n x n to compute
@@ -147,32 +176,37 @@ int main(int argc, char **argv)
     solver->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     solver->DomainDecomposition();
 
+    // Print fluid solver configuration if root rank
     if(rank==root){
         solver->PrintConfiguration();
     }
 
+    // Warn about legacy mode if enabled and root rank
     if (legacy && rank==root) {
         std::cout << "Warning: Legacy mode is enabled. Executing legacy baseline numerical code.\n" << std::endl;
     }
 
 
+    // Initialize solver
     if (not(legacy)) {
         solver->InitialiseParallel();
     } else {
         solver->Initialise();
     }
     
+    // Write initial solution if root rank
     if(rank==root){
         solver->WriteSolution(folder_results+"ic.txt");
     }
 
-
+    // Integrate solver
     if (not(legacy)) {
         solver->IntegrateParallel();
     } else {
         solver->Integrate();
     }
 
+    // Write final solution if root rank
     if(rank==root){
         solver->WriteSolution(folder_results+"final.txt");
     }
