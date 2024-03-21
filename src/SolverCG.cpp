@@ -60,14 +60,12 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
     p = new double[n];
     z = new double[n];
     t = new double[n]; //temp
-    dot_buffer = new double[n];
 
     for(int i=0;i<n;i++){
         r[i] = 0;
         p[i] = 0;
         z[i] = 0;
         t[i] = 0;
-        dot_buffer[i] = 0;
     }
 
 
@@ -155,21 +153,6 @@ void SolverCG::SetOffset(int offset_x, int offset_y, int Nx_global, int Ny_globa
     this->Nx_global = Nx_global;
     this->Ny_global = Ny_global;   
     this->Npts = Nx_global*Ny_global;
-
-    // For sole debugging purposes
-    if(rank==root){
-        r_global = new double[Npts];
-        p_global = new double[Npts];
-        z_global = new double[Npts];
-        t_global = new double[Npts]; //temp
-
-        for(int i=0;i<Npts;i++){
-            r_global[i] = 0;
-            p_global[i] = 0;
-            z_global[i] = 0;
-            t_global[i] = 0;
-        }
-    }
 }
 
 /**
@@ -181,6 +164,18 @@ SolverCG::~SolverCG()
     delete[] p;
     delete[] z;
     delete[] t;
+
+    if(buffer_up_send){
+        delete[] buffer_up_send;
+        delete[] buffer_down_send;
+        delete[] buffer_up_recv;
+        delete[] buffer_down_recv;
+
+        delete[] buffer_left_send;
+        delete[] buffer_right_send;
+        delete[] buffer_left_recv;
+        delete[] buffer_right_recv;
+    }
 }
 
 /**

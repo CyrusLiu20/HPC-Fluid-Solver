@@ -71,12 +71,6 @@ private:
     int Ny_global;
     int Npts;
 
-
-    double* r_global = nullptr;
-    double* p_global = nullptr;
-    double* z_global = nullptr;
-    double* t_global = nullptr;
-
     double* buffer_up_send = nullptr;
     double* buffer_down_send = nullptr;
     double* buffer_up_recv = nullptr;
