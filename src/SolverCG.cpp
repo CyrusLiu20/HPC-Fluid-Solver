@@ -103,6 +103,10 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
         buffer_right_recv[j] = 0;
     }  
 
+    dx2i = 1.0/dx/dx;
+    dy2i = 1.0/dy/dy;
+    factor2 = 1/2.0*(dx2i + dy2i);
+
 }
 
 /**
@@ -130,7 +134,6 @@ void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_
     if (this->rank_down != -2) {j_start++;}
     if (this->rank_left != -2) {i_start++;}
     if (this->rank_right != -2) {i_end--;}
-
 
 }
 
@@ -268,12 +271,13 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
         #pragma omp for 
         for (unsigned int i=0; i<n; i++) {
             t[i]=z[i];
-        }
+        // }
 
         // cblas_daxpy(n, beta_global, p, 1, t, 1);
         // cblas_dcopy(n, t, 1, p, 1);
-        #pragma omp for 
-        for (unsigned int i=0; i<n; i++) {
+
+        // #pragma omp for 
+        // for (unsigned int i=0; i<n; i++) {
             t[i]=z[i] + beta_global*p[i];
             p[i]=t[i];
         }
@@ -305,9 +309,9 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
 */ 
 void SolverCG::ApplyOperator(double* in, double* out) {
     // Assume ordered with y-direction fastest (column-by-column)
-    double dx2i = 1.0/dx/dx;
-    double dy2i = 1.0/dy/dy;
-    // int jm1 = 0, jp1 = 2;
+    // double dx2i = 1.0/dx/dx;
+    // double dy2i = 1.0/dy/dy;
+    // // int jm1 = 0, jp1 = 2;
 
     int index_local;
     #pragma omp for collapse(2) private(index_local)
@@ -343,9 +347,11 @@ void SolverCG::ApplyOperator(double* in, double* out) {
  */
 void SolverCG::PreconditionParallel(double* in, double* out) {
     int i, j;
-    double dx2i = 1.0/dx/dx;
-    double dy2i = 1.0/dy/dy;
-    double factor = 2.0*(dx2i + dy2i);
+    // double dx2i = 1.0/dx/dx;
+    // double dy2i = 1.0/dy/dy;
+    // // double factor = 2.0*(dx2i + dy2i);
+    // double factor2 = 1/2.0*(dx2i + dy2i);
+
 
     int i_start_temp = 1;
     int i_end_temp = Nx-1;
@@ -359,9 +365,11 @@ void SolverCG::PreconditionParallel(double* in, double* out) {
     if (rank_right != -2) {i_end_temp++;}
 
 
+
     for (j = j_start_temp; j < j_end_temp; ++j) {
         for (i = i_start_temp; i < i_end_temp; ++i) {
-            out[IDX(i,j)] = in[IDX(i,j)]/factor;
+            // out[IDX(i,j)] = in[IDX(i,j)]/factor;
+            out[IDX(i,j)] = in[IDX(i,j)]*factor2;
         }
     }
     // Boundaries
@@ -672,6 +680,7 @@ double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
     MPI_Allreduce(&value, &value_global, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     return value_global;
 }
+
 
 
 

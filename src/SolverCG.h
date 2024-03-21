@@ -59,7 +59,12 @@ private:
     int j_start;
     int j_end;
 
-    
+    double dx2i;
+    double dy2i;
+    double factor2;
+
+
+
     int offset_x;
     int offset_y;
     int Nx_global;
@@ -81,7 +86,6 @@ private:
     double* buffer_right_send = nullptr;
     double* buffer_left_recv = nullptr;
     double* buffer_right_recv = nullptr;
-
 
     void Printmatrix(int nx, int ny, double* A);
 
