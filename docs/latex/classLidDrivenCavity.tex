@@ -11,7 +11,8 @@
 
 
 
-Collaboration diagram for Lid\+Driven\+Cavity\+:\nopagebreak
+Collaboration diagram for Lid\+Driven\+Cavity\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -41,18 +42,20 @@ void \mbox{\hyperlink{classLidDrivenCavity_a9f358af1e0c0a0046ec16583799a7a0b}{Se
 \begin{DoxyCompactList}\small\item\em Configure the number of threads. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_aef90a698edcea34004a779f56c4edfd3}{Set\+Neighbour}} (int \mbox{\hyperlink{classLidDrivenCavity_aeb765aa03707ae639feeef7a40f1609f}{rank\+\_\+up}}, int \mbox{\hyperlink{classLidDrivenCavity_a9b253374164313a0cae091cf5e78d945}{rank\+\_\+down}}, int \mbox{\hyperlink{classLidDrivenCavity_a3aaa98ed60961ddd4aa15751c2b602b4}{rank\+\_\+left}}, int \mbox{\hyperlink{classLidDrivenCavity_a4d2c45d269f0283b27f329d9ff2e3797}{rank\+\_\+right}})
 \begin{DoxyCompactList}\small\item\em Configures the neighboring process ranks for inter-\/process communication. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}{Domain\+Decomposition}} ()
-\begin{DoxyCompactList}\small\item\em Performs domain decomposition for parallel computation. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_ab0eb448219134e835173e94874a3983a}{Initialise}} ()
-\begin{DoxyCompactList}\small\item\em Initializes the \mbox{\hyperlink{classLidDrivenCavity}{Lid\+Driven\+Cavity}} object by allocating memory for vorticity, stream function, and creating a solver object. Also initializes velocity components. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_a80cd7032d10f09279d62d03335023e72}{Integrate}} ()
-\begin{DoxyCompactList}\small\item\em Integrates the \mbox{\hyperlink{classLidDrivenCavity}{Lid\+Driven\+Cavity}} object over time using a simple time-\/stepping scheme. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_a25e4a6ffd522ffbffaf7e0d2fedad59c}{Write\+Solution}} (std\+::string file)
 \begin{DoxyCompactList}\small\item\em Writes the solution data to a file. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_a8e111839958ac5d4d0d8d583a4d84e86}{Print\+Configuration}} ()
 \begin{DoxyCompactList}\small\item\em Prints the configuration parameters of the Lid-\/\+Driven Cavity simulation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_ab0eb448219134e835173e94874a3983a}{Initialise}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the \mbox{\hyperlink{classLidDrivenCavity}{Lid\+Driven\+Cavity}} object by allocating memory for vorticity, stream function, and creating a solver object. Also initializes velocity components. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_a80cd7032d10f09279d62d03335023e72}{Integrate}} ()
+\begin{DoxyCompactList}\small\item\em Integrates the \mbox{\hyperlink{classLidDrivenCavity}{Lid\+Driven\+Cavity}} object over time using a simple time-\/stepping scheme. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_abd03496713e6fd52c2a88d94a8da6050}{Initialise\+Parallel}} ()
 \begin{DoxyCompactList}\small\item\em Initializes the \mbox{\hyperlink{classLidDrivenCavity}{Lid\+Driven\+Cavity}} solver for parallel execution. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_ac458ad4869ad3da2bb74e5500519298a}{Integrate\+Parallel}} ()
+\begin{DoxyCompactList}\small\item\em Integrates the Lid-\/\+Driven Cavity simulation over time in parallel. This function iterates over time steps, advancing the simulation state at each step. Gathers all local vorticity and stream for writing purposes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}{Domain\+Decomposition}} ()
+\begin{DoxyCompactList}\small\item\em Performs domain decomposition for parallel computation and ensures buffer zone for information sharing. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classLidDrivenCavity_a4066b63c02fa8c473f0056ea12daa8ca}{get\+\_\+dx}} ()
 \begin{DoxyCompactList}\small\item\em Returns the grid spacing in the x-\/direction. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classLidDrivenCavity_a2e16a371830ddc02c5c3f73067675799}{get\+\_\+dy}} ()
@@ -72,9 +75,7 @@ double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a133de3e394758982d0239f3c651
 void \mbox{\hyperlink{classLidDrivenCavity_a4c2619b56c92f209fb138e626e6be5ee}{Integrate\+Control}} (double percentage)
 \item 
 void \mbox{\hyperlink{classLidDrivenCavity_a0456e69240df3932761fc3820fde0bed}{Advance}} (bool verbose\+\_\+advance)
-\begin{DoxyCompactList}\small\item\em Integrates the Lid-\/\+Driven Cavity simulation over time in serial. This function iterates over time steps, advancing the simulation state at each step. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_ac458ad4869ad3da2bb74e5500519298a}{Integrate\+Parallel}} ()
-\begin{DoxyCompactList}\small\item\em Integrates the Lid-\/\+Driven Cavity simulation over time in parallel. This function iterates over time steps, advancing the simulation state at each step. Gathers all local vorticity and stream for writing purposes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Integrates the Lid-\/\+Driven Cavity simulation over time in serial. This function iterates over time steps, advancing the simulation state at each step. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -82,6 +83,10 @@ void \mbox{\hyperlink{classLidDrivenCavity_aa8be5cfc1901cfc1ad5954b026e3b63d}{Cl
 \begin{DoxyCompactList}\small\item\em Cleans up memory allocated for vorticity, stream function, communication buffer, and the conjugate gradient solver. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_af9575dd6a4fb69b8b5aa6376ec60fda0}{Update\+Dx\+Dy}} ()
 \begin{DoxyCompactList}\small\item\em Configure grid spacing based on domain size and number of grid points. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_ad3cc258bff230ce7f160132958762ca4}{CreateU}} ()
+\begin{DoxyCompactList}\small\item\em Allocate memory for global u and v velocity and initialising to prevent memory leakage. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLidDrivenCavity_af2cf7812515b807a646109ef649534d9}{Printmatrix}} (int nx, int ny, double $\ast$A)
+\begin{DoxyCompactList}\small\item\em Prints the content of a 2D matrix to the standard output. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_a42efeb8d107a39c3926387dd8ed0cf4a}{Gather\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
 \begin{DoxyCompactList}\small\item\em Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_ae9194a027b9adec8c5f8a7031ca8266a}{Scatter\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
@@ -97,23 +102,9 @@ void \mbox{\hyperlink{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}{Co
 void \mbox{\hyperlink{classLidDrivenCavity_ad1cea55e23744eb99665b7420227aa48}{Compute\+Next\+Vorticity\+Parallel}} ()
 \begin{DoxyCompactList}\small\item\em Computes the next vorticity values for the Lid-\/\+Driven Cavity simulation in parallel. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classLidDrivenCavity_ae035aa99b3b514cdf843648592fceea9}{Compute\+Laplace\+Operator\+Parallel}} ()
-\begin{DoxyCompactList}\small\item\em Computes the Laplace operator for the Lid-\/\+Driven Cavity simulation in parallel. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_ad3cc258bff230ce7f160132958762ca4}{CreateU}} ()
-\begin{DoxyCompactList}\small\item\em Allocate memory for global u and v velocity to prevent memory leakage. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classLidDrivenCavity_af2cf7812515b807a646109ef649534d9}{Printmatrix}} (int nx, int ny, double $\ast$A)
-\begin{DoxyCompactList}\small\item\em Prints the content of a 2D matrix to the standard output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Computes the Laplace operator for the Lid-\/\+Driven Cavity simulation in parallel. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
-\item 
-double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a2a3baea585bb5bd05b834fdde47cb73e}{v}} = nullptr
-\item 
-double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a9535ff3518769d62238a9446ef2e975c}{v\+\_\+new}} = nullptr
-\item 
-double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_aefafb847d74c48e5edab903e3c1c6b1d}{s}} = nullptr
-\item 
-double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a0d803bdf97c3e23e66ea79307e092300}{u0}} = nullptr
-\item 
-double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a70fddccc2bc5ed7372746c573845ec88}{u1}} = nullptr
 \item 
 double \mbox{\hyperlink{classLidDrivenCavity_ae0b1f2686b38d6a478e06e8038b36dc6}{dt}} = 0.\+01
 \item 
@@ -122,18 +113,6 @@ double \mbox{\hyperlink{classLidDrivenCavity_a4bf51ffebdc439a9d68aefee614d242c}{
 double \mbox{\hyperlink{classLidDrivenCavity_a465db02f65675ebb7dc152e6b0f3be5a}{dx}}
 \item 
 double \mbox{\hyperlink{classLidDrivenCavity_a16ffb5205c2faeb7a27b069e0f16a8fd}{dy}}
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_ac893dc5f92e88a60d023cb2732fa9cd3}{Nx}} = 9
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_a09a3f4e78348c0e61b3fe363ba0916d9}{Ny}} = 9
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_aadf26c7a96b8629e3d0b6bc1fe7b73d4}{Npts}} = 81
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_a780180f421777d4c687bf336deb2dc6e}{Nx\+\_\+inner}}
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_aa2a308550d77024050ea93af3da316b9}{Ny\+\_\+inner}}
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_a0967222f54d7498bae6849c5472281ec}{Npts\+\_\+inner}}
 \item 
 double \mbox{\hyperlink{classLidDrivenCavity_a2cf00d0d1b2c628eec19b15972ba39b8}{Lx}} = 1.\+0
 \item 
@@ -145,11 +124,27 @@ double \mbox{\hyperlink{classLidDrivenCavity_a80f016b2c11c2997f3a2f726ae989cab}{
 \item 
 double \mbox{\hyperlink{classLidDrivenCavity_ae5bdf166644f5b09f57d1be93343e75c}{nu}} = 0.\+1
 \item 
-bool \mbox{\hyperlink{classLidDrivenCavity_ab277fbb087ae7f27a15c31b4db230d98}{parallel}}
+int \mbox{\hyperlink{classLidDrivenCavity_ac893dc5f92e88a60d023cb2732fa9cd3}{Nx}} = 9
+\item 
+int \mbox{\hyperlink{classLidDrivenCavity_a09a3f4e78348c0e61b3fe363ba0916d9}{Ny}} = 9
+\item 
+int \mbox{\hyperlink{classLidDrivenCavity_aadf26c7a96b8629e3d0b6bc1fe7b73d4}{Npts}} = 81
+\item 
+bool \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}} = true
+\item 
+\mbox{\hyperlink{classSolverCG}{Solver\+CG}} $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a5c5391a59509247c872ca287fbe771f9}{cg}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a2a3baea585bb5bd05b834fdde47cb73e}{v}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a9535ff3518769d62238a9446ef2e975c}{v\+\_\+new}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_aefafb847d74c48e5edab903e3c1c6b1d}{s}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a0d803bdf97c3e23e66ea79307e092300}{u0}} = nullptr
+\item 
+double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a70fddccc2bc5ed7372746c573845ec88}{u1}} = nullptr
 \item 
 int \mbox{\hyperlink{classLidDrivenCavity_ae60477c2ac5e4a31410a10b9d654b20c}{Npts\+\_\+local}}
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_a579e712921bf6bf10acd492e691e2998}{Npts\+\_\+local\+\_\+buffer}}
 \item 
 int \mbox{\hyperlink{classLidDrivenCavity_a19eb718ab8cee466ba958efca42b06af}{Nx\+\_\+remainder}}
 \item 
@@ -171,8 +166,6 @@ double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_ab656c679a003185f923282d4839
 \item 
 double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a92591c30c69b3d0f347a1b0ed83bb418}{A\+\_\+global\+\_\+temp}} = nullptr
 \item 
-bool \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}} = true
-\item 
 int \mbox{\hyperlink{classLidDrivenCavity_a265fe16ac796e137e7016326c427a189}{root}} = 0
 \item 
 int \mbox{\hyperlink{classLidDrivenCavity_a405bd4260b1e348d87e1c67535a15814}{rank}}
@@ -189,6 +182,8 @@ int \mbox{\hyperlink{classLidDrivenCavity_a3aaa98ed60961ddd4aa15751c2b602b4}{ran
 \item 
 int \mbox{\hyperlink{classLidDrivenCavity_a4d2c45d269f0283b27f329d9ff2e3797}{rank\+\_\+right}}
 \item 
+int \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}}
+\item 
 double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a8ebcf6fa30e987c2c2a714fc72233e9c}{buffer\+\_\+up\+\_\+send}} = nullptr
 \item 
 double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a4406d364a12eb3ae851cec2df930d360}{buffer\+\_\+down\+\_\+send}} = nullptr
@@ -204,10 +199,6 @@ double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a5eca9ae770cbc6737235a65570c
 double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_aa5404a4b98da12709051ef4861094a2b}{buffer\+\_\+left\+\_\+recv}} = nullptr
 \item 
 double $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a74b7a993a5584c6055f5993af42aaf06}{buffer\+\_\+right\+\_\+recv}} = nullptr
-\item 
-\mbox{\hyperlink{classSolverCG}{Solver\+CG}} $\ast$ \mbox{\hyperlink{classLidDrivenCavity_a5c5391a59509247c872ca287fbe771f9}{cg}} = nullptr
-\item 
-int \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}}
 \end{DoxyCompactItemize}
 
 
@@ -292,7 +283,7 @@ Computes the boundary vorticity for the Lid-\/\+Driven Cavity simulation in para
 
 This function calculates the boundary vorticity values of the local domain in a parallel environment. It computes the vorticity values along the top, bottom, left, and right boundaries of the local domain based on the given stream function values.
 
-The boundary vorticity is computed using finite difference approximations and is updated directly in the local vorticity array. Boundary conditions are applied according to the MPI ranks of neighboring processes. For example, if a process has no neighbor on its top boundary (rank\+\_\+up == -\/2), it computes the vorticity along the top boundary using a specified boundary condition (e.\+g., uniform velocity). \mbox{\Hypertarget{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}\label{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}} 
+The boundary vorticity is computed using finite difference approximations and is updated directly in the local vorticity array. Boundary conditions are applied according to the coordinate of current process. \mbox{\Hypertarget{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}\label{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!ComputeInteriorVorticityParallel@{ComputeInteriorVorticityParallel}}
 \index{ComputeInteriorVorticityParallel@{ComputeInteriorVorticityParallel}!LidDrivenCavity@{LidDrivenCavity}}
 \doxysubsubsection{\texorpdfstring{ComputeInteriorVorticityParallel()}{ComputeInteriorVorticityParallel()}}
@@ -332,7 +323,7 @@ This function advances the vorticity values of the local domain to the next time
 
 
 
-Allocate memory for global u and v velocity to prevent memory leakage. 
+Allocate memory for global u and v velocity and initialising to prevent memory leakage. 
 
 \mbox{\Hypertarget{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}\label{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!DomainDecomposition@{DomainDecomposition}}
@@ -342,13 +333,11 @@ Allocate memory for global u and v velocity to prevent memory leakage.
 
 
 
-Performs domain decomposition for parallel computation. 
+Performs domain decomposition for parallel computation and ensures buffer zone for information sharing. 
 
 This function divides the computational domain into smaller subdomains for parallel computation using the MPI library. Each process is assigned a portion of the domain based on its rank, allowing for parallel execution of the Lid-\/\+Driven Cavity simulation.
 
-The domain decomposition ensures that each process works on a distinct portion of the domain, facilitating efficient parallelization of the computation.
-
-Note\+: This function requires the MPI library for parallel communication. \mbox{\Hypertarget{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}\label{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}} 
+The domain decomposition ensures that each process works on a distinct portion of the domain, facilitating efficient parallelization of the computation. \mbox{\Hypertarget{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}\label{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!DomainInterComunnication@{DomainInterComunnication}}
 \index{DomainInterComunnication@{DomainInterComunnication}!LidDrivenCavity@{LidDrivenCavity}}
 \doxysubsubsection{\texorpdfstring{DomainInterComunnication()}{DomainInterComunnication()}}
@@ -881,23 +870,11 @@ This function assumes that the solution data arrays (v, s, u0, u1) have been pro
 \doxysubsubsection{\texorpdfstring{Npts}{Npts}}
 {\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Npts = 81\hspace{0.3cm}{\ttfamily [private]}}
 
-\mbox{\Hypertarget{classLidDrivenCavity_a0967222f54d7498bae6849c5472281ec}\label{classLidDrivenCavity_a0967222f54d7498bae6849c5472281ec}} 
-\index{LidDrivenCavity@{LidDrivenCavity}!Npts\_inner@{Npts\_inner}}
-\index{Npts\_inner@{Npts\_inner}!LidDrivenCavity@{LidDrivenCavity}}
-\doxysubsubsection{\texorpdfstring{Npts\_inner}{Npts\_inner}}
-{\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Npts\+\_\+inner\hspace{0.3cm}{\ttfamily [private]}}
-
 \mbox{\Hypertarget{classLidDrivenCavity_ae60477c2ac5e4a31410a10b9d654b20c}\label{classLidDrivenCavity_ae60477c2ac5e4a31410a10b9d654b20c}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!Npts\_local@{Npts\_local}}
 \index{Npts\_local@{Npts\_local}!LidDrivenCavity@{LidDrivenCavity}}
 \doxysubsubsection{\texorpdfstring{Npts\_local}{Npts\_local}}
 {\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Npts\+\_\+local\hspace{0.3cm}{\ttfamily [private]}}
-
-\mbox{\Hypertarget{classLidDrivenCavity_a579e712921bf6bf10acd492e691e2998}\label{classLidDrivenCavity_a579e712921bf6bf10acd492e691e2998}} 
-\index{LidDrivenCavity@{LidDrivenCavity}!Npts\_local\_buffer@{Npts\_local\_buffer}}
-\index{Npts\_local\_buffer@{Npts\_local\_buffer}!LidDrivenCavity@{LidDrivenCavity}}
-\doxysubsubsection{\texorpdfstring{Npts\_local\_buffer}{Npts\_local\_buffer}}
-{\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Npts\+\_\+local\+\_\+buffer\hspace{0.3cm}{\ttfamily [private]}}
 
 \mbox{\Hypertarget{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}\label{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!Nt@{Nt}}
@@ -917,12 +894,6 @@ This function assumes that the solution data arrays (v, s, u0, u1) have been pro
 \doxysubsubsection{\texorpdfstring{Nx}{Nx}}
 {\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Nx = 9\hspace{0.3cm}{\ttfamily [private]}}
 
-\mbox{\Hypertarget{classLidDrivenCavity_a780180f421777d4c687bf336deb2dc6e}\label{classLidDrivenCavity_a780180f421777d4c687bf336deb2dc6e}} 
-\index{LidDrivenCavity@{LidDrivenCavity}!Nx\_inner@{Nx\_inner}}
-\index{Nx\_inner@{Nx\_inner}!LidDrivenCavity@{LidDrivenCavity}}
-\doxysubsubsection{\texorpdfstring{Nx\_inner}{Nx\_inner}}
-{\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Nx\+\_\+inner\hspace{0.3cm}{\ttfamily [private]}}
-
 \mbox{\Hypertarget{classLidDrivenCavity_a78fe7433b0154c3652ab0b48cc0859c7}\label{classLidDrivenCavity_a78fe7433b0154c3652ab0b48cc0859c7}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!Nx\_local@{Nx\_local}}
 \index{Nx\_local@{Nx\_local}!LidDrivenCavity@{LidDrivenCavity}}
@@ -940,12 +911,6 @@ This function assumes that the solution data arrays (v, s, u0, u1) have been pro
 \index{Ny@{Ny}!LidDrivenCavity@{LidDrivenCavity}}
 \doxysubsubsection{\texorpdfstring{Ny}{Ny}}
 {\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Ny = 9\hspace{0.3cm}{\ttfamily [private]}}
-
-\mbox{\Hypertarget{classLidDrivenCavity_aa2a308550d77024050ea93af3da316b9}\label{classLidDrivenCavity_aa2a308550d77024050ea93af3da316b9}} 
-\index{LidDrivenCavity@{LidDrivenCavity}!Ny\_inner@{Ny\_inner}}
-\index{Ny\_inner@{Ny\_inner}!LidDrivenCavity@{LidDrivenCavity}}
-\doxysubsubsection{\texorpdfstring{Ny\_inner}{Ny\_inner}}
-{\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::\+Ny\+\_\+inner\hspace{0.3cm}{\ttfamily [private]}}
 
 \mbox{\Hypertarget{classLidDrivenCavity_a3ccae4d4add1b6b0350baee14d995ce6}\label{classLidDrivenCavity_a3ccae4d4add1b6b0350baee14d995ce6}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!Ny\_local@{Ny\_local}}
@@ -970,12 +935,6 @@ This function assumes that the solution data arrays (v, s, u0, u1) have been pro
 \index{offset\_y@{offset\_y}!LidDrivenCavity@{LidDrivenCavity}}
 \doxysubsubsection{\texorpdfstring{offset\_y}{offset\_y}}
 {\footnotesize\ttfamily int Lid\+Driven\+Cavity\+::offset\+\_\+y\hspace{0.3cm}{\ttfamily [private]}}
-
-\mbox{\Hypertarget{classLidDrivenCavity_ab277fbb087ae7f27a15c31b4db230d98}\label{classLidDrivenCavity_ab277fbb087ae7f27a15c31b4db230d98}} 
-\index{LidDrivenCavity@{LidDrivenCavity}!parallel@{parallel}}
-\index{parallel@{parallel}!LidDrivenCavity@{LidDrivenCavity}}
-\doxysubsubsection{\texorpdfstring{parallel}{parallel}}
-{\footnotesize\ttfamily bool Lid\+Driven\+Cavity\+::parallel\hspace{0.3cm}{\ttfamily [private]}}
 
 \mbox{\Hypertarget{classLidDrivenCavity_a405bd4260b1e348d87e1c67535a15814}\label{classLidDrivenCavity_a405bd4260b1e348d87e1c67535a15814}} 
 \index{LidDrivenCavity@{LidDrivenCavity}!rank@{rank}}

@@ -65,7 +65,23 @@ $(function() {
   <div class="headertitle"><div class="title">README </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >The lid-driven cavity problem is a classical benchmark in computational fluid dynamics that provides valuable insights into the behaviour and efficiency of the CFD algorithm. In this problem, a square cavity is filled with fluid, and the motion of the fluid is driven by the continuous movement of the top lid, while the other boundaries remain stationary. </p>
+<div class="textblock"><p >The lid-driven cavity problem is a classical benchmark in computational fluid dynamics that provides valuable insights into the behaviour and efficiency of the CFD algorithm. In this problem, a square cavity is filled with fluid, and the motion of the fluid is driven by the continuous movement of the top lid, while the other boundaries remain stationary.</p>
+<p >To run main solver:</p><ol type="1">
+<li>make ./solver</li>
+</ol>
+<p >or</p>
+<p >(You can specify the solver arguments in make file without using explicity typing ./solver)</p><ol type="1">
+<li>make run Np=4 Nx=801 Ny=801 T=5</li>
+</ol>
+<p >To run test:</p><ol type="1">
+<li>make unittests ./testing (Please wait for a few minutes if using 1 process)</li>
+</ol>
+<p >or</p>
+<ol type="1">
+<li>make run_test Np=9 Nt=2</li>
+</ol>
+<p >To generate HTML and LATEX from doxygen (please configure file from the makefile guidelines (echo) if generate Doxyfile) cd docs/ doxygen</p>
+<p >To visualise simulation results: Open the FlowVisualisation.ipynb (change results file path if necessary) Run all and view results from the output </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->

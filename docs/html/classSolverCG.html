@@ -84,24 +84,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a996c32d6fce0b553c981a6c1f86387e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a996c32d6fce0b553c981a6c1f86387e8">~SolverCG</a> ()</td></tr>
 <tr class="memdesc:a996c32d6fce0b553c981a6c1f86387e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector.  <a href="classSolverCG.html#a996c32d6fce0b553c981a6c1f86387e8">More...</a><br /></td></tr>
 <tr class="separator:a996c32d6fce0b553c981a6c1f86387e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a912137e50d0887235b01d42327976441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a912137e50d0887235b01d42327976441">Solve</a> (double *b, double *x, bool verbose)</td></tr>
-<tr class="memdesc:a912137e50d0887235b01d42327976441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in serial.  <a href="classSolverCG.html#a912137e50d0887235b01d42327976441">More...</a><br /></td></tr>
-<tr class="separator:a912137e50d0887235b01d42327976441"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">SolveParallel</a> (double *b, double *x, bool verbose)</td></tr>
-<tr class="memdesc:a96403ae1ec87dbe1f963fea60631ecaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in parallel.  <a href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">More...</a><br /></td></tr>
-<tr class="separator:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae17ac7e44454a7db31d22f77e55dc196"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ae17ac7e44454a7db31d22f77e55dc196">SetNeighbour</a> (int <a class="el" href="classSolverCG.html#a3ec7348532a68fa5c33e87f8ad5dba6c">rank_up</a>, int <a class="el" href="classSolverCG.html#ab6278ba5f5bc561481f4e62bf261f9a1">rank_down</a>, int <a class="el" href="classSolverCG.html#a44f8ffaff74d1b72ef931082725b6c4f">rank_left</a>, int <a class="el" href="classSolverCG.html#a80bbcaf78ff83054c0b90d174396cd41">rank_right</a>)</td></tr>
 <tr class="memdesc:ae17ac7e44454a7db31d22f77e55dc196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the neighboring process ranks for inter-process communication.  <a href="classSolverCG.html#ae17ac7e44454a7db31d22f77e55dc196">More...</a><br /></td></tr>
 <tr class="separator:ae17ac7e44454a7db31d22f77e55dc196"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc771b5af6805bf6738206e931fe994"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a6cc771b5af6805bf6738206e931fe994">SetOffset</a> (int <a class="el" href="classSolverCG.html#a8c1233f293e6c8db21bae2a863086e35">offset_x</a>, int <a class="el" href="classSolverCG.html#a7eb07f291c6d12087c830844641ce6d1">offset_y</a>, int <a class="el" href="classSolverCG.html#a85d9f37d436ae6a32daf8f815c5d6d5d">Nx_global</a>, int <a class="el" href="classSolverCG.html#a9c1664c5f5a8196c831d626e053b54ec">Ny_global</a>)</td></tr>
 <tr class="memdesc:a6cc771b5af6805bf6738206e931fe994"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain  <a href="classSolverCG.html#a6cc771b5af6805bf6738206e931fe994">More...</a><br /></td></tr>
 <tr class="separator:a6cc771b5af6805bf6738206e931fe994"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a912137e50d0887235b01d42327976441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a912137e50d0887235b01d42327976441">Solve</a> (double *b, double *x, bool verbose)</td></tr>
+<tr class="memdesc:a912137e50d0887235b01d42327976441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in serial.  <a href="classSolverCG.html#a912137e50d0887235b01d42327976441">More...</a><br /></td></tr>
+<tr class="separator:a912137e50d0887235b01d42327976441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">SolveParallel</a> (double *b, double *x, bool verbose)</td></tr>
+<tr class="memdesc:a96403ae1ec87dbe1f963fea60631ecaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system using the Conjugate Gradient method in parallel.  <a href="classSolverCG.html#a96403ae1ec87dbe1f963fea60631ecaa">More...</a><br /></td></tr>
+<tr class="separator:a96403ae1ec87dbe1f963fea60631ecaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">ApplyOperator</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
-<tr class="memdesc:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the Laplace operator to the input vector.  <a href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">More...</a><br /></td></tr>
-<tr class="separator:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077195062c4dfe4b350bf0d6e954cc57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">Printmatrix</a> (int nx, int ny, double *A)</td></tr>
+<tr class="memdesc:a077195062c4dfe4b350bf0d6e954cc57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the content of a 2D matrix to the standard output.  <a href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">More...</a><br /></td></tr>
+<tr class="separator:a077195062c4dfe4b350bf0d6e954cc57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af07949ab7beaa99ee197660aa68efd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">GatherDomain</a> (double *A_local, double *A_global)</td></tr>
+<tr class="memdesc:af07949ab7beaa99ee197660aa68efd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment.  <a href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">More...</a><br /></td></tr>
+<tr class="separator:af07949ab7beaa99ee197660aa68efd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8c4220fab79a6f34b8aa068e29d6511"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ad8c4220fab79a6f34b8aa068e29d6511">Precondition</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
 <tr class="memdesc:ad8c4220fab79a6f34b8aa068e29d6511"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply serial preconditioning to the input vector.  <a href="classSolverCG.html#ad8c4220fab79a6f34b8aa068e29d6511">More...</a><br /></td></tr>
 <tr class="separator:ad8c4220fab79a6f34b8aa068e29d6511"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,9 +114,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:adc705faa3abbe6005e8d6d12bfe54021"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#adc705faa3abbe6005e8d6d12bfe54021">DomainInterComunnication</a> (double *A_local)</td></tr>
 <tr class="memdesc:adc705faa3abbe6005e8d6d12bfe54021"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages inter-domain communication for the conjugate gradient solver.  <a href="classSolverCG.html#adc705faa3abbe6005e8d6d12bfe54021">More...</a><br /></td></tr>
 <tr class="separator:adc705faa3abbe6005e8d6d12bfe54021"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af07949ab7beaa99ee197660aa68efd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">GatherDomain</a> (double *A_local, double *A_global)</td></tr>
-<tr class="memdesc:af07949ab7beaa99ee197660aa68efd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment.  <a href="classSolverCG.html#af07949ab7beaa99ee197660aa68efd21">More...</a><br /></td></tr>
-<tr class="separator:af07949ab7beaa99ee197660aa68efd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">ApplyOperator</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
+<tr class="memdesc:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the Laplace operator to the input vector.  <a href="classSolverCG.html#ab386d54f7db50dee43c6bf0fb5d609f0">More...</a><br /></td></tr>
+<tr class="separator:ab386d54f7db50dee43c6bf0fb5d609f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a123782d564c3527edb06d819814e31fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a123782d564c3527edb06d819814e31fc">PreconditionParallel</a> (double *<a class="el" href="classSolverCG.html#adcc49db5ef3a64571563a2f9daa1a708">p</a>, double *<a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a>)</td></tr>
 <tr class="memdesc:a123782d564c3527edb06d819814e31fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply parallel preconditioning to the input vector.  <a href="classSolverCG.html#a123782d564c3527edb06d819814e31fc">More...</a><br /></td></tr>
 <tr class="separator:a123782d564c3527edb06d819814e31fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,9 +129,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a998cc834430b2b87464d7ac22983ac30"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a998cc834430b2b87464d7ac22983ac30">ComputeDotGlobalParallel</a> (unsigned int n, double *a, double *b)</td></tr>
 <tr class="memdesc:a998cc834430b2b87464d7ac22983ac30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the global dot prduct of two vectors in parallel.  <a href="classSolverCG.html#a998cc834430b2b87464d7ac22983ac30">More...</a><br /></td></tr>
 <tr class="separator:a998cc834430b2b87464d7ac22983ac30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a077195062c4dfe4b350bf0d6e954cc57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">Printmatrix</a> (int nx, int ny, double *A)</td></tr>
-<tr class="memdesc:a077195062c4dfe4b350bf0d6e954cc57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the content of a 2D matrix to the standard output.  <a href="classSolverCG.html#a077195062c4dfe4b350bf0d6e954cc57">More...</a><br /></td></tr>
-<tr class="separator:a077195062c4dfe4b350bf0d6e954cc57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -148,8 +148,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a62935239e4936b556715a625531ccbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac31fe70cffbaf995a39bad50ddef6bf6"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ac31fe70cffbaf995a39bad50ddef6bf6">t</a></td></tr>
 <tr class="separator:ac31fe70cffbaf995a39bad50ddef6bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e238214060d7cc6e964e7b106e3ce11"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a6e238214060d7cc6e964e7b106e3ce11">dot_buffer</a> = nullptr</td></tr>
-<tr class="separator:a6e238214060d7cc6e964e7b106e3ce11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235a7c4ab694dd17bc300f9f2cf4b3cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a235a7c4ab694dd17bc300f9f2cf4b3cf">iter_max</a></td></tr>
 <tr class="separator:a235a7c4ab694dd17bc300f9f2cf4b3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91900eead48ae010dedad88e95abf640"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a91900eead48ae010dedad88e95abf640">debug</a></td></tr>
@@ -176,12 +174,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ab58fbac89e04e65d634c71657bfff2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fd0379df711c8e44d78c8c81e2a6b1a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a9fd0379df711c8e44d78c8c81e2a6b1a">j_end</a></td></tr>
 <tr class="separator:a9fd0379df711c8e44d78c8c81e2a6b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79d59251f21cc5a24d83ecca6d776d30"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a79d59251f21cc5a24d83ecca6d776d30">dx2i</a></td></tr>
-<tr class="separator:a79d59251f21cc5a24d83ecca6d776d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5d29cfcc4b690afe11ef3d1baac4220"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ab5d29cfcc4b690afe11ef3d1baac4220">dy2i</a></td></tr>
-<tr class="separator:ab5d29cfcc4b690afe11ef3d1baac4220"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7544e97a3f11ff322da5fd46b625ed70"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a7544e97a3f11ff322da5fd46b625ed70">factor2</a></td></tr>
-<tr class="separator:a7544e97a3f11ff322da5fd46b625ed70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c1233f293e6c8db21bae2a863086e35"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a8c1233f293e6c8db21bae2a863086e35">offset_x</a></td></tr>
 <tr class="separator:a8c1233f293e6c8db21bae2a863086e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eb07f291c6d12087c830844641ce6d1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a7eb07f291c6d12087c830844641ce6d1">offset_y</a></td></tr>
@@ -192,6 +184,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a9c1664c5f5a8196c831d626e053b54ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed1416456dec9f0b99343e784e159cc5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#aed1416456dec9f0b99343e784e159cc5">Npts</a></td></tr>
 <tr class="separator:aed1416456dec9f0b99343e784e159cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79d59251f21cc5a24d83ecca6d776d30"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a79d59251f21cc5a24d83ecca6d776d30">dx2i</a></td></tr>
+<tr class="separator:a79d59251f21cc5a24d83ecca6d776d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5d29cfcc4b690afe11ef3d1baac4220"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ab5d29cfcc4b690afe11ef3d1baac4220">dy2i</a></td></tr>
+<tr class="separator:ab5d29cfcc4b690afe11ef3d1baac4220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7544e97a3f11ff322da5fd46b625ed70"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a7544e97a3f11ff322da5fd46b625ed70">factor2</a></td></tr>
+<tr class="separator:a7544e97a3f11ff322da5fd46b625ed70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81e7d080247a041df8e3c871f53308a9"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#a81e7d080247a041df8e3c871f53308a9">buffer_up_send</a> = nullptr</td></tr>
 <tr class="separator:a81e7d080247a041df8e3c871f53308a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad19d9947a1c0705cfe27dbcc13f1717a"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolverCG.html#ad19d9947a1c0705cfe27dbcc13f1717a">buffer_down_send</a> = nullptr</td></tr>
@@ -1111,28 +1109,6 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool SolverCG::debug</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6e238214060d7cc6e964e7b106e3ce11" name="a6e238214060d7cc6e964e7b106e3ce11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e238214060d7cc6e964e7b106e3ce11">&#9670;&nbsp;</a></span>dot_buffer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double* SolverCG::dot_buffer = nullptr</td>
         </tr>
       </table>
   </td>

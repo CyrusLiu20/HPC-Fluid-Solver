@@ -16,27 +16,29 @@
 \begin{DoxyCompactList}\small\item\em Initializes the \mbox{\hyperlink{classSolverCG}{Solver\+CG}} conjugate gradient solver solver for parallel execution. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classSolverCG_a996c32d6fce0b553c981a6c1f86387e8}{$\sim$\+Solver\+CG}} ()
 \begin{DoxyCompactList}\small\item\em Cleans up memory allocated for residue, conjugate direction, preconditioned, and temporary vector. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classSolverCG_a912137e50d0887235b01d42327976441}{Solve}} (double $\ast$b, double $\ast$x, bool verbose)
-\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in serial. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}{Solve\+Parallel}} (double $\ast$b, double $\ast$x, bool verbose)
-\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in parallel. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_ae17ac7e44454a7db31d22f77e55dc196}{Set\+Neighbour}} (int \mbox{\hyperlink{classSolverCG_a3ec7348532a68fa5c33e87f8ad5dba6c}{rank\+\_\+up}}, int \mbox{\hyperlink{classSolverCG_ab6278ba5f5bc561481f4e62bf261f9a1}{rank\+\_\+down}}, int \mbox{\hyperlink{classSolverCG_a44f8ffaff74d1b72ef931082725b6c4f}{rank\+\_\+left}}, int \mbox{\hyperlink{classSolverCG_a80bbcaf78ff83054c0b90d174396cd41}{rank\+\_\+right}})
 \begin{DoxyCompactList}\small\item\em Configures the neighboring process ranks for inter-\/process communication. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a6cc771b5af6805bf6738206e931fe994}{Set\+Offset}} (int \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\+\_\+x}}, int \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\+\_\+y}}, int \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\+\_\+global}}, int \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\+\_\+global}})
-\begin{DoxyCompactList}\small\item\em (Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em (Purely for debugging purposes) Configures the coordinates of the local domain relative to the global domain and initialises memory at root process for assembling global domain \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSolverCG_a912137e50d0887235b01d42327976441}{Solve}} (double $\ast$b, double $\ast$x, bool verbose)
+\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in serial. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSolverCG_a96403ae1ec87dbe1f963fea60631ecaa}{Solve\+Parallel}} (double $\ast$b, double $\ast$x, bool verbose)
+\begin{DoxyCompactList}\small\item\em Solve a linear system using the Conjugate Gradient method in parallel. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{Apply\+Operator}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
-\begin{DoxyCompactList}\small\item\em Apply the Laplace operator to the input vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}} (int nx, int ny, double $\ast$A)
+\begin{DoxyCompactList}\small\item\em Prints the content of a 2D matrix to the standard output. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{Gather\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
+\begin{DoxyCompactList}\small\item\em (Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_ad8c4220fab79a6f34b8aa068e29d6511}{Precondition}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
 \begin{DoxyCompactList}\small\item\em Apply serial preconditioning to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a252ab61ae011d656c12926681ee234dd}{Impose\+BC}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
 \begin{DoxyCompactList}\small\item\em Impose boundary conditions on the input vector in serial. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_adc705faa3abbe6005e8d6d12bfe54021}{Domain\+Inter\+Comunnication}} (double $\ast$A\+\_\+local)
 \begin{DoxyCompactList}\small\item\em Manages inter-\/domain communication for the conjugate gradient solver. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classSolverCG_af07949ab7beaa99ee197660aa68efd21}{Gather\+Domain}} (double $\ast$A\+\_\+local, double $\ast$A\+\_\+global)
-\begin{DoxyCompactList}\small\item\em (Primarily for debugging purposes, not used in the code) Gathers the local domain data from each process and sends it to the root process to assemble the global domain. The function ensures proper alignment and communication between processes in a parallel environment. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSolverCG_ab386d54f7db50dee43c6bf0fb5d609f0}{Apply\+Operator}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
+\begin{DoxyCompactList}\small\item\em Apply the Laplace operator to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a123782d564c3527edb06d819814e31fc}{Precondition\+Parallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}}, double $\ast$\mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}})
 \begin{DoxyCompactList}\small\item\em Apply parallel preconditioning to the input vector. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+BCParallel}} (double $\ast$\mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{p}})
@@ -44,9 +46,7 @@ void \mbox{\hyperlink{classSolverCG_a4c829516d18272febbb4b9f7c9508d9d}{Impose\+B
 double \mbox{\hyperlink{classSolverCG_a9a8ecd10c7be80bbc0d98f14cb5ef725}{Compute\+Error\+Global\+Parallel}} (unsigned int n, double $\ast$a)
 \begin{DoxyCompactList}\small\item\em Compute the global error of a vector in parallel. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classSolverCG_a998cc834430b2b87464d7ac22983ac30}{Compute\+Dot\+Global\+Parallel}} (unsigned int n, double $\ast$a, double $\ast$b)
-\begin{DoxyCompactList}\small\item\em Compute the global dot prduct of two vectors in parallel. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classSolverCG_a077195062c4dfe4b350bf0d6e954cc57}{Printmatrix}} (int nx, int ny, double $\ast$A)
-\begin{DoxyCompactList}\small\item\em Prints the content of a 2D matrix to the standard output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Compute the global dot prduct of two vectors in parallel. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -65,8 +65,6 @@ double $\ast$ \mbox{\hyperlink{classSolverCG_adcc49db5ef3a64571563a2f9daa1a708}{
 double $\ast$ \mbox{\hyperlink{classSolverCG_a62935239e4936b556715a625531ccbb9}{z}}
 \item 
 double $\ast$ \mbox{\hyperlink{classSolverCG_ac31fe70cffbaf995a39bad50ddef6bf6}{t}}
-\item 
-double $\ast$ \mbox{\hyperlink{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}{dot\+\_\+buffer}} = nullptr
 \item 
 int \mbox{\hyperlink{classSolverCG_a235a7c4ab694dd17bc300f9f2cf4b3cf}{iter\+\_\+max}}
 \item 
@@ -94,12 +92,6 @@ int \mbox{\hyperlink{classSolverCG_ab58fbac89e04e65d634c71657bfff2c7}{j\+\_\+sta
 \item 
 int \mbox{\hyperlink{classSolverCG_a9fd0379df711c8e44d78c8c81e2a6b1a}{j\+\_\+end}}
 \item 
-double \mbox{\hyperlink{classSolverCG_a79d59251f21cc5a24d83ecca6d776d30}{dx2i}}
-\item 
-double \mbox{\hyperlink{classSolverCG_ab5d29cfcc4b690afe11ef3d1baac4220}{dy2i}}
-\item 
-double \mbox{\hyperlink{classSolverCG_a7544e97a3f11ff322da5fd46b625ed70}{factor2}}
-\item 
 int \mbox{\hyperlink{classSolverCG_a8c1233f293e6c8db21bae2a863086e35}{offset\+\_\+x}}
 \item 
 int \mbox{\hyperlink{classSolverCG_a7eb07f291c6d12087c830844641ce6d1}{offset\+\_\+y}}
@@ -109,6 +101,12 @@ int \mbox{\hyperlink{classSolverCG_a85d9f37d436ae6a32daf8f815c5d6d5d}{Nx\+\_\+gl
 int \mbox{\hyperlink{classSolverCG_a9c1664c5f5a8196c831d626e053b54ec}{Ny\+\_\+global}}
 \item 
 int \mbox{\hyperlink{classSolverCG_aed1416456dec9f0b99343e784e159cc5}{Npts}}
+\item 
+double \mbox{\hyperlink{classSolverCG_a79d59251f21cc5a24d83ecca6d776d30}{dx2i}}
+\item 
+double \mbox{\hyperlink{classSolverCG_ab5d29cfcc4b690afe11ef3d1baac4220}{dy2i}}
+\item 
+double \mbox{\hyperlink{classSolverCG_a7544e97a3f11ff322da5fd46b625ed70}{factor2}}
 \item 
 double $\ast$ \mbox{\hyperlink{classSolverCG_a81e7d080247a041df8e3c871f53308a9}{buffer\+\_\+up\+\_\+send}} = nullptr
 \item 
@@ -525,12 +523,6 @@ Apply\+Operator\+Parallel(), \mbox{\hyperlink{classSolverCG_a123782d564c3527edb0
 \index{debug@{debug}!SolverCG@{SolverCG}}
 \doxysubsubsection{\texorpdfstring{debug}{debug}}
 {\footnotesize\ttfamily bool Solver\+CG\+::debug\hspace{0.3cm}{\ttfamily [private]}}
-
-\mbox{\Hypertarget{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}\label{classSolverCG_a6e238214060d7cc6e964e7b106e3ce11}} 
-\index{SolverCG@{SolverCG}!dot\_buffer@{dot\_buffer}}
-\index{dot\_buffer@{dot\_buffer}!SolverCG@{SolverCG}}
-\doxysubsubsection{\texorpdfstring{dot\_buffer}{dot\_buffer}}
-{\footnotesize\ttfamily double$\ast$ Solver\+CG\+::dot\+\_\+buffer = nullptr\hspace{0.3cm}{\ttfamily [private]}}
 
 \mbox{\Hypertarget{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}\label{classSolverCG_a92a173d8a5f428ce3cf1685ab5aa4309}} 
 \index{SolverCG@{SolverCG}!dx@{dx}}

@@ -16,138 +16,120 @@
 \DoxyCodeLine{17     \mbox{\hyperlink{classLidDrivenCavity_a497a8268ebbb541b0e591df04dbcc1df}{LidDrivenCavity}}();}
 \DoxyCodeLine{18     \mbox{\hyperlink{classLidDrivenCavity_ac78f201aa895020820cd9c5752db72ea}{\string~LidDrivenCavity}}();}
 \DoxyCodeLine{19 }
-\DoxyCodeLine{20     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac96a0dd4fe0d31f9daba2e126ff72885}{SetDomainSize}}(\textcolor{keywordtype}{double} xlen, \textcolor{keywordtype}{double} ylen);}
-\DoxyCodeLine{21     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aa6f9fbebb9bf7cb481ff5f066e14f596}{SetGridSize}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny);}
-\DoxyCodeLine{22     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a996ab414b064d520581b0d4ed08aa17d}{SetTimeStep}}(\textcolor{keywordtype}{double} deltat);}
-\DoxyCodeLine{23     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af9307f56a6f334e6740164c90775f461}{SetFinalTime}}(\textcolor{keywordtype}{double} finalt);}
-\DoxyCodeLine{24     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aeb6eca7e0c1255ebc4c1a8da56dd95b8}{SetReynoldsNumber}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_af627cab70131b32232ea7ded07b24c43}{Re}});}
-\DoxyCodeLine{25     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a8d28eb0f64a49a03e231682f5bca50ea}{SetVerbose}}(\textcolor{keywordtype}{bool} \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}});}
-\DoxyCodeLine{26     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a9f358af1e0c0a0046ec16583799a7a0b}{SetThreads}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}});}
-\DoxyCodeLine{27 }
+\DoxyCodeLine{20     \textcolor{comment}{// Configuring fluid solver}}
+\DoxyCodeLine{21     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac96a0dd4fe0d31f9daba2e126ff72885}{SetDomainSize}}(\textcolor{keywordtype}{double} xlen, \textcolor{keywordtype}{double} ylen);}
+\DoxyCodeLine{22     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aa6f9fbebb9bf7cb481ff5f066e14f596}{SetGridSize}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny);}
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a996ab414b064d520581b0d4ed08aa17d}{SetTimeStep}}(\textcolor{keywordtype}{double} deltat);}
+\DoxyCodeLine{24     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af9307f56a6f334e6740164c90775f461}{SetFinalTime}}(\textcolor{keywordtype}{double} finalt);}
+\DoxyCodeLine{25     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aeb6eca7e0c1255ebc4c1a8da56dd95b8}{SetReynoldsNumber}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_af627cab70131b32232ea7ded07b24c43}{Re}});}
+\DoxyCodeLine{26     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a8d28eb0f64a49a03e231682f5bca50ea}{SetVerbose}}(\textcolor{keywordtype}{bool} \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}});}
+\DoxyCodeLine{27     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a9f358af1e0c0a0046ec16583799a7a0b}{SetThreads}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}});}
 \DoxyCodeLine{28     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aef90a698edcea34004a779f56c4edfd3}{SetNeighbour}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_aeb765aa03707ae639feeef7a40f1609f}{rank\_up}}, \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a9b253374164313a0cae091cf5e78d945}{rank\_down}}, \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a3aaa98ed60961ddd4aa15751c2b602b4}{rank\_left}}, \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a4d2c45d269f0283b27f329d9ff2e3797}{rank\_right}});}
-\DoxyCodeLine{29     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}{DomainDecomposition}}();}
-\DoxyCodeLine{30 }
-\DoxyCodeLine{31 }
-\DoxyCodeLine{32     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ab0eb448219134e835173e94874a3983a}{Initialise}}();}
-\DoxyCodeLine{33     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a80cd7032d10f09279d62d03335023e72}{Integrate}}();}
-\DoxyCodeLine{34     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a25e4a6ffd522ffbffaf7e0d2fedad59c}{WriteSolution}}(std::string file);}
-\DoxyCodeLine{35     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a8e111839958ac5d4d0d8d583a4d84e86}{PrintConfiguration}}();}
-\DoxyCodeLine{36 }
-\DoxyCodeLine{37     \textcolor{comment}{// MPI Parallel processing}}
-\DoxyCodeLine{38     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_abd03496713e6fd52c2a88d94a8da6050}{InitialiseParallel}}();}
-\DoxyCodeLine{39     }
-\DoxyCodeLine{40 }
-\DoxyCodeLine{41 }
-\DoxyCodeLine{42     \textcolor{comment}{// Test cases (Developer use)}}
-\DoxyCodeLine{43     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a4066b63c02fa8c473f0056ea12daa8ca}{get\_dx}}();}
-\DoxyCodeLine{44     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a2e16a371830ddc02c5c3f73067675799}{get\_dy}}();}
-\DoxyCodeLine{45     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a74f82a9ff69f9e6dc4c884fcd87c371b}{get\_nu}}();}
-\DoxyCodeLine{46     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_aadfbba1c20a5226a8df30d42b40c582f}{get\_Npts}}();}
-\DoxyCodeLine{47     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5f212a5850a2c960347dc73ed6c0cb86}{get\_v}}();}
-\DoxyCodeLine{48     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5a506dc43be4efa26d792b647415df35}{get\_s}}();}
-\DoxyCodeLine{49     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a3b2adb8ab54516e3042a9164cbcfa017}{get\_u0}}();}
-\DoxyCodeLine{50     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a133de3e394758982d0239f3c65174dcb}{get\_u1}}();}
-\DoxyCodeLine{51 }
-\DoxyCodeLine{52     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a4c2619b56c92f209fb138e626e6be5ee}{IntegrateControl}}(\textcolor{keywordtype}{double} percentage);}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{comment}{// Utilities}}
+\DoxyCodeLine{31     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a25e4a6ffd522ffbffaf7e0d2fedad59c}{WriteSolution}}(std::string file);}
+\DoxyCodeLine{32     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a8e111839958ac5d4d0d8d583a4d84e86}{PrintConfiguration}}();}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \textcolor{comment}{// Serial computing}}
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ab0eb448219134e835173e94874a3983a}{Initialise}}();}
+\DoxyCodeLine{36     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a80cd7032d10f09279d62d03335023e72}{Integrate}}();}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{comment}{// MPI Parallel processing}}
+\DoxyCodeLine{39     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_abd03496713e6fd52c2a88d94a8da6050}{InitialiseParallel}}();}
+\DoxyCodeLine{40     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac458ad4869ad3da2bb74e5500519298a}{IntegrateParallel}}();}
+\DoxyCodeLine{41     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac2d7312750b8506cc22474651ba8c685}{DomainDecomposition}}();}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{comment}{// Test cases (Developer use)}}
+\DoxyCodeLine{44     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a4066b63c02fa8c473f0056ea12daa8ca}{get\_dx}}();}
+\DoxyCodeLine{45     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a2e16a371830ddc02c5c3f73067675799}{get\_dy}}();}
+\DoxyCodeLine{46     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a74f82a9ff69f9e6dc4c884fcd87c371b}{get\_nu}}();}
+\DoxyCodeLine{47     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_aadfbba1c20a5226a8df30d42b40c582f}{get\_Npts}}();}
+\DoxyCodeLine{48     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5f212a5850a2c960347dc73ed6c0cb86}{get\_v}}();}
+\DoxyCodeLine{49     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5a506dc43be4efa26d792b647415df35}{get\_s}}();}
+\DoxyCodeLine{50     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a3b2adb8ab54516e3042a9164cbcfa017}{get\_u0}}();}
+\DoxyCodeLine{51     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a133de3e394758982d0239f3c65174dcb}{get\_u1}}();}
+\DoxyCodeLine{52     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a4c2619b56c92f209fb138e626e6be5ee}{IntegrateControl}}(\textcolor{keywordtype}{double} percentage); \textcolor{comment}{// Integrating up to certain point}}
 \DoxyCodeLine{53     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a0456e69240df3932761fc3820fde0bed}{Advance}}(\textcolor{keywordtype}{bool} verbose\_advance);}
 \DoxyCodeLine{54 }
-\DoxyCodeLine{55     \textcolor{comment}{// Parallel processing functions}}
-\DoxyCodeLine{56     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac458ad4869ad3da2bb74e5500519298a}{IntegrateParallel}}();}
-\DoxyCodeLine{57 }
-\DoxyCodeLine{58 }
-\DoxyCodeLine{59 }
-\DoxyCodeLine{60 \textcolor{keyword}{private}:}
-\DoxyCodeLine{61 }
-\DoxyCodeLine{62     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a2a3baea585bb5bd05b834fdde47cb73e}{v}}   = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{63     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a9535ff3518769d62238a9446ef2e975c}{v\_new}}   = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{64     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aefafb847d74c48e5edab903e3c1c6b1d}{s}}   = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{65 }
-\DoxyCodeLine{66     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a0d803bdf97c3e23e66ea79307e092300}{u0}}   = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{67     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a70fddccc2bc5ed7372746c573845ec88}{u1}}   = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{68 }
-\DoxyCodeLine{69     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_ae0b1f2686b38d6a478e06e8038b36dc6}{dt}}   = 0.01;}
-\DoxyCodeLine{70     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a4bf51ffebdc439a9d68aefee614d242c}{T}}    = 1.0;}
-\DoxyCodeLine{71     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a465db02f65675ebb7dc152e6b0f3be5a}{dx}};}
-\DoxyCodeLine{72     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a16ffb5205c2faeb7a27b069e0f16a8fd}{dy}};}
-\DoxyCodeLine{73     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ac893dc5f92e88a60d023cb2732fa9cd3}{Nx}}   = 9;}
-\DoxyCodeLine{74     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a09a3f4e78348c0e61b3fe363ba0916d9}{Ny}}   = 9;}
-\DoxyCodeLine{75     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_aadf26c7a96b8629e3d0b6bc1fe7b73d4}{Npts}} = 81;}
-\DoxyCodeLine{76     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a780180f421777d4c687bf336deb2dc6e}{Nx\_inner}};}
-\DoxyCodeLine{77     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_aa2a308550d77024050ea93af3da316b9}{Ny\_inner}};}
-\DoxyCodeLine{78     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a0967222f54d7498bae6849c5472281ec}{Npts\_inner}};}
-\DoxyCodeLine{79 }
-\DoxyCodeLine{80 }
-\DoxyCodeLine{81     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a2cf00d0d1b2c628eec19b15972ba39b8}{Lx}}   = 1.0;}
-\DoxyCodeLine{82     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a11d3fb00643d1aa3303b6415e344f4a8}{Ly}}   = 1.0;}
-\DoxyCodeLine{83     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_af627cab70131b32232ea7ded07b24c43}{Re}}   = 10;}
-\DoxyCodeLine{84     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a80f016b2c11c2997f3a2f726ae989cab}{U}}    = 1.0;}
-\DoxyCodeLine{85     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_ae5bdf166644f5b09f57d1be93343e75c}{nu}}   = 0.1;}
-\DoxyCodeLine{86 }
-\DoxyCodeLine{87     \textcolor{comment}{// MPI Parallel processing}}
-\DoxyCodeLine{88     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classLidDrivenCavity_ab277fbb087ae7f27a15c31b4db230d98}{parallel}}; \textcolor{comment}{// Serial or parallel processing}}
-\DoxyCodeLine{89     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ae60477c2ac5e4a31410a10b9d654b20c}{Npts\_local}};}
-\DoxyCodeLine{90     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a579e712921bf6bf10acd492e691e2998}{Npts\_local\_buffer}};}
-\DoxyCodeLine{91     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a19eb718ab8cee466ba958efca42b06af}{Nx\_remainder}}; \textcolor{comment}{// remainder of nodes in x direction}}
-\DoxyCodeLine{92     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ad27b77931f5c61e5995ec6df33c8fabc}{Ny\_remainder}}; \textcolor{comment}{// remainder of nodes in y direction}}
-\DoxyCodeLine{93     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a78fe7433b0154c3652ab0b48cc0859c7}{Nx\_local}};}
-\DoxyCodeLine{94     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a3ccae4d4add1b6b0350baee14d995ce6}{Ny\_local}};}
+\DoxyCodeLine{55 \textcolor{keyword}{private}:}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{comment}{// Fluid solver configuration parameters}}
+\DoxyCodeLine{58     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_ae0b1f2686b38d6a478e06e8038b36dc6}{dt}}   = 0.01;}
+\DoxyCodeLine{59     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a4bf51ffebdc439a9d68aefee614d242c}{T}}    = 1.0;}
+\DoxyCodeLine{60     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a465db02f65675ebb7dc152e6b0f3be5a}{dx}};}
+\DoxyCodeLine{61     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a16ffb5205c2faeb7a27b069e0f16a8fd}{dy}};}
+\DoxyCodeLine{62     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a2cf00d0d1b2c628eec19b15972ba39b8}{Lx}}   = 1.0;}
+\DoxyCodeLine{63     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a11d3fb00643d1aa3303b6415e344f4a8}{Ly}}   = 1.0;}
+\DoxyCodeLine{64     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_af627cab70131b32232ea7ded07b24c43}{Re}}   = 10;}
+\DoxyCodeLine{65     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_a80f016b2c11c2997f3a2f726ae989cab}{U}}    = 1.0;}
+\DoxyCodeLine{66     \textcolor{keywordtype}{double} \mbox{\hyperlink{classLidDrivenCavity_ae5bdf166644f5b09f57d1be93343e75c}{nu}}   = 0.1;}
+\DoxyCodeLine{67     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ac893dc5f92e88a60d023cb2732fa9cd3}{Nx}}   = 9;}
+\DoxyCodeLine{68     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a09a3f4e78348c0e61b3fe363ba0916d9}{Ny}}   = 9;}
+\DoxyCodeLine{69     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_aadf26c7a96b8629e3d0b6bc1fe7b73d4}{Npts}} = 81;}
+\DoxyCodeLine{70     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}} = \textcolor{keyword}{true}; \textcolor{comment}{// Display convergence and timestep detail during integration}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \mbox{\hyperlink{classSolverCG}{SolverCG}}* \mbox{\hyperlink{classLidDrivenCavity_a5c5391a59509247c872ca287fbe771f9}{cg}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// Conjugate gradient solver}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74     \textcolor{comment}{// Serial Computing}}
+\DoxyCodeLine{75     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a2a3baea585bb5bd05b834fdde47cb73e}{v}}   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{76     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a9535ff3518769d62238a9446ef2e975c}{v\_new}}   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{77     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aefafb847d74c48e5edab903e3c1c6b1d}{s}}   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79     \textcolor{comment}{// Utilities (Writing velocity to file)}}
+\DoxyCodeLine{80     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a0d803bdf97c3e23e66ea79307e092300}{u0}}   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{81     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a70fddccc2bc5ed7372746c573845ec88}{u1}}   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83     \textcolor{comment}{// MPI Parallel processing}}
+\DoxyCodeLine{84     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ae60477c2ac5e4a31410a10b9d654b20c}{Npts\_local}};}
+\DoxyCodeLine{85     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a19eb718ab8cee466ba958efca42b06af}{Nx\_remainder}}; \textcolor{comment}{// remainder of nodes in x direction}}
+\DoxyCodeLine{86     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ad27b77931f5c61e5995ec6df33c8fabc}{Ny\_remainder}}; \textcolor{comment}{// remainder of nodes in y direction}}
+\DoxyCodeLine{87     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a78fe7433b0154c3652ab0b48cc0859c7}{Nx\_local}};}
+\DoxyCodeLine{88     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_a3ccae4d4add1b6b0350baee14d995ce6}{Ny\_local}};}
+\DoxyCodeLine{89     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ad43d5549363d01062b89cf05d5b91ec0}{offset\_x}};}
+\DoxyCodeLine{90     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_af12a653c8e3cb5262c160f58f977dd0f}{offset\_y}};}
+\DoxyCodeLine{91     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a0c795b319eaaf755f868fda4270c7d74}{v\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local vorticity matrix}}
+\DoxyCodeLine{92     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_af38b9f2e37732c409890e8c9051adc11}{v\_next\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local vorticity matrix for next time step}}
+\DoxyCodeLine{93     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ab656c679a003185f923282d4839de86d}{s\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local stream function matrix}}
+\DoxyCodeLine{94     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a92591c30c69b3d0f347a1b0ed83bb418}{A\_global\_temp}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// temporary pointer storing global matrix}}
 \DoxyCodeLine{95 }
-\DoxyCodeLine{96     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_ad43d5549363d01062b89cf05d5b91ec0}{offset\_x}};}
-\DoxyCodeLine{97     \textcolor{keywordtype}{int}    \mbox{\hyperlink{classLidDrivenCavity_af12a653c8e3cb5262c160f58f977dd0f}{offset\_y}};}
-\DoxyCodeLine{98 }
-\DoxyCodeLine{99     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a0c795b319eaaf755f868fda4270c7d74}{v\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local vorticity matrix}}
-\DoxyCodeLine{100     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_af38b9f2e37732c409890e8c9051adc11}{v\_next\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local vorticity matrix for next time step}}
-\DoxyCodeLine{101     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ab656c679a003185f923282d4839de86d}{s\_local}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// local stream function matrix}}
+\DoxyCodeLine{96     \textcolor{comment}{// MPI process rank and number of processes}}
+\DoxyCodeLine{97     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a265fe16ac796e137e7016326c427a189}{root}}    = 0;}
+\DoxyCodeLine{98     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a405bd4260b1e348d87e1c67535a15814}{rank}};}
+\DoxyCodeLine{99     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_ad86773c0520342e05b0eab2c390ff50f}{Nprocs}};}
+\DoxyCodeLine{100     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a11b29952505118b2c7e0bee57128c615}{Nprocs\_sqrt}}; \textcolor{comment}{// Square root of nprocs for domain decomposition}}
+\DoxyCodeLine{101     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_aeb765aa03707ae639feeef7a40f1609f}{rank\_up}}, \mbox{\hyperlink{classLidDrivenCavity_a9b253374164313a0cae091cf5e78d945}{rank\_down}}, \mbox{\hyperlink{classLidDrivenCavity_a3aaa98ed60961ddd4aa15751c2b602b4}{rank\_left}}, \mbox{\hyperlink{classLidDrivenCavity_a4d2c45d269f0283b27f329d9ff2e3797}{rank\_right}}; \textcolor{comment}{// neighbour ranking}}
 \DoxyCodeLine{102 }
-\DoxyCodeLine{103     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a92591c30c69b3d0f347a1b0ed83bb418}{A\_global\_temp}} = \textcolor{keyword}{nullptr}; \textcolor{comment}{// temporary pointer storing global matrix}}
-\DoxyCodeLine{104 }
+\DoxyCodeLine{103     \textcolor{comment}{// Threading}}
+\DoxyCodeLine{104     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}};}
 \DoxyCodeLine{105 }
-\DoxyCodeLine{106     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classLidDrivenCavity_acd64ee38f448fdc70a1a219034b0a87a}{verbose}} = \textcolor{keyword}{true}; \textcolor{comment}{// Display convergence and timestep detail during integration}}
-\DoxyCodeLine{107 }
-\DoxyCodeLine{108     \textcolor{comment}{// MPI process rank and number of processes}}
-\DoxyCodeLine{109     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a265fe16ac796e137e7016326c427a189}{root}}    = 0;}
-\DoxyCodeLine{110     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a405bd4260b1e348d87e1c67535a15814}{rank}};}
-\DoxyCodeLine{111     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_ad86773c0520342e05b0eab2c390ff50f}{Nprocs}};}
-\DoxyCodeLine{112     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a11b29952505118b2c7e0bee57128c615}{Nprocs\_sqrt}}; \textcolor{comment}{// Square root of nprocs for domain decomposition}}
-\DoxyCodeLine{113     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_aeb765aa03707ae639feeef7a40f1609f}{rank\_up}}, \mbox{\hyperlink{classLidDrivenCavity_a9b253374164313a0cae091cf5e78d945}{rank\_down}}, \mbox{\hyperlink{classLidDrivenCavity_a3aaa98ed60961ddd4aa15751c2b602b4}{rank\_left}}, \mbox{\hyperlink{classLidDrivenCavity_a4d2c45d269f0283b27f329d9ff2e3797}{rank\_right}}; \textcolor{comment}{// neighbour ranking}}
-\DoxyCodeLine{114 }
-\DoxyCodeLine{115 }
-\DoxyCodeLine{116     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a8ebcf6fa30e987c2c2a714fc72233e9c}{buffer\_up\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{117     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a4406d364a12eb3ae851cec2df930d360}{buffer\_down\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{118     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ab04e2cb0c225cf540bbbd9092c03ee2d}{buffer\_up\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{119     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aed1b77f1400c1db1530621046aeb9afd}{buffer\_down\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{120 }
-\DoxyCodeLine{121     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ac99fc9aab9ca8ef8176a610251ac2da1}{buffer\_left\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{122     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5eca9ae770cbc6737235a65570c30eb7}{buffer\_right\_send}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{123     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aa5404a4b98da12709051ef4861094a2b}{buffer\_left\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{124     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a74b7a993a5584c6055f5993af42aaf06}{buffer\_right\_recv}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{125 }
-\DoxyCodeLine{126 }
-\DoxyCodeLine{127     \mbox{\hyperlink{classSolverCG}{SolverCG}}* \mbox{\hyperlink{classLidDrivenCavity_a5c5391a59509247c872ca287fbe771f9}{cg}} = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{128 }
-\DoxyCodeLine{129     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aa8be5cfc1901cfc1ad5954b026e3b63d}{CleanUp}}();}
-\DoxyCodeLine{130     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af9575dd6a4fb69b8b5aa6376ec60fda0}{UpdateDxDy}}();}
-\DoxyCodeLine{131 }
-\DoxyCodeLine{132     \textcolor{comment}{// Parallel processing functions}}
-\DoxyCodeLine{133     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a42efeb8d107a39c3926387dd8ed0cf4a}{GatherDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
-\DoxyCodeLine{134     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ae9194a027b9adec8c5f8a7031ca8266a}{ScatterDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
-\DoxyCodeLine{135     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}{DomainInterComunnication}}(\textcolor{keywordtype}{double}* A\_local);}
-\DoxyCodeLine{136 }
-\DoxyCodeLine{137 }
-\DoxyCodeLine{138     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad6f85225e7526cd7f9f3c3fc48d8d3b0}{AdvanceParallel}}(\textcolor{keywordtype}{bool} verbose\_advance);}
-\DoxyCodeLine{139 }
-\DoxyCodeLine{140     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac15e48c2b427bed53a595da550269a0b}{ComputeBoundaryVorticityParallel}}();}
-\DoxyCodeLine{141     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}{ComputeInteriorVorticityParallel}}();}
-\DoxyCodeLine{142     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad1cea55e23744eb99665b7420227aa48}{ComputeNextVorticityParallel}}();}
-\DoxyCodeLine{143     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ae035aa99b3b514cdf843648592fceea9}{ComputeLaplaceOperatorParallel}}();}
-\DoxyCodeLine{144 }
-\DoxyCodeLine{145     \textcolor{comment}{// Threading}}
-\DoxyCodeLine{146     \textcolor{keywordtype}{int} \mbox{\hyperlink{classLidDrivenCavity_a63fdfc133e863ea24a508649f75a7396}{Nt}};}
-\DoxyCodeLine{147 }
-\DoxyCodeLine{148 }
-\DoxyCodeLine{149     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad3cc258bff230ce7f160132958762ca4}{CreateU}}();}
-\DoxyCodeLine{150     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af2cf7812515b807a646109ef649534d9}{Printmatrix}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny, \textcolor{keywordtype}{double}* A);}
-\DoxyCodeLine{151 \};}
-\DoxyCodeLine{152 }
+\DoxyCodeLine{106     \textcolor{comment}{// Buffer memory for sharing boundary value}}
+\DoxyCodeLine{107     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a8ebcf6fa30e987c2c2a714fc72233e9c}{buffer\_up\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{108     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a4406d364a12eb3ae851cec2df930d360}{buffer\_down\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{109     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ab04e2cb0c225cf540bbbd9092c03ee2d}{buffer\_up\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{110     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aed1b77f1400c1db1530621046aeb9afd}{buffer\_down\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_ac99fc9aab9ca8ef8176a610251ac2da1}{buffer\_left\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{113     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a5eca9ae770cbc6737235a65570c30eb7}{buffer\_right\_send}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{114     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_aa5404a4b98da12709051ef4861094a2b}{buffer\_left\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{115     \textcolor{keywordtype}{double}* \mbox{\hyperlink{classLidDrivenCavity_a74b7a993a5584c6055f5993af42aaf06}{buffer\_right\_recv}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117     \textcolor{comment}{// Utilities}}
+\DoxyCodeLine{118     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aa8be5cfc1901cfc1ad5954b026e3b63d}{CleanUp}}();}
+\DoxyCodeLine{119     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af9575dd6a4fb69b8b5aa6376ec60fda0}{UpdateDxDy}}();}
+\DoxyCodeLine{120     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad3cc258bff230ce7f160132958762ca4}{CreateU}}();}
+\DoxyCodeLine{121     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_af2cf7812515b807a646109ef649534d9}{Printmatrix}}(\textcolor{keywordtype}{int} nx, \textcolor{keywordtype}{int} ny, \textcolor{keywordtype}{double}* A);}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123     \textcolor{comment}{// Parallel processing functions}}
+\DoxyCodeLine{124     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a42efeb8d107a39c3926387dd8ed0cf4a}{GatherDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
+\DoxyCodeLine{125     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ae9194a027b9adec8c5f8a7031ca8266a}{ScatterDomain}}(\textcolor{keywordtype}{double}* A\_local, \textcolor{keywordtype}{double}* A\_global);}
+\DoxyCodeLine{126     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_aaa217101877b67a568fccec071233a28}{DomainInterComunnication}}(\textcolor{keywordtype}{double}* A\_local);}
+\DoxyCodeLine{127     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad6f85225e7526cd7f9f3c3fc48d8d3b0}{AdvanceParallel}}(\textcolor{keywordtype}{bool} verbose\_advance);}
+\DoxyCodeLine{128     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ac15e48c2b427bed53a595da550269a0b}{ComputeBoundaryVorticityParallel}}();}
+\DoxyCodeLine{129     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_a687272ab3617ec1707303cd288458aad}{ComputeInteriorVorticityParallel}}();}
+\DoxyCodeLine{130     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ad1cea55e23744eb99665b7420227aa48}{ComputeNextVorticityParallel}}();}
+\DoxyCodeLine{131     \textcolor{keywordtype}{void} \mbox{\hyperlink{classLidDrivenCavity_ae035aa99b3b514cdf843648592fceea9}{ComputeLaplaceOperatorParallel}}();}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \};}
+\DoxyCodeLine{134 }
 
 \end{DoxyCode}
