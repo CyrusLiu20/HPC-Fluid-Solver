@@ -285,8 +285,6 @@ void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, in
  * 
  * The domain decomposition ensures that each process works on a distinct portion of 
  * the domain, facilitating efficient parallelization of the computation.
- * 
- * Note: This function requires the MPI library for parallel communication.
  */
 void LidDrivenCavity::DomainDecomposition()
 {
@@ -495,9 +493,7 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
  * 
  * @details The boundary vorticity is computed using finite difference approximations 
  * and is updated directly in the local vorticity array. Boundary conditions are applied 
- * according to the MPI ranks of neighboring processes. For example, if a process has 
- * no neighbor on its top boundary (rank_up == -2), it computes the vorticity along 
- * the top boundary using a specified boundary condition (e.g., uniform velocity).
+ * according to the coordinate of current process.
 */
 void LidDrivenCavity::ComputeBoundaryVorticityParallel()
 {
@@ -602,7 +598,6 @@ void LidDrivenCavity::ComputeNextVorticityParallel(){
 void LidDrivenCavity::ComputeLaplaceOperatorParallel()
 {
     // Solve Poisson problem
-    // cg->SolveParallel(v_local, s_local, verbose);
     cg->SolveParallel(v_next_local, s_local, verbose);
 
 }

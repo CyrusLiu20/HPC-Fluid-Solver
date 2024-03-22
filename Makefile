@@ -13,7 +13,7 @@
 CC = mpicxx
 MPI_CC = mpiexec
 OMPI_CXX = g++-10 mpicxx -v
-CFLAGS = -std=c++11 -Wall -O0 -pedantic -fopenmp
+CFLAGS = -std=c++11 -Wall -O3 -pedantic -fopenmp
 LIBS = -lboost_program_options -lblas -llapack -lscalapack-openmpi 
 TEST_LIBS = -lboost_unit_test_framework
 
