@@ -115,6 +115,7 @@ run_evaluate: $(OUTPUT)
 	OMP_NUM_THREADS=$(Nt) $(MPI_CC) --bind-to none -np $(Np) ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 run_profiler: $(PROF_DIR) $(OUTPUT)
+	mkdir -p $(PROF_DIR)
 	OMP_NUM_THREADS=1 collect -o $(PROF_DIR)/experiment$(EXP).er ./$(OUTPUT) --Lx 1 --Ly 1 --dt 0.005 --T $(T) --Re 1000 --Nx 201 --Ny 201 --verbose true
 
 $(PROF_DIR):
@@ -122,8 +123,8 @@ $(PROF_DIR):
 
 doc:
 	mkdir -p $(DOC_DIR)
-	doxygen -g $(DOC_DIR)/$(DOCX)
-	echo "\nPlease configure Doxygen configuration file (4 flags in total): INPUT = ../ | RECURSIVE = YES | EXTRACT_ALL = YES | EXTRACT_PRIVATE = YES"
+	doxygen
+
 
 clean_doc:
 	rm -rf $(DOC_DIR)/$(HTML) $(DOC_DIR)/$(LATEX) 
