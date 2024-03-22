@@ -76,58 +76,6 @@ void LidDrivenCavity::Printmatrix(int nx, int ny, double* A) {
 }
 
 /**
- * @brief (Primarily for debugging purposes, not used in the code) Scatters the global domain data from the root process to all other processes, ensuring proper distribution of data.
- * 
- * The function scatters the global matrix to all other processes.
- * It ensures proper alignment and distribution of data based on the process rank and offset values.
- * 
- * @param A_local Pointer to the local domain array (vorticity or stream function) of size Nx_local * Ny_local.
- * @param A_global Pointer to the global domain array (vorticity or stream function) at the root process of size Nx * Ny.
- * 
- * @deprecated This function is deprecated and will be removed in future versions.
- * 
- * @see GatherDomain()
- */
-void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
-{
-
-    if(rank==root){
-        for (int src = 1; src < Nprocs; ++src) {
-            MPI_Send(A_global, Npts, MPI_DOUBLE, src, 0, MPI_COMM_WORLD);
-        }
-        int index_global, index_local;
-        for (int i=0;i<Nx_local;i++){
-            for (int j=0;j<Ny_local;j++){
-                index_global = (j + 0)*Nx + (i + 0);
-                index_local = IDX_local(i,j);                
-                A_local[index_local] = A_global[index_global];
-            }
-        }
-    } 
-    else{
-        double* A_global_temp = new double[Npts];
-        int index_global, index_local;
-        MPI_Recv(A_global_temp, Npts, MPI_DOUBLE, root, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-        int offset_y_temp = offset_y;
-        int offset_x_temp = offset_x;
-        if(rank_down!=-2){offset_y_temp--;}
-        if(rank_left!=-2){offset_x_temp--;}
-
-
-        for (int i=0;i<Nx_local;i++){
-            for (int j=0;j<Ny_local;j++){
-                index_global = (j + offset_y_temp)*Nx + (i + offset_x_temp);
-                index_local = IDX_local(i,j);                
-                A_local[index_local] = A_global_temp[index_global];
-            }
-        }
-        delete[] A_global_temp;
-    }
-
-}
-
-/**
  * @brief Gathers the local domain data from each process and sends it to the root process to assemble the global domain.
  * The function ensures proper alignment and communication between processes in a parallel environment.
  * 
@@ -142,21 +90,25 @@ void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
  */
 void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
 
+    // Parameters for the (true) local domain without buffwe
     int Nx_local_temp = Nx_local;
     int Ny_local_temp = Ny_local;
     int i_start = 0;
     int i_end = Nx_local;
     int j_start = 0;
     int j_end = Ny_local;
+
+    // Check if required to exclude buffer zone
     if (rank_up != -2) {Ny_local_temp--;j_end--;}
     if (rank_down != -2) {Ny_local_temp--;j_start++;}
     if (rank_left != -2) {Nx_local_temp--;i_start++;}
     if (rank_right != -2) {Nx_local_temp--;i_end--;}
 
     int Npts_local_temp = Nx_local_temp*Ny_local_temp;
-    double* A_local_temp = new double[Npts_local_temp];
-    for(int i=0;i<Npts_local_temp;i++){A_local_temp[i]=0;}
+    double* A_local_temp = new double[Npts_local_temp]; // Temporarily store local domain without buffer
+    for(int i=0;i<Npts_local_temp;i++){A_local_temp[i]=0;} // Initialise to prevent memory issue
 
+    // Extracting true local domain (without buffer)
     int k = 0;
     for(int j=j_start;j<j_end;j++){
         for(int i=i_start;i<i_end;i++){
@@ -166,34 +118,34 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
     }
 
     if(rank!=root){
-
+        // All non root processes send the number of parameters then the true local domain
         int send_buf[4] = {Nx_local_temp, Ny_local_temp, offset_x, offset_y};
         MPI_Send(send_buf,4,MPI_INT,root,0,MPI_COMM_WORLD);
-        // Send A_local_temp to the root
         MPI_Send(A_local_temp, Npts_local_temp, MPI_DOUBLE, root, 0, MPI_COMM_WORLD);
     }
     else{
         int index_global, index_local;
         for (int src = 0; src < Nprocs; ++src) {
 
+            // Unpacking number of elements to receive and the true local domain from non-root processes
             if (src != root) {
                 int recv_buf[4];
-                MPI_Recv(recv_buf, 4, MPI_INT, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Recv(recv_buf, 4, MPI_INT, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // Number of elements to receive
                 double* A_local_temp_recv = new double[recv_buf[0]*recv_buf[1]];
 
+                // Receiving true local domain from all processes
                 MPI_Recv(A_local_temp_recv, recv_buf[0]*recv_buf[1], MPI_DOUBLE, src, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 for(int i=0;i<recv_buf[0];i++){
                     for(int j=0;j<recv_buf[1];j++){
-                        index_global = (j + recv_buf[3])*Nx + (i + recv_buf[2]);
-                        index_local = (j)*recv_buf[0] + (i);
+                        index_global = (j + recv_buf[3])*Nx + (i + recv_buf[2]); // Global coordinates relative to local domain
+                        index_local = (j)*recv_buf[0] + (i); // Local coordinates of the local domain
                         A_global[index_global] = A_local_temp_recv[index_local];
-
                     }
                 }
                 delete[] A_local_temp_recv;
             }
             else{
-                
+                // Assembling all true local domain based on local relative coordinates to A_global
                 for(int i=i_start;i<i_end;i++){
                     for(int j=j_start;j<j_end;j++){
                         index_global = (j + offset_y)*Nx + (i + offset_x);
@@ -209,7 +161,6 @@ void LidDrivenCavity::GatherDomain(double* A_local, double* A_global){
     MPI_Barrier(MPI_COMM_WORLD);
 
     delete[] A_local_temp;
-
 }
 
 LidDrivenCavity::LidDrivenCavity()
@@ -245,11 +196,6 @@ void LidDrivenCavity::SetGridSize(int nx, int ny)
 {
     this->Nx = nx;
     this->Ny = ny;
-
-    // Interior matrix size
-    this->Nx_inner = Nx - 2;
-    this->Ny_inner = Ny - 2;
-    this->Npts_inner = Nx_inner*Ny_inner;
     UpdateDxDy();
 }
 
@@ -331,7 +277,7 @@ void LidDrivenCavity::SetNeighbour(int rank_up, int rank_down, int rank_left, in
 }
 
 /**
- * @brief Performs domain decomposition for parallel computation.
+ * @brief Performs domain decomposition for parallel computation and ensures buffer zone for information sharing
  * 
  * This function divides the computational domain into smaller subdomains for parallel 
  * computation using the MPI library. Each process is assigned a portion of the domain 
@@ -349,41 +295,38 @@ void LidDrivenCavity::DomainDecomposition()
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
 
+    // Calculate remainder node points
+    Nprocs_sqrt = sqrt(Nprocs);
+    Nx_remainder = Nx % Nprocs_sqrt;
+    Ny_remainder = Ny % Nprocs_sqrt;
 
-    parallel = Nprocs > 1;
-    // if(parallel){
-        Nprocs_sqrt = sqrt(Nprocs);
-        Nx_remainder = Nx % Nprocs_sqrt;
-        Ny_remainder = Ny % Nprocs_sqrt;
+    // Determine the local domain size and offset for the current process in x-direction
+    if(rank % Nprocs_sqrt < Nx_remainder){
+        Nx_local = Nx / Nprocs_sqrt + 1;
+        offset_x = Nx_local * (rank % Nprocs_sqrt);
+    }
+    else{
+        Nx_local = Nx / Nprocs_sqrt;
+        offset_x = Nx_local * (rank % Nprocs_sqrt) + Nx_remainder;
+    }
 
-        if(rank % Nprocs_sqrt < Nx_remainder){
-            Nx_local = Nx / Nprocs_sqrt + 1;
-            offset_x = Nx_local * (rank % Nprocs_sqrt);
-        }
-        else{
-            Nx_local = Nx / Nprocs_sqrt;
-            offset_x = Nx_local * (rank % Nprocs_sqrt) + Nx_remainder;
-        }
+    // Determine the local domain size and offset for the current process in x-direction
+    if(rank / Nprocs_sqrt < Ny_remainder){
+        Ny_local = Ny / Nprocs_sqrt + 1;
+        offset_y = Ny_local * (rank / Nprocs_sqrt);
+    }
+    else{
+        Ny_local = Ny / Nprocs_sqrt;
+        offset_y = Ny_local * (rank / Nprocs_sqrt) + Ny_remainder ;
+    }
 
-        if(rank / Nprocs_sqrt < Ny_remainder){
-            Ny_local = Ny / Nprocs_sqrt + 1;
-            offset_y = Ny_local * (rank / Nprocs_sqrt);
-        }
-        else{
-            Ny_local = Ny / Nprocs_sqrt;
-            offset_y = Ny_local * (rank / Nprocs_sqrt) + Ny_remainder ;
-        }
+    // Buffer zone to account for shared rows/columns of neighbouring ranks
+    if (rank_up != -2) {Ny_local++;}
+    if (rank_down != -2) {Ny_local++;}
+    if (rank_left != -2) {Nx_local++;}
+    if (rank_right != -2) {Nx_local++;}
 
-        // Account for shared rows/columns of neighbouring ranks
-        if (rank_up != -2) {Ny_local++;}
-        if (rank_down != -2) {Ny_local++;}
-        if (rank_left != -2) {Nx_local++;}
-        if (rank_right != -2) {Nx_local++;}
-
-        Npts_local = Nx_local*Ny_local;
-
-        // std::cout << "Rank: " << rank  << " | Nx_local: " << Nx_local << " | offset_x: " << offset_x << " | Ny_local: " << Ny_local << " | offset_y: " << offset_y << std::endl;
-
+    Npts_local = Nx_local*Ny_local; // Number of elements in local domain
 }
 
 /**
@@ -394,10 +337,12 @@ void LidDrivenCavity::DomainDecomposition()
  */
 void LidDrivenCavity::InitialiseParallel()
 {
+    // Allocating memory for local vorticity and stream function
     v_local = new double[Npts_local];
     v_next_local = new double[Npts_local];
     s_local = new double[Npts_local];
-    // v_next_local = new double[Npts_local];
+
+    // Initialise conjugate gradient solver
     cg = new SolverCG(Nx_local,Ny_local,dx,dy);
     cg->SetNeighbour(rank_up,rank_down,rank_left,rank_right);
     cg->SetOffset(offset_x,offset_y,Nx,Ny);
@@ -406,20 +351,22 @@ void LidDrivenCavity::InitialiseParallel()
     for (int i=0;i<Npts_local;i++) {
         v_local[i] = 0;
         s_local[i] = 0;
-        // v_next_local[i] = 0;
     }    
 
+    // Initialise array to prevent memory issue
     if(rank==root){
         u0 = new double[Npts];
         u1 = new double[Npts];
         for (int i=0;i<Npts;i++) {u0[i] = 0;u1[i] = 0;}
     }
     if(rank==root){
+        // Purely for gathering domain purposes and writing solution
         v = new double[Npts];
         s = new double[Npts];
         for (int i=0;i<Npts;i++) {v[i] = 0;s[i]=0;}
     }
 
+    // Buffer for send/receive boundary information for domain inter-communication (Top and Bottom)
     buffer_up_send = new double[Nx_local];
     buffer_down_send = new double[Nx_local];
     buffer_up_recv = new double[Nx_local];
@@ -431,6 +378,7 @@ void LidDrivenCavity::InitialiseParallel()
         buffer_down_recv[i] = 0;
     }    
 
+    // Buffer for send/receive boundary information for domain inter-communication (Left and Right)
     buffer_left_send = new double[Ny_local];
     buffer_right_send = new double[Ny_local];
     buffer_left_recv = new double[Ny_local];
@@ -444,7 +392,7 @@ void LidDrivenCavity::InitialiseParallel()
 }
 
 /**
- * @brief Allocate memory for global u and v velocity to prevent memory leakage
+ * @brief Allocate memory for global u and v velocity and initialising to prevent memory leakage
 */
 void LidDrivenCavity::CreateU(){
     u0 = new double[Npts];
@@ -478,10 +426,14 @@ void LidDrivenCavity::IntegrateParallel(){
                     << "  Time: " << setw(8) << t*dt
                     << std::endl;
         }
+
+        // For debugging purposes
         if(t==-1){verbose_advance=true;}
         else{verbose_advance=false;}
-        AdvanceParallel(verbose_advance);
+        AdvanceParallel(verbose_advance); // Compute vorticity and steam function
     }
+
+    // Assembling all local vorticity and stream function at root for writing purposes
     GatherDomain(v_local,v);
     GatherDomain(s_local,s);
 }
@@ -500,6 +452,7 @@ void LidDrivenCavity::IntegrateParallel(){
 */
 void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
 
+    // Computing boundary and interior vorticity in parallel mode
     ComputeBoundaryVorticityParallel();
     ComputeInteriorVorticityParallel();
 
@@ -507,10 +460,11 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
         std::cout << "(Interior vorticity) vorticity matrix" << std::endl;
         Printmatrix(Nx, Ny, v);
     }
+    DomainInterComunnication(v_local); // Sharing boundary values
 
-    DomainInterComunnication(v_local);
+    // Computing vorticity at next time step
     ComputeNextVorticityParallel();
-    DomainInterComunnication(v_local);  
+    DomainInterComunnication(v_local); //  Sharing boundary values
 
     if(rank==root&&verbose_advance){
         std::cout << "(Next vorticity) vorticity matrix" << std::endl;
@@ -519,6 +473,7 @@ void LidDrivenCavity::AdvanceParallel(bool verbose_advance){
         Printmatrix(Nx, Ny, s);
     } 
 
+    // Solution of the Poisson problem for stream function at next time step
     ComputeLaplaceOperatorParallel();
 
     if(rank==root&&verbose_advance){
@@ -551,28 +506,28 @@ void LidDrivenCavity::ComputeBoundaryVorticityParallel()
     double dx2i = 1.0/dx/dx;
     double dy2i = 1.0/dy/dy;
 
-    // Top
+    // Top boundary values
     if (rank_up==-2){
         for (int i=1;i<Nx_local-1;++i){
             v_local[IDX_local(i,Ny_local-1)] = 2.0 * dy2i * (s_local[IDX_local(i,Ny_local-1)] - s_local[IDX_local(i,Ny_local-2)])- 2.0 * dyi*U;
         }
     }
 
-    // Bottom
+    // Bottom boundary values
     if (rank_down==-2){
         for (int i=1;i<Nx_local-1;++i){
             v_local[IDX_local(i,0)] = 2.0 * dy2i * (s_local[IDX_local(i,0)] - s_local[IDX_local(i,1)]);
         }
     }
 
-    // Left
+    // Left boundary values
     if (rank_left==-2){
         for (int j=1;j<Ny_local-1;++j){
             v_local[IDX_local(0,j)]    = 2.0 * dx2i * (s_local[IDX_local(0,j)] - s_local[IDX_local(1,j)]);
         }
     }
 
-    // Right
+    // Right boundary values
     if (rank_right==-2){
         for (int j=1;j<Ny_local-1;++j){
             v_local[IDX_local(Nx_local-1,j)] = 2.0 * dx2i * (s_local[IDX_local(Nx_local-1,j)]    - s_local[IDX_local(Nx_local-2,j)]);
@@ -667,12 +622,14 @@ void LidDrivenCavity::ComputeLaplaceOperatorParallel()
 void LidDrivenCavity::DomainInterComunnication(double* A_local){
 
     // Top and bottom communication
+    // Sending upper edge of (true) local domain if neighbour exist
     if(rank_up!=-2){
         int j_second_upper = (Ny_local-1)-1;
         for(int i=0;i<Nx_local;i++){
             buffer_up_send[i] = A_local[IDX_local(i,j_second_upper)];
         }
     }
+    // Sending bottom edge of (true) local domain if neighbour exist
     if(rank_down!=-2){
         int j_second_lower = (0)+1;
         for(int i=0;i<Nx_local;i++){
@@ -680,7 +637,7 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         }
     }
 
-    // Send and receive
+    // Sending buffer data with neighboring processes if exist
     if(rank_up!=-2){
         MPI_Send(buffer_up_send, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD);
     }
@@ -688,6 +645,7 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         MPI_Send(buffer_down_send, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD);
     }
 
+    // Receiving buffer data with neighboring processes if exist
     if(rank_down!=-2){
         MPI_Recv(buffer_down_recv, Nx_local, MPI_DOUBLE, rank_down, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
@@ -695,23 +653,24 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         MPI_Recv(buffer_up_recv, Nx_local, MPI_DOUBLE, rank_up, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
-
+    // Synchronise all processes
     MPI_Barrier(MPI_COMM_WORLD);
 
-    // Storing communicated knowledge
+    // Unpacking all received data
     for(int i=0;i<Nx_local;i++){
         if (rank_up != -2) {A_local[IDX_local(i,Ny_local-1)] = buffer_up_recv[i];}
         if (rank_down != -2) {A_local[IDX_local(i,0)] = buffer_down_recv[i];}
     }
 
     // Left and right communication
-    // Allocate memory for communication buffers
+    // Sending left edge of (true) local domain if neighbour exist
     if(rank_left!=-2){
         int i_second_left = (0) + 1;
         for(int j=0;j<Ny_local;j++){
             buffer_left_send[j] = A_local[IDX_local(i_second_left,j)];
         }
     }
+    // Sending right edge of (true) local domain if neighbour exist
     if(rank_right!=-2){
         int i_second_right = (Nx_local-1) - 1;
         for(int j=0;j<Ny_local;j++){
@@ -719,7 +678,7 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         }
     }
 
-    // Send and receive
+    // Sending buffer data with neighboring processes if exist
     if(rank_left!=-2){
         MPI_Send(buffer_left_send, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD);
     }
@@ -727,6 +686,7 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         MPI_Send(buffer_right_send, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD);
     }
 
+    // Receiving buffer data with neighboring processes if exist
     if(rank_right!=-2){
         MPI_Recv(buffer_right_recv, Ny_local, MPI_DOUBLE, rank_right, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
@@ -734,9 +694,10 @@ void LidDrivenCavity::DomainInterComunnication(double* A_local){
         MPI_Recv(buffer_left_recv, Ny_local, MPI_DOUBLE, rank_left, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
     }
+    // Synchronise all processes
     MPI_Barrier(MPI_COMM_WORLD);
 
-    // Storing communicated knowledge
+    // Unpacking all received data
     for(int j=0;j<Ny_local;j++){
         if (rank_left != -2) {A_local[IDX_local(0,j)] = buffer_left_recv[j];}
         if (rank_right != -2) {A_local[IDX_local(Nx_local-1,j)] = buffer_right_recv[j];}
@@ -764,13 +725,13 @@ void LidDrivenCavity::WriteSolution(std::string file)
     for(int i=0;i<Npts;i++){u0[i] = 0; u1[i] = 0;}
     for (int i = 1; i < Nx - 1; ++i) {
         for (int j = 1; j < Ny - 1; ++j) {
-            u0[IDX(i,j)] =  (s[IDX(i,j+1)] - s[IDX(i,j)]) / dy;
-            u1[IDX(i,j)] = -(s[IDX(i+1,j)] - s[IDX(i,j)]) / dx;
+            u0[IDX(i,j)] =  (s[IDX(i,j+1)] - s[IDX(i,j)]) / dy; // Computing U-velocity from stream
+            u1[IDX(i,j)] = -(s[IDX(i+1,j)] - s[IDX(i,j)]) / dx; // Computing V-velocity from stream
         }
     }
 
     for (int i = 0; i < Nx; ++i) {
-        u0[IDX(i,Ny-1)] = U;
+        u0[IDX(i,Ny-1)] = U; // Boundary condition due to moving top lid
     }
 
     std::ofstream f(file.c_str());
@@ -854,7 +815,58 @@ void LidDrivenCavity::CleanUp()
 }
 
 
+/**
+ * @brief (Primarily for debugging purposes, not used in the code) Scatters the global domain data from the root process to all other processes, ensuring proper distribution of data.
+ * 
+ * The function scatters the global matrix to all other processes.
+ * It ensures proper alignment and distribution of data based on the process rank and offset values.
+ * 
+ * @param A_local Pointer to the local domain array (vorticity or stream function) of size Nx_local * Ny_local.
+ * @param A_global Pointer to the global domain array (vorticity or stream function) at the root process of size Nx * Ny.
+ * 
+ * @deprecated This function is deprecated and will be removed in future versions.
+ * 
+ * @see GatherDomain()
+ */
+void LidDrivenCavity::ScatterDomain(double* A_local, double* A_global)
+{
 
+    if(rank==root){
+        for (int src = 1; src < Nprocs; ++src) {
+            MPI_Send(A_global, Npts, MPI_DOUBLE, src, 0, MPI_COMM_WORLD); // Sending A_global to each rank from root
+        }
+        int index_global, index_local;
+        for (int i=0;i<Nx_local;i++){
+            for (int j=0;j<Ny_local;j++){
+                index_global = (j + 0)*Nx + (i + 0); // Global equivalent coordinate relative to local domain
+                index_local = IDX_local(i,j); // Local coordinates   
+                A_local[index_local] = A_global[index_global];
+            }
+        }
+    } 
+    else{
+        double* A_global_temp = new double[Npts]; // Store global domain temporarily
+        int index_global, index_local;
+        MPI_Recv(A_global_temp, Npts, MPI_DOUBLE, root, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // Receive global domain from root
+
+        // Relative position of local origin without buffer
+        int offset_y_temp = offset_y;
+        int offset_x_temp = offset_x;
+        if(rank_down!=-2){offset_y_temp--;}
+        if(rank_left!=-2){offset_x_temp--;}
+
+        // Unpacking received global domain
+        for (int i=0;i<Nx_local;i++){
+            for (int j=0;j<Ny_local;j++){
+                index_global = (j + offset_y_temp)*Nx + (i + offset_x_temp); // Global equivalent coordinate relative to local domain
+                index_local = IDX_local(i,j); // Local coordinates           
+                A_local[index_local] = A_global_temp[index_global];
+            }
+        }
+        delete[] A_global_temp;
+    }
+
+}
 
 
 

@@ -51,16 +51,18 @@ void SolverCG::Printmatrix(int nx, int ny, double* A) {
  */
 SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
 {
+    // Solver parameters
     dx = pdx;
     dy = pdy;
     Nx = pNx;
     Ny = pNy;
     int n = Nx*Ny;
-    r = new double[n];
-    p = new double[n];
+    r = new double[n]; // Residual vector
+    p = new double[n]; // Search direction
     z = new double[n];
-    t = new double[n]; //temp
+    t = new double[n];
 
+    // Initialising to prevent memory issue
     for(int i=0;i<n;i++){
         r[i] = 0;
         p[i] = 0;
@@ -68,17 +70,14 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
         t[i] = 0;
     }
 
-
-    // iter_max = 2;
-    iter_max = 5000;
-
-    // debug = true;
-    debug = false;
+    iter_max = 5000; // Maximum iteration allowed
+    debug = false; // Debuggin mode
 
     // Retrieve current rank and process
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &Nprocs);
 
+    // Memory buffer for boundary value communication
     buffer_up_send = new double[Nx];
     buffer_down_send = new double[Nx];
     buffer_up_recv = new double[Nx];
@@ -89,7 +88,6 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
         buffer_up_recv[i] = 0;
         buffer_down_recv[i] = 0;
     }    
-
     buffer_left_send = new double[Ny];
     buffer_right_send = new double[Ny];
     buffer_left_recv = new double[Ny];
@@ -101,10 +99,10 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
         buffer_right_recv[j] = 0;
     }  
 
+    // Precomputing values for applying Laplace operator and preconditioning
     dx2i = 1.0/dx/dx;
     dy2i = 1.0/dy/dy;
     factor2 = 1/(2.0*(dx2i + dy2i));
-
 }
 
 /**
@@ -119,11 +117,14 @@ SolverCG::SolverCG(int pNx, int pNy, double pdx, double pdy)
  * @param rank_right Rank of the neighboring process to the right of the current process.
  */
 void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_right){
+
+    // Rank of neighbouring process in the Cartesian topology
     this->rank_up = rank_up;
     this->rank_down = rank_down;
     this->rank_left = rank_left;
     this->rank_right = rank_right;
 
+    // Excluding local domain buffer zone
     i_start = 0;
     i_end = Nx;
     j_start = 0;
@@ -148,6 +149,7 @@ void SolverCG::SetNeighbour(int rank_up, int rank_down, int rank_left, int rank_
  * @see GatherDomain()
 */
 void SolverCG::SetOffset(int offset_x, int offset_y, int Nx_global, int Ny_global){
+    // Local relative position to global domain
     this->offset_x = offset_x;
     this->offset_y = offset_y;
     this->Nx_global = Nx_global;
@@ -211,7 +213,7 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     }
 
 
-    DomainInterComunnication(p); // Remove if unnecessary
+    DomainInterComunnication(p);
     ApplyOperator(x, t);
 
     cblas_dcopy(n, b, 1, r, 1);        // r_0 = b (i.e. b)
@@ -221,10 +223,8 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
     PreconditionParallel(r, z);
     DomainInterComunnication(z); // Remove if unnecessary
 
-
     cblas_dcopy(n, z, 1, p, 1);        // p_0 = r_0
-
-    DomainInterComunnication(p); // Remove if unnecessary
+    DomainInterComunnication(p);
 
     k = 0;
     do {
@@ -235,11 +235,10 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
 
         alpha1_global = ComputeDotGlobalParallel(n,t,p);
         alpha2_global = ComputeDotGlobalParallel(n,r,z);
-        alpha_global = alpha2_global/alpha1_global;
+        alpha_global = alpha2_global/alpha1_global; // Obtaining global set size
 
         // One single new search direction for all processes (beta_global)
         beta1_global  = alpha2_global;
-
 
         // cblas_daxpy(n,  alpha_global, p, 1, x, 1);  // x_{k+1} = x_k + alpha_k p_k
         // cblas_daxpy(n, -alpha_global, t, 1, r, 1); // r_{k+1} = r_k - alpha_k A p_k
@@ -249,16 +248,16 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
             r[i] -= alpha_global * t[i];
         }
 
-        DomainInterComunnication(x); // Remove if unnecessary
-        DomainInterComunnication(r); // Remove if unnecessary
+        DomainInterComunnication(x);
+        DomainInterComunnication(r); 
 
         eps = ComputeErrorGlobalParallel(n,r);
-
         if (eps < tol*tol) {
             break;
         }
-        PreconditionParallel(r, z);
 
+        // Computing global beta coefficient
+        PreconditionParallel(r, z);
         beta2_global = ComputeDotGlobalParallel(n,r,z);
         beta_global = beta2_global / beta1_global;
 
@@ -272,7 +271,7 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
             p[i]=t[i];
         }
 
-        DomainInterComunnication(p); // Remove if unnecessary
+        DomainInterComunnication(p); 
     } while (k < iter_max); // Set a maximum number of iterations
 
 
@@ -299,10 +298,6 @@ void SolverCG::SolveParallel(double* b, double* x, bool verbose) {
 */ 
 void SolverCG::ApplyOperator(double* in, double* out) {
     // Assume ordered with y-direction fastest (column-by-column)
-    // double dx2i = 1.0/dx/dx;
-    // double dy2i = 1.0/dy/dy;
-    // // int jm1 = 0, jp1 = 2;
-
     int index_local;
     #pragma omp for collapse(2) private(index_local)
     for (int j = 1; j < Ny - 1; ++j) {
@@ -319,8 +314,6 @@ void SolverCG::ApplyOperator(double* in, double* out) {
             out[index_local] = (-in[index_local-1]-in[index_local+1])*dx2i + (2.0*dx2i+2.0*dy2i)*in[index_local] + (-in[index_local-Nx]-in[index_local+Nx])*dy2i;
             
         }
-        // jm1++;
-        // jp1++;
     }
 
 }
@@ -337,24 +330,16 @@ void SolverCG::ApplyOperator(double* in, double* out) {
  */
 void SolverCG::PreconditionParallel(double* in, double* out) {
     int i, j;
-    // double dx2i = 1.0/dx/dx;
-    // double dy2i = 1.0/dy/dy;
-    // double factor = 2.0*(dx2i + dy2i);
-    // double factor2 = 1/(2.0*(dx2i + dy2i));
 
-
+    // Check buffer zone
     int i_start_temp = 1;
     int i_end_temp = Nx-1;
     int j_start_temp = 1;
     int j_end_temp = Ny-1;
-
-
     if (rank_up != -2) {j_end_temp++;}
     if (rank_down != -2) {;j_start_temp--;}
     if (rank_left != -2) {i_start_temp--;}
     if (rank_right != -2) {i_end_temp++;}
-
-
 
     for (j = j_start_temp; j < j_end_temp; ++j) {
         for (i = i_start_temp; i < i_end_temp; ++i) {
@@ -364,19 +349,19 @@ void SolverCG::PreconditionParallel(double* in, double* out) {
     }
     // Boundaries
     for (i = 0; i < Nx; ++i) {
-        if(rank_down==-2){
+        if(rank_down==-2){ // Bottom boundary
             out[IDX(i, 0)] = in[IDX(i,0)];
         }
-        if(rank_up==-2){
+        if(rank_up==-2){ // top boundary
             out[IDX(i, Ny-1)] = in[IDX(i, Ny-1)];
         }
     }
 
     for (j = 0; j < Ny; ++j) {
-        if(rank_left==-2){
+        if(rank_left==-2){ // Left boundary
             out[IDX(0, j)] = in[IDX(0, j)];
         }
-        if(rank_right==-2){
+        if(rank_right==-2){ // Right boundary
             out[IDX(Nx - 1, j)] = in[IDX(Nx - 1, j)];
         }
     }
@@ -611,6 +596,7 @@ double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
     double error_global = 0;
     // error = cblas_ddot(n, a, 1, a, 1); // the square root process can only be done after global ddot error is gathered
 
+    // Computing error for local domain excluding buffer zone
     #pragma omp parallel for collapse(2) reduction(+:error)
     for(int j=j_start;j<j_end;j++){
         for(int i=i_start;i<i_end;i++){
@@ -618,8 +604,8 @@ double SolverCG::ComputeErrorGlobalParallel(unsigned int n, double *a){
         }
     }
 
+    // Error is the square root of the dot product of a and a itself
     MPI_Allreduce(&error, &error_global, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-
     error_global = sqrt(error_global);
     return error_global;
 }
@@ -643,6 +629,7 @@ double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
     double value = 0; // squared without norm yet
     double value_global = 0;
 
+    // Computing error for local domain excluding buffer zone
     int index_local;
     #pragma omp parallel for collapse(2) reduction(+:value) private(index_local)
     for(int j=j_start;j<j_end;j++){
@@ -652,6 +639,7 @@ double SolverCG::ComputeDotGlobalParallel(unsigned int n, double *a, double *b){
         }
     }
 
+    // Global dot product from reducing all local dot product
     MPI_Allreduce(&value, &value_global, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     return value_global;
 }

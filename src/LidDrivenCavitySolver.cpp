@@ -35,11 +35,12 @@ int main(int argc, char **argv)
 	int Ny; // Number of grid points in y-direction
 	bool verbose = true; // Display more hint message
 	bool legacy = false; // Execute legacy baseline numerical code
-
-
     int root = 0; // Root process
     std::string folder_results = "results/";
 
+
+
+    // Extracting program arguments with BOOST library
     po::options_description opts(
         "Solver for the 2D lid-driven cavity incompressible flow problem");
     opts.add_options()
@@ -53,8 +54,6 @@ int main(int argc, char **argv)
         ("verbose", po::value<bool>(&verbose)->default_value(true), "Display more hint message")
         ("legacy", po::value<bool>(&legacy)->default_value(false), "Execute legacy serial baseline numerical solver")
 		("help", "Display argument details");
-
-
 	// Ensure arguments are parsed correctly
     po::variables_map vm;
     try {
@@ -65,13 +64,13 @@ int main(int argc, char **argv)
         return 1;
     }
 	
-	
 	// Display argument details and terminates program if help flag
 	if(vm.count("help")){
 		std::cout << opts << std::endl;
 		return 0;
 	}
 	
+
 
     // Initialise MPI
     int rank = 0; // ID of process
@@ -141,12 +140,14 @@ int main(int argc, char **argv)
     MPI_Cart_shift(domain_local, 0, 1, &rank_down, &rank_up);
     MPI_Cart_shift(domain_local, 1, 1, &rank_left, &rank_right);
 
+
+    // Retrieving the number of threads
     int Nt =1;
     #pragma omp parallel
     {
         Nt = omp_get_num_threads();
     }
-
+    // Prevent the usage of too many threads (especially when unspecified) which slows down coarse mesh problems
     if (Nt > 25) {
         if(rank==0){
             std::cout << "Warning: Too many threads (" << Nt << ") to be used, limiting the number of threads to 1\n" << std::endl;
@@ -156,13 +157,12 @@ int main(int argc, char **argv)
     }
 
 
-    auto start = std::chrono::system_clock::now();
     // Begin program and displays current time
+    auto start = std::chrono::system_clock::now();
     if(rank==root){
         std::time_t time_now = std::chrono::system_clock::to_time_t(start);
         std::cout << "2D lid-driven cavity incompressible flow problem | Time :  " << std::ctime(&time_now);
     }
-
 
     // Core program
     LidDrivenCavity* solver = new LidDrivenCavity();
@@ -185,7 +185,6 @@ int main(int argc, char **argv)
     if (legacy && rank==root) {
         std::cout << "Warning: Legacy mode is enabled. Executing legacy baseline numerical code.\n" << std::endl;
     }
-
 
     // Initialize solver
     if (not(legacy)) {
@@ -220,8 +219,9 @@ int main(int argc, char **argv)
         std::cout << "End of program | Time : " << std::ctime(&end_time);
     }
 
+
+
     // Finalise MPI.
     MPI_Finalize();
-
 	return 0;
 }
